@@ -1,3 +1,4 @@
+// eslint-disable-next-line vue/multi-word-component-names
 <template>
   <section class="container parent_sect">
     <div class="form-group">
@@ -131,6 +132,7 @@
   <div class = "text-center">
     <button type="submit" class="btn btn-primary">Submit</button>
   </div>
+  
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
