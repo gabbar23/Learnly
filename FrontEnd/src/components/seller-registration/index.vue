@@ -48,12 +48,17 @@
     <div class="form-group">
       <div class="form-group">
         <label for="formGroupExampleInput">City</label>
-        <input
+        <select class="custom-select form-control">
+          <option selected>Select City</option>
+          <option v-for="city in cities" >{{ city.place }}</option>
+          </select>
+        <!-- <input
           type="text"
           class="form-control"
           id="formGroupExampleInput"
           placeholder="Example input"
-        />
+        /> -->
+        
       </div>
     </div>
     <div class="form-group">
@@ -61,9 +66,7 @@
         <label for="formGroupExampleInput">State</label>
         <select class="custom-select form-control">
           <option selected>Open this select menu</option>
-          <option value="1">One</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
+          <option v-for="state in states" >{{ state }}</option>
         </select>
       </div>
     </div>
@@ -138,6 +141,26 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
+  data(){
+    return{
+      states : [
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "New Brunswick",
+        "Newfoundland and Labrador",
+        "Northwest Territories",
+        "Nova Scotia",
+        "Nunavut",
+        "Ontario",
+        "Prince Edward Island",
+        "Quebec",
+        "Saskatchewan",
+        "Yukon",
+    ],
+      cities:[{ place : 'Halifax'}, {place : 'DartMouth'}]
+  }
+  },
   props: {
     headerText: {
       type: String,
