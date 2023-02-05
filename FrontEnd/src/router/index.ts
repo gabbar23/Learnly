@@ -12,7 +12,18 @@ const router = createRouter({
       path: "/address",
       name: "address",
       component: () => import("../components/seller-registration/address/index.vue"),
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../components/seller-registration/login.vue"),
+    },
+    {
+      path: "/homepage",
+      name: "homepage",
+      component: () => import("../components/seller-registration/homepage.vue"),
     }
+    
   ],
 });
 
