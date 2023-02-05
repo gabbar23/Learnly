@@ -1,5 +1,4 @@
 // eslint-disable-next-line vue/multi-word-component-names
-
 <template>
 <FormKit type="form" @submit="route" >
 <div class = "row col-md-12">
@@ -147,6 +146,26 @@ import router from "@/router";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
+  data() {
+    return {
+      states : [
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "New Brunswick",
+        "Newfoundland and Labrador",
+        "Northwest Territories",
+        "Nova Scotia",
+        "Nunavut",
+        "Ontario",
+        "Prince Edward Island",
+        "Quebec",
+        "Saskatchewan",
+        "Yukon",
+    ],
+      cities:[{ place : 'Halifax'}, {place : 'DartMouth'}]
+  }
+  },
   props: {
     headerText: {
       type: String,
