@@ -6,22 +6,22 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../components/seller-registration/index.vue"),
+      component: () => import("../components/index.vue"),
     },
     // {
     //   path: "/address",
     //   name: "address",
-    //   component: () => import("../components/seller-registration/address/index.vue"),
+    //   component: () => import("../components/address/index.vue"),
     // },
     {
       path: "/login",
       name: "login",
-      component: () => import("../components/seller-registration/login.vue"),
+      component: () => import("../components/login.vue"),
     },
     {
       path: "/homepage",
       name: "homepage",
-      component: () => import("../components/seller-registration/homepage.vue"),
+      component: () => import("../components/homepage.vue"),
     },
   ],
 });
