@@ -3,7 +3,7 @@ import PropertiesReader from "properties-reader";
 import { dirPath } from "./path";
 
 const properties = PropertiesReader(
-  dirPath.join(__dirname,"../dbconfig/properties.ini")
+  dirPath.join(__dirname,"../../../dbconfig/properties.ini")
 );
 
 const sequelize = new Sequelize(
