@@ -1,85 +1,64 @@
-// eslint-disable-next-line vue/multi-word-component-names
+<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <section class="container parent_sect">
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">First Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">First Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">Last Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">Last Name</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">Address Line 1</label>
-        <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">Address Line 1</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">Address Line 2</label>
-        <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">Address Line 2</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">City</label>
-        <select class="custom-select form-control">
-          <option selected>Select City</option>
-          <option v-for="city in cities" >{{ city.place }}</option>
-          </select>
-        <!-- <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        /> -->
-        
-      </div>
+      <label for="formGroupExampleInput">City</label>
+      <select class="custom-select form-control">
+        <option selected>Select City</option>
+        <option v-for="city in cities">{{ city.place }}</option>
+      </select>
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">State</label>
-        <select class="custom-select form-control">
-          <option selected>Open this select menu</option>
-          <option v-for="state in states" >{{ state }}</option>
-        </select>
-      </div>
+      <label for="formGroupExampleInput">State</label>
+      <select class="custom-select form-control">
+        <option selected>Open this select menu</option>
+        <option v-for="state in states">{{ state }}</option>
+      </select>
     </div>
     <div class="form-group">
-      <div class="form-group">
-        <label for="formGroupExampleInput">Postal Zip Code</label>
-        <input
-          type="text"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">Postal Zip Code</label>
+      <input
+        type="text"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <div class="form-group">
       <label for="exampleInputEmail1">Email address</label>
@@ -92,15 +71,13 @@
       />
     </div>
     <div class="form-group ml-2">
-      <div class="form-group">
-        <label for="formGroupExampleInput">Phone Number</label>
-        <input
-          type="number"
-          class="form-control"
-          id="formGroupExampleInput"
-          placeholder="Example input"
-        />
-      </div>
+      <label for="formGroupExampleInput">Phone Number</label>
+      <input
+        type="number"
+        class="form-control"
+        id="formGroupExampleInput"
+        placeholder="Example input"
+      />
     </div>
     <!-- <div class="form-group">
         <div class="form-group">
@@ -132,159 +109,138 @@
         </div>
     </div> -->
   </section>
-  <div class = "text-center">
+  <div class="text-center">
     <button type="submit" class="btn btn-primary">Submit</button>
-<FormKit type="form" @submit="route" >
-<div class = "row col-md-12">
-  <div class = "col-md-4">
-  <FormKit
-  type="text"
-  label="First Name"
-  validation="required|alpha"
-/>
-</div>
-<div class = "col-md-4">
-<FormKit
-  type="text"
-  label="Middle Name"
-/>
-</div>
-<div class = "col-md-4">
-<FormKit
-  type="text"
-  label="Last Name"
-  validation="required|alpha"
-/>
-</div>
+    <FormKit type="form" @submit="route">
+      <div class="row col-md-12">
+        <div class="col-md-4">
+          <FormKit type="text" label="First Name" validation="required|alpha" />
+        </div>
+        <div class="col-md-4">
+          <FormKit type="text" label="Middle Name" />
+        </div>
+        <div class="col-md-4">
+          <FormKit type="text" label="Last Name" validation="required|alpha" />
+        </div>
+      </div>
+
+      <div class="row col-md-12">
+        <div class="col-md-4">
+          <FormKit type="date" label="Date of Birth" validation="required" />
+        </div>
+        <div class="col-md-4">
+          <FormKit
+            type="radio"
+            label="Buyer/Seller"
+            :options="['Buyer', 'Seller']"
+            validation="required"
+          />
+        </div>
+      </div>
+
+      <div class="row col-md-12">
+        <div class="col-md-4">
+          <FormKit
+            type="text"
+            label="Address Line 1"
+            validation="required"
+            help="Street Name and Apartment Name"
+          />
+        </div>
+        <div class="col-md-4">
+          <FormKit type="text" label="Address Line 2" help="Unit number" />
+        </div>
+      </div>
+      <div class="row col-md-12">
+        <div class="col-md-4">
+          <FormKit type="text" label="City" validation="required|alpha" />
+        </div>
+
+        <div class="col-md-4">
+          <FormKit
+            type="select"
+            name="province"
+            label="Province/State"
+            validation="required"
+            :options="[
+              { label: 'Select Province', value: null },
+              { label: 'Nova Scotia', value: 'NS' },
+              { label: 'Ontario', value: 'ON' },
+              { label: 'Quebec', value: 'QC' },
+            ]"
+          />
+        </div>
+        <div class="col-md-4">
+          <FormKit
+            type="text"
+            label="Postal Zip Code"
+            :validation="[
+              ['required'],
+              [
+                'matches',
+                /^\w\d\w \w\d\w$/,
+                /^\w\d\w-\w\d\w$/,
+                /^\w\d\w\w\d\w$/,
+              ],
+            ]"
+            help="format: a1b-c2d | a1bc2d | a1b c2d"
+          />
+        </div>
+      </div>
+      <FormKit
+        type="text"
+        name="email"
+        id="email"
+        validation="required|email"
+        label="Email"
+        placeholder="abc@abc.com"
+      />
+      <FormKit
+        type="password"
+        name="password"
+        validation="required"
+        label="Password"
+        placeholder="Password"
+      />
+      <FormKit
+        type="password"
+        name="password_confirm"
+        validation="required|confirm"
+        label="Confirm Password"
+        placeholder="Re-Enter Password"
+      />
+      <FormKit
+        type="file"
+        label="Photo of Government ID"
+        accept=".pdf,.jpg,.jpeg,.png"
+        help="Upload a goverment approved ID such as Driving License or Passport"
+        validation="required"
+      />
+
+      <FormKit
+        type="checkbox"
+        label="Terms and Conditions"
+        help="Do you agree to our terms of service?"
+        name="terms"
+        :value="false"
+        validation="accepted"
+        validation-visibility="dirty"
+      />
+    </FormKit>
+
+    <FormKit type="button" :ignore="false" @click="loginRedirect">
+      Already have an account? Sign In!
+    </FormKit>
   </div>
-
-<div class="row col-md-12">
-<div class="col-md-4">
-  <FormKit
-  type="date"
-  label="Date of Birth"
-  validation="required"
-/>
-</div>
-<div class="col-md-4">
-
-  <FormKit
-  type="radio"
-  label="Buyer/Seller"
-  :options="['Buyer','Seller']"
-  validation="required"
-  />
-</div>
-</div>
-
-  <div class = "row col-md-12">
-    <div class = "col-md-4">
-<FormKit
-  type="text"
-  label="Address Line 1"
-  validation="required"
-  help="Street Name and Apartment Name"
-/>
-</div>
-<div class = "col-md-4">
-<FormKit
-  type="text"
-  label="Address Line 2"
-  help="Unit number"
-/>
-</div>
-
-</div>
-<div class = "row col-md-12">
-  <div class = "col-md-4">
-    <FormKit
-    type="text"
-    label="City"
-    validation="required|alpha"
-    />
-</div>
-
-<div class = "col-md-4">
-  <FormKit
-    type="select"
-    name="province"
-    label="Province/State"
-    validation="required"
-    :options="[ { label:'Select Province',value:null},{label: 'Nova Scotia', value: 'NS' },
-  { label: 'Ontario', value: 'ON' },
-  { label: 'Quebec', value: 'QC' },]"
-  />
-</div>
-<div class = "col-md-4">
-<FormKit
-  type="text"
-  label="Postal Zip Code"
-  :validation="[['required'], ['matches', /^\w\d\w \w\d\w$/, /^\w\d\w-\w\d\w$/,/^\w\d\w\w\d\w$/]]"
-  help="format: a1b-c2d | a1bc2d | a1b c2d"
-/>
-</div>
-</div>
-<FormKit
-      type="text"
-      name="email"
-      id="email"
-      validation="required|email"
-      label="Email"
-      placeholder="abc@abc.com"
-    />
-    <FormKit
-      type="password"
-      name="password"
-      validation="required"
-      label="Password"
-      placeholder="Password"
-    />
-    <FormKit
-      type="password"
-      name="password_confirm"
-      validation="required|confirm"
-      label="Confirm Password"
-      placeholder="Re-Enter Password"
-    />
-  <FormKit
-type="file"
-label="Photo of Government ID"
-accept=".pdf,.jpg,.jpeg,.png"
-help="Upload a goverment approved ID such as Driving License or Passport"
-validation="required"
-/>
-
-    <FormKit
-      type="checkbox"
-      label="Terms and Conditions"
-      help="Do you agree to our terms of service?"
-      name="terms"
-      :value="false"
-      validation="accepted"
-      validation-visibility="dirty"
-    />
-
-
-</FormKit>
-
-<FormKit type="button" :ignore="false" @click="loginRedirect">
-  Already have an account? Sign In!
-
-</FormKit>
-
-
-
 </template>
 <script lang="ts">
 import router from "@/router";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
-  data(){
-    return{
   data() {
     return {
-      states : [
+      states: [
         "Alberta",
         "British Columbia",
         "Manitoba",
@@ -298,9 +254,9 @@ export default defineComponent({
         "Quebec",
         "Saskatchewan",
         "Yukon",
-    ],
-      cities:[{ place : 'Halifax'}, {place : 'DartMouth'}]
-  }
+      ],
+      cities: [{ place: "Halifax" }, { place: "DartMouth" }],
+    };
   },
   props: {
     headerText: {
@@ -320,28 +276,20 @@ export default defineComponent({
       },
     },
   },
-  setup(props) {
-
+  setup(props) {},
+  methods: {
+    route() {
+      router.push("/login");
+    },
+    loginRedirect() {
+      router.push("/login");
+    },
   },
-  methods:{
-  route() {
-    router.push('/login')
-  },
-  loginRedirect(){
-    router.push('/login')
-  }
-}
 });
 </script>
 <style>
 .parent_sect {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-</style>
-<style>
-.parent_sect {
-display: grid;
-grid-template-columns: 1fr 1fr;
 }
 </style>
