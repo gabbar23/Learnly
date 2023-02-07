@@ -1,10 +1,13 @@
 <template>
+  <Navigation />
   <RouterView />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Navigation from './components/seller-registration/Navigation.vue';
 export default defineComponent({
+    components: { Navigation }
 });
 </script>
 <style>
