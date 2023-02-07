@@ -3,18 +3,18 @@ import PropertiesReader from "properties-reader";
 import { dirPath } from "./path";
 
 const properties = PropertiesReader(
-  dirPath.join(__dirname, "../", "../", "config/keys.properties")
+  dirPath.join(__dirname,"../dbconfig/properties.ini")
 );
 
-//creating Database Connection
 const sequelize = new Sequelize(
-  "bid_test",
-  "root",
-  `${properties.get("DBPASSWORD")}`,
+  `${properties.get("dev.db")}`,
+  `${properties.get("dev.username")}`,
+  `${properties.get("dev.password")}`,
   {
-    dialect: "mysql",
-    host: "localhost",
+    dialect:  "mysql",
+    host:  `${properties.get("dev.host")}`,
   }
 );
+
 
 export { sequelize };
