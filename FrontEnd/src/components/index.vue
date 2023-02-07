@@ -1,84 +1,34 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
   <section class="container parent_sect">
-    <div class="form-group">
-      <label for="formGroupExampleInput">First Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">Last Name</label>
-      <input
-        type="text"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">Address Line 1</label>
-      <input
-        type="text"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">Address Line 2</label>
-      <input
-        type="text"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">City</label>
-      <select class="custom-select form-control">
-        <option selected>Select City</option>
-        <option v-for="city in cities">{{ city.place }}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">State</label>
-      <select class="custom-select form-control">
-        <option selected>Open this select menu</option>
-        <option v-for="state in states">{{ state }}</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="formGroupExampleInput">Postal Zip Code</label>
-      <input
-        type="text"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="exampleInputEmail1">Email address</label>
-      <input
-        type="email"
-        class="form-control"
-        id="exampleInputEmail1"
-        aria-describedby="emailHelp"
-        placeholder="Enter email"
-      />
-    </div>
-    <div class="form-group ml-2">
-      <label for="formGroupExampleInput">Phone Number</label>
-      <input
-        type="number"
-        class="form-control"
-        id="formGroupExampleInput"
-        placeholder="Example input"
-      />
-    </div>
+    <FormKit type="text" label="First Name" validation="required|alpha" />
+
+    <FormKit type="text" label="Last Name" validation="required|alpha" />
+
+    <FormKit type="text" label="Address Line 1" validation="required|alpha" />
+
+    <FormKit type="text" label="Address Line 2" validation="required|alpha" />
+
+    <FormKit
+      type="select"
+      label="Select City"
+      :options="cities"
+      validation="required|alpha"
+    />
+
+    <FormKit
+      type="select"
+      label="State"
+      :options="states"
+      validation="required|alpha"
+    />
+
+    <FormKit type="text" label="Postal Zip Code" validation="required|alpha" />
+
+    <FormKit type="email" label="Email" validation="required|alpha" />
+
+    <FormKit type="number" label="Phone Number" validation="required|alpha" />
+
     <!-- <div class="form-group">
         <div class="form-group">
             <label for="formGroupExampleInput">Name of Offering</label>
@@ -96,12 +46,14 @@
   <input type="file" class="custom-file-input" id="customFile">
   <label class="custom-file-label" for="customFile">Choose file</label>
 </div> -->
-    <div class="form-check mt-4">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-      <label class="form-check-label" for="exampleCheck1"
-        >I agree to all Terms and Conditions</label
-      >
-    </div>
+    <FormKit
+      type="checkbox"
+      label="Terms and Conditions"
+      name="terms"
+      :value="false"
+      validation="accepted"
+      validation-visibility="dirty"
+    />
     <!-- <div class="form-group">
         <div class="form-group">
             <label for="formGroupExampleInput">Description</label>
@@ -283,6 +235,9 @@ export default defineComponent({
     },
     loginRedirect() {
       router.push("/login");
+    },
+    selectMade() {
+      console.warn("SELECT mADE HIT");
     },
   },
 });
