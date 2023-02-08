@@ -5,6 +5,14 @@
 
     <FormKit type="text" label="Last Name" validation="required|alpha" />
 
+    <FormKit type="email" label="Email" validation="required|email" />
+
+    <FormKit type="number" label="Phone Number" validation="required|alpha" />
+
+    <FormKit type="text" label="Name Of Offering" validation="required|alpha" />
+
+    <FormKit type="number" label="Estimated Value" validation="required" />
+
     <FormKit type="text" label="Address Line 1" validation="required|alpha" />
 
     <FormKit type="text" label="Address Line 2" validation="required|alpha" />
@@ -25,9 +33,11 @@
 
     <FormKit type="text" label="Postal Zip Code" validation="required|alpha" />
 
-    <FormKit type="email" label="Email" validation="required|alpha" />
+    
 
-    <FormKit type="number" label="Phone Number" validation="required|alpha" />
+    <FormKit type="file" label="Upload Photos" validation="required" />
+
+    <FormKit type="textarea" label="Description" validation="required|alpha" />
 
     <!-- <div class="form-group">
         <div class="form-group">
