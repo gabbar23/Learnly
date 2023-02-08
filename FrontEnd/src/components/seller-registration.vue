@@ -20,14 +20,14 @@
     <FormKit
       type="select"
       label="Select City"
-      :options="cities"
+      :options="[]"
       validation="required|alpha"
     />
 
     <FormKit
       type="select"
       label="State"
-      :options="states"
+      :options="[]"
       validation="required|alpha"
     />
 
@@ -180,22 +180,6 @@ export default defineComponent({
   components: {},
   data() {
     return {
-      states: [
-        "Alberta",
-        "British Columbia",
-        "Manitoba",
-        "New Brunswick",
-        "Newfoundland and Labrador",
-        "Northwest Territories",
-        "Nova Scotia",
-        "Nunavut",
-        "Ontario",
-        "Prince Edward Island",
-        "Quebec",
-        "Saskatchewan",
-        "Yukon",
-      ],
-      cities: [{ place: "Halifax" }, { place: "DartMouth" }],
     };
   },
   props: {
