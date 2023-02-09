@@ -33,8 +33,6 @@
 
     <FormKit type="text" label="Postal Zip Code" validation="required|alpha" />
 
-    
-
     <FormKit type="file" label="Upload Photos" validation="required" />
 
     <FormKit type="textarea" label="Description" validation="required|alpha" />
@@ -48,6 +46,10 @@
       validation-visibility="dirty"
     />
   </section>
+  <div>
+    <p>Address Comp</p>
+    <Address />
+  </div>
   <div class="text-center">
     <button type="submit" class="btn btn-primary">Submit</button>
     <FormKit type="form" @submit="route">
@@ -176,11 +178,11 @@
 import { validation } from "@/constants";
 import router from "@/router";
 import { defineComponent } from "vue";
+import { Address } from "./component";
 export default defineComponent({
-  components: {},
+  components: { Address },
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     headerText: {
