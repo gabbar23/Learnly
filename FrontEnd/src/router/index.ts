@@ -23,6 +23,11 @@ const router = createRouter({
       name: "homepage",
       component: () => import("../components/homepage.vue"),
     },
+    {
+      path: "/admin-dashboard",
+      name: "Admin Dashboard",
+      component: () => import("../components/admin-dashboard.vue"),
+    },
   ],
 });
 
