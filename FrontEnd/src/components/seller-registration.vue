@@ -18,6 +18,7 @@
     <FormKit type="text" label="Address Line 2" validation="required|alpha" />
 
     <FormKit
+      v-model="city"
       type="select"
       label="Select City"
       :options="[]"
@@ -50,7 +51,7 @@
   </section>
   <div class="text-center">
     <button type="submit" class="btn btn-primary">Submit</button>
-    <FormKit type="form" @submit="route">
+    <FormKit type="form" @submit="sellerRegister()">
       <div class="row col-md-12">
         <div class="col-md-4">
           <FormKit type="text" label="First Name" validation="required|alpha" />
@@ -167,7 +168,7 @@
       />
     </FormKit>
 
-    <FormKit type="button" :ignore="false" @click="loginRedirect">
+    <FormKit type="button" :ignore="false" @click="login()">
       Already have an account? Sign In!
     </FormKit>
   </div>
@@ -175,11 +176,14 @@
 <script lang="ts">
 import { validation } from "@/constants";
 import router from "@/router";
+import AuthService from '@/services/AuthService'
+import type { register } from "@formkit/core";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
   data() {
     return {
+      s
     };
   },
   props: {
@@ -202,11 +206,17 @@ export default defineComponent({
   },
   setup(props) {},
   methods: {
-    route() {
+    login() {
       router.push("/login");
     },
-    loginRedirect() {
-      router.push("/login");
+    async sellerRegister() {
+      const response = await AuthService.register({
+        email:"abc@gmail.com",
+        pass: "123"
+      });
+
+      console.log("worked");
+      // router.push("/login");
     },
     selectMade() {
       console.warn("SELECT mADE HIT");
