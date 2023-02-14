@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../util/database";
 
-const CanadaCities = sequelize.define("canadacities", {
+const CanadaRegions = sequelize.define("canadacities", {
 
   city: {
     type: DataTypes.STRING,
@@ -58,4 +58,4 @@ const CanadaCities = sequelize.define("canadacities", {
     timestamps:false
 });
 
-export const cities = CanadaCities;
+export const StatesCity = CanadaRegions;

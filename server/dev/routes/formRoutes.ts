@@ -1,11 +1,11 @@
 import express from "express";
 
-import {fetchCity} from "../controllers/fetchCities";
+import  region from "../controllers/fetchCities";
 
 const router = express.Router();
 
 // POST /api/fetch/fetchCity
-router.get("/fetchCity", fetchCity);
-// router.post("/fetchCity", fetchCity);
+router.get("/fetchStates", region.fetchStates);
+router.get("/fetchCity", region.fetchCity);
 
 export const fetch = router;

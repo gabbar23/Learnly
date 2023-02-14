@@ -98,6 +98,7 @@
 
         <div class="col-md-4">
           <FormKit
+            v-model="state"
             type="select"
             name="province"
             label="Province/State"
@@ -181,9 +182,18 @@ import type { register } from "@formkit/core";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
+  mounted(){
+    setTimeout(()=>{
+      AuthService.getStates()
+      .then((result)=> {
+        this.options = result; 
+      })
+      .catch(()=>console.log("could not fetch."));
+    },100);
+  },
   data() {
     return {
-      s
+      state:[]
     };
   },
   props: {
@@ -203,6 +213,11 @@ export default defineComponent({
         return null;
       },
     },
+  },
+  watch:{
+    state(value){
+
+    }
   },
   setup(props) {},
   methods: {

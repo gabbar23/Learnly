@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
 import { sellerModel } from "./models/sellerModel";
-import { cities } from "./models/citiesState";
+import { StatesCity } from "./models/citiesState";
 
 const app = express();
 
@@ -36,10 +36,10 @@ sellerModel
     console.log(error);
   });
 
-  cities
+  StatesCity
   .sync()
   .then((_) => {
-    console.log("cities Loaded");
+    console.log("Region Loaded");
   })
   .catch((error: Error) => {
     console.log(error);
