@@ -28,6 +28,11 @@ const router = createRouter({
       name: "Admin Dashboard",
       component: () => import("../components/admin-dashboard.vue"),
     },
+    {
+      path: "/make-bid",
+      name: "Make Bidding",
+      component: () => import("../components/online-bidding.vue"),
+    },
   ],
 });
 

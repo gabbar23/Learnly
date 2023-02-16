@@ -11,7 +11,7 @@ export default defineComponent({
 });
 </script>
 <style>
-body{
-  margin:1em;
+body {
+  margin: 1em;
 }
 </style>
