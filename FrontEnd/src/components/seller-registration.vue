@@ -24,12 +24,16 @@
       validation="required|alpha"
     />
 
-    <FormKit
+    <FormKit 
       type="select"
       label="State"
-      :options="[]"
+      placeholder="Select a State"
       validation="required|alpha"
-    />
+    >
+  <optgroup label="States">
+    <option v-for="state in stateOptions" value={{state.province}}>{{state.province}}</option>
+  </optgroup>
+    </FormKit>
 
     <FormKit type="text" label="Postal Zip Code" validation="required|alpha" />
 
@@ -46,13 +50,9 @@
       validation-visibility="dirty"
     />
   </section>
-  <div>
-    <p>Address Comp</p>
-    <Address />
-  </div>
   <div class="text-center">
     <button type="submit" class="btn btn-primary">Submit</button>
-    <FormKit type="form" @submit="route">
+    <FormKit type="form" @submit="sellerRegister()">
       <div class="row col-md-12">
         <div class="col-md-4">
           <FormKit type="text" label="First Name" validation="required|alpha" />
@@ -75,6 +75,7 @@
             label="Buyer/Seller"
             :options="['Buyer', 'Seller']"
             validation="required"
+            
           />
         </div>
       </div>
@@ -99,17 +100,18 @@
 
         <div class="col-md-4">
           <FormKit
+            v-model="stateOptions"
+            id="state"
             type="select"
             name="province"
             label="Province/State"
             validation="required"
-            :options="[
-              { label: 'Select Province', value: null },
-              { label: 'Nova Scotia', value: 'NS' },
-              { label: 'Ontario', value: 'ON' },
-              { label: 'Quebec', value: 'QC' },
-            ]"
-          />
+      
+          >
+          <optgroup label="States">
+            <option v-for="state in stateOptions" value={{state.province}}>{{state.province}}</option>
+          </optgroup>
+          </FormKit>
         </div>
         <div class="col-md-4">
           <FormKit
@@ -169,7 +171,7 @@
       />
     </FormKit>
 
-    <FormKit type="button" :ignore="false" @click="loginRedirect">
+    <FormKit type="button" :ignore="false" @click="login()">
       Already have an account? Sign In!
     </FormKit>
   </div>
@@ -177,12 +179,26 @@
 <script lang="ts">
 import { validation } from "@/constants";
 import router from "@/router";
+import AuthService from '@/services/AuthService'
+import type { register } from "@formkit/core";
 import { defineComponent } from "vue";
 import { Address } from "./component";
 export default defineComponent({
-  components: { Address },
+  components: {},
+  mounted(){
+
+    setTimeout(()=>{
+      AuthService.getStates()
+      .then((result)=> {
+        this.stateOptions= result.data
+      })
+      .catch(()=>console.log("could not fetch."));
+    },100);
+  },
   data() {
-    return {};
+    return {
+      stateOptions:new Array<any>
+    };
   },
   props: {
     headerText: {
@@ -202,13 +218,24 @@ export default defineComponent({
       },
     },
   },
+  watch:{
+    state(value){
+
+    }
+  },
   setup(props) {},
   methods: {
-    route() {
+    login() {
       router.push("/login");
     },
-    loginRedirect() {
-      router.push("/login");
+
+    async sellerRegister() {
+
+      const response = await AuthService.register({});
+
+      console.log("worked");
+
+      // router.push("/login");
     },
     selectMade() {
       console.warn("SELECT mADE HIT");

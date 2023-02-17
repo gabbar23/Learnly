@@ -24,6 +24,10 @@ const Seller = sequelize.define("seller", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-});
+},
+{
+  timestamps:false,
+}
+);
 
 export const sellerModel = Seller;

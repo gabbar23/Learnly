@@ -24,12 +24,15 @@
 
 <script lang="ts">
 import router from '@/router';
+import axios from 'axios';
 import { FormKit } from '@formkit/vue';
 import {defineComponent} from 'vue';
 export default defineComponent({
   methods:
   {
     route(){
+
+      
         router.push("/homepage");
     }
   }
