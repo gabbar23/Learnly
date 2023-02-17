@@ -188,7 +188,6 @@ export default defineComponent({
   components: {},
   mounted(){
 
-  
     setTimeout(()=>{
       AuthService.getStates()
       .then((result)=> {
@@ -230,13 +229,13 @@ export default defineComponent({
     login() {
       router.push("/login");
     },
+
     async sellerRegister() {
-      const response = await AuthService.register({
-        email:"abc@gmail.com",
-        pass: "123"
-      });
+
+      const response = await AuthService.register({});
 
       console.log("worked");
+
       // router.push("/login");
     },
     selectMade() {

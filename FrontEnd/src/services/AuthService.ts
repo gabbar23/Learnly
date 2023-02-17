@@ -9,6 +9,7 @@ export default {
         return Api().get('api/fetch/fetchStates')
     }
     ,
+    //add parameter state name to search city
     getCities(){
         return Api().get('api/fetch/fetchCities')
     }
