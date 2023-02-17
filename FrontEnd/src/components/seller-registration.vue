@@ -18,19 +18,22 @@
     <FormKit type="text" label="Address Line 2" validation="required|alpha" />
 
     <FormKit
-      v-model="city"
       type="select"
       label="Select City"
       :options="[]"
       validation="required|alpha"
     />
 
-    <FormKit
+    <FormKit 
       type="select"
       label="State"
-      :options="[]"
+      placeholder="Select a State"
       validation="required|alpha"
-    />
+    >
+  <optgroup label="States">
+    <option v-for="state in stateOptions" value={{state.province}}>{{state.province}}</option>
+  </optgroup>
+    </FormKit>
 
     <FormKit type="text" label="Postal Zip Code" validation="required|alpha" />
 
@@ -74,6 +77,7 @@
             label="Buyer/Seller"
             :options="['Buyer', 'Seller']"
             validation="required"
+            
           />
         </div>
       </div>
@@ -98,18 +102,18 @@
 
         <div class="col-md-4">
           <FormKit
-            v-model="state"
+            v-model="stateOptions"
+            id="state"
             type="select"
             name="province"
             label="Province/State"
             validation="required"
-            :options="[
-              { label: 'Select Province', value: null },
-              { label: 'Nova Scotia', value: 'NS' },
-              { label: 'Ontario', value: 'ON' },
-              { label: 'Quebec', value: 'QC' },
-            ]"
-          />
+      
+          >
+          <optgroup label="States">
+            <option v-for="state in stateOptions" value={{state.province}}>{{state.province}}</option>
+          </optgroup>
+          </FormKit>
         </div>
         <div class="col-md-4">
           <FormKit
@@ -183,17 +187,19 @@ import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
   mounted(){
+
+  
     setTimeout(()=>{
       AuthService.getStates()
       .then((result)=> {
-        this.options = result; 
+        this.stateOptions= result.data
       })
       .catch(()=>console.log("could not fetch."));
     },100);
   },
   data() {
     return {
-      state:[]
+      stateOptions:new Array<object>
     };
   },
   props: {
