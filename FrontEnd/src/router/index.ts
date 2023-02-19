@@ -43,6 +43,16 @@ const router = createRouter({
       name: "Homepage",
       component: () => import("../components/homepage.vue"),
     },
+    {
+      path: "/make-blind-auction",
+      name: "Blind Auction",
+      component: () => import("../components/blind-auction.vue"),
+    },
+    {
+      path: "/make-sell",
+      name: "Simply Sell",
+      component: () => import("../components/simple-sell.vue"),
+    },
   ],
 });
 
