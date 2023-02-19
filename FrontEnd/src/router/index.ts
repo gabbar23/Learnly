@@ -19,9 +19,9 @@ const router = createRouter({
       component: () => import("../components/login.vue"),
     },
     {
-      path: "/homepage",
-      name: "homepage",
-      component: () => import("../components/homepage.vue"),
+      path: "/interim-homepage",
+      name: "Interim-Homepage",
+      component: () => import("../components/intermediate-homepage.vue"),
     },
     {
       path: "/admin-dashboard",
@@ -32,6 +32,16 @@ const router = createRouter({
       path: "/make-bid",
       name: "Make Bidding",
       component: () => import("../components/online-bidding.vue"),
+    },
+    {
+      path: "/sell-item",
+      name: "Sell Item",
+      component: () => import("../components/sell-item-landing.vue"),
+    },
+    {
+      path: "/homepage",
+      name: "Homepage",
+      component: () => import("../components/homepage.vue"),
     },
   ],
 });

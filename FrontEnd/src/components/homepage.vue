@@ -1,15 +1,18 @@
 // eslint-disable-next-line vue/multi-word-component-names
 <template>
-  <div class="main-section">
+  <div>
     <h2>Home Page</h2>
-    <div class="banner"><h3>Bid For Good</h3></div>
-    <div class="bottom-btn">
-      <button type="button" @click="auction()" class="btn btn-primary">
-        Check Near By Auction
-      </button>
-      <button type="button" @click="sell()" class="btn btn-primary">
-        Sell Your Item
-      </button>
+    <div class="main-section">
+      <div class="main-card card" v-for="slide in 30">
+        <div class="img">
+          <img src="" alt="" />
+        </div>
+        <div>
+          <div>Description</div>
+          <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi eligendi voluptatum id voluptate dolorem, mollitia esse! </div>
+          <div>Price</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,8 +36,19 @@ export default {
 };
 </script>
 <style>
+.main-card {
+  border: 1px solid;
+  max-width: 30vw;
+  margin: 0.5em;
+}
+
+.main-card > .img{
+    height: 30vh;
+}
 .main-section {
-  /* height: 90vh; */
+  height: 30vh;
+  display: flex;
+  flex-wrap: wrap;
 }
 .banner {
   display: flex;
