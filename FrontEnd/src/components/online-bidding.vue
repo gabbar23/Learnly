@@ -1,14 +1,34 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <Carousel>
-    <Slide v-for="slide in 10" :key="slide">
-      <div class="carousel__item">{{ slide }}</div>
-    </Slide>
-    <template #addons>
-      <Navigation />
-      <Pagination />
-    </template>
-  </Carousel>
+  <div class="main-section">
+    <div>
+      <Carousel>
+        <Slide v-for="slide in 10" :key="slide">
+          <div class="carousel__item">{{ slide }}</div>
+        </Slide>
+        <template #addons>
+          <Navigation />
+          <Pagination />
+        </template>
+      </Carousel>
+    </div>
+    <div>
+      <div>
+        <div class="details">
+          <p></p>
+          <div>Closing At:</div>
+
+          <div>Current Max:</div>
+          <div class="d-flex">
+            <label>Bid:</label><FormKit type="text" class="box" />
+            <div>
+              <button class="btn btn-danger">Submit Bid</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,11 +38,14 @@ import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 export default defineComponent({
   components: { Navigation, Carousel, Slide, Pagination },
-
 });
 </script>
 
 <style>
+.main-section {
+  border: 1px solid;
+  width: 50vw;
+}
 .carousel__item {
   min-height: 200px;
   width: 100%;
