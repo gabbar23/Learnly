@@ -1,38 +1,49 @@
+// eslint-disable-next-line vue/multi-word-component-names
 <template>
-  <v-app id="inspire">
-    <v-app-bar
-      app
-      extended
-    >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Application</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <v-container>
-        <v-row>
-          <v-col
-            v-for="n in 24"
-            :key="n"
-            cols="4"
-          >
-            <v-card height="200"></v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  <div class="main-section">
+    <h2>Home Page</h2>
+    <div class="banner"><h3>Bid For Good</h3></div>
+    <div class="bottom-btn">
+      <button type="button" @click="auction()" class="btn btn-primary">
+        Check Near By Auction
+      </button>
+      <button type="button" @click="sell()" class="btn btn-primary">
+        Sell Your Item
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>
-  export default {
-    //
-  }
+export default {
+  setup() {
+    const sell = () => {
+      console.log("Sell");
+    };
+
+    const auction = () => {
+      console.log("Auction");
+    };
+
+    return {
+      sell,
+      auction,
+    };
+  },
+};
 </script>
+<style>
+.main-section {
+  /* height: 90vh; */
+}
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottom-btn > button {
+  margin: 2em;
+  padding: 1em;
+}
+</style>

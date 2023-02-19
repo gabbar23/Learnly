@@ -12,6 +12,6 @@ export default defineComponent({
 </script>
 <style>
 body {
-  margin: 1em;
+  box-sizing: border-box;
 }
 </style>
