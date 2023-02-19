@@ -8,4 +8,5 @@ export { default as AdminDashboard } from "../components/admin-dashboard.vue";
 export { default as OnlineBidding } from "../components/online-bidding.vue";
 export { default as SellItemLanding } from "../components/sell-item-landing.vue";
 export { default as Homepage } from "../components/homepage.vue";
-
+export { default as BlindAuction } from "../components/homepage.vue";
+export { default as SimplySell } from "../components/homepage.vue";
