@@ -36,6 +36,10 @@ const Seller = sequelize.define("seller", {
     type : DataTypes.STRING,
     allowNull:false
   },
+  postalCode:{
+    type:DataTypes.STRING,
+    allowNull:false
+  },
 
   dateOfbirth:{
     type: DataTypes.DATE,

@@ -15,6 +15,14 @@ const registerSeller = (req: Request, res: Response) => {
       lname: lname,
       email: email,
       age: age,
+      phone:req.body.phone,
+      address:req.body.address,
+      password:req.body.password,
+      city: req.body.city,
+      province:req.body.province,
+      postalCode:req.body.postalCode,
+      dateOfbirth:req.body.dateOfbirth
+
     })
     .then((result) => {
       res.status(201).json({
