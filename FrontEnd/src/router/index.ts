@@ -1,3 +1,4 @@
+import { BuyerDetails, DonationDetails, OrderDetails, ReportIssue } from "@/components/component";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -9,9 +10,15 @@ const router = createRouter({
       component: () => import("../components/seller-registration.vue"),
     },
     {
-      path: "/buyer",
+      path: "/",
       name: "buyer",
       component: () => import("../components/buyer-registration.vue"),
+      children:[
+        { path: '/buyer', component: BuyerDetails },
+        { path: '/donations', component: DonationDetails },
+        { path: '/orders', component: OrderDetails },
+        { path: '/report-issue', component: ReportIssue },
+      ]
     },
     {
       path: "/login",

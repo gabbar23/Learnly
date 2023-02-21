@@ -10,3 +10,8 @@ export { default as SellItemLanding } from "../components/sell-item-landing.vue"
 export { default as Homepage } from "../components/homepage.vue";
 export { default as BlindAuction } from "../components/homepage.vue";
 export { default as SimplySell } from "../components/homepage.vue";
+export { default as BuyerDetails } from "../components/buyer-details.vue";
+export { default as DonationDetails } from "../components/donation-details.vue";
+export { default as OrderDetails } from "../components/order-details.vue";
+export { default as ReportIssue } from "../components/report-issue.vue";
+

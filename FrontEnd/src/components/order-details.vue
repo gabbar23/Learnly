@@ -1,18 +1,10 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <div class="main">
-    <section class="side-bar">
-      <div>Details</div>
-      <div>Donations</div>
-      <div>Orders</div>
-      <div>Report</div>
-    </section>
-    <section>
-      <router-view></router-view>
-    </section>
+  <section>
+    <h1>Order Details</h1>
+  </section>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary">Submit</button>
   </div>
-
-  
 </template>
 <script lang="ts">
 import router from "@/router";
