@@ -16,11 +16,8 @@
       <div>
         <div class="details">
           <p></p>
-          <div>Closing At:</div>
-
-          <div>Current Max:</div>
           <div class="d-flex">
-            <label>Bid:</label><FormKit type="text" class="box" />
+            <label>Make Bid:</label><FormKit type="text" class="box" />
             <div>
               <button class="btn btn-danger">Submit Bid</button>
             </div>

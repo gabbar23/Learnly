@@ -1,38 +1,63 @@
+// eslint-disable-next-line vue/multi-word-component-names
 <template>
-  <v-app id="inspire">
-    <v-app-bar
-      app
-      extended
-    >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Application</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-dots-vertical</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <v-container>
-        <v-row>
-          <v-col
-            v-for="n in 24"
-            :key="n"
-            cols="4"
-          >
-            <v-card height="200"></v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+  <div>
+    <h2>Home Page</h2>
+    <div class="main-section">
+      <div class="main-card card" v-for="slide in 30">
+        <div class="img">
+          <img src="" alt="" />
+        </div>
+        <div>
+          <div>Description</div>
+          <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi eligendi voluptatum id voluptate dolorem, mollitia esse! </div>
+          <div>Price</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-  export default {
-    //
-  }
+export default {
+  setup() {
+    const sell = () => {
+      console.log("Sell");
+    };
+
+    const auction = () => {
+      console.log("Auction");
+    };
+
+    return {
+      sell,
+      auction,
+    };
+  },
+};
 </script>
+<style>
+.main-card {
+  border: 1px solid;
+  max-width: 30vw;
+  margin: 0.5em;
+}
+
+.main-card > .img{
+    height: 30vh;
+}
+.main-section {
+  height: 30vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottom-btn > button {
+  margin: 2em;
+  padding: 1em;
+}
+</style>
