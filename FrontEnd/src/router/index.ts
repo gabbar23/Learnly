@@ -1,4 +1,9 @@
-import { BuyerDetails, DonationDetails, OrderDetails, ReportIssue } from "@/components/component";
+import {
+  BuyerDetails,
+  DonationDetails,
+  OrderDetails,
+  ReportIssue,
+} from "@/components/component";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -6,8 +11,8 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "home",
-      component: () => import("../components/registration/seller-registration.vue"),
+      name: "Login",
+      component: () => import("../components/login/user-login.vue"),
     },
     {
       path: "/buyer-details",
@@ -15,23 +20,24 @@ const router = createRouter({
       component: () => import("../components/registration/buyer-details.vue"),
     },
     {
-      path: "/",
+      path: "/buyer",
       name: "buyer",
-      component: () => import("../components/registration/buyer-registration.vue"),
-      children:[
-        { path: '/buyer', component: BuyerDetails },
-        { path: '/donations', component: DonationDetails },
-        { path: '/orders', component: OrderDetails },
-        { path: '/report-issue', component: ReportIssue },
-      ]
+      component: () =>
+        import("../components/registration/buyer-registration.vue"),
+      children: [
+        { path: "/buyer", component: BuyerDetails },
+        { path: "/donations", component: DonationDetails },
+        { path: "/buyer/orders", component: OrderDetails },
+        { path: "/buyer/report-issue", component: ReportIssue },
+      ],
     },
     {
-      path: "/login",
-      name: "login",
-      component: () => import("../components/login/user-login.vue"),
+      path: "/home",
+      name: "Home",
+      component: () => import("../components/homepage.vue"),
     },
     {
-      path: "/interim-homepage",
+      path: "/interim-home",
       name: "Interim-Homepage",
       component: () => import("../components/intermediate-homepage.vue"),
     },
@@ -64,6 +70,16 @@ const router = createRouter({
       path: "/make-sell",
       name: "Simply Sell",
       component: () => import("../components/auction/simple-sell.vue"),
+    },
+    {
+      path: "/reg-buyer",
+      name: "Buyer Registration",
+      component: () => import("../components/registration/buyer-details.vue"),
+    },
+    {
+      path: "/reg-seller",
+      name: "Seller Registration",
+      component: () => import("../components/registration/seller-registration.vue"),
     },
   ],
 });

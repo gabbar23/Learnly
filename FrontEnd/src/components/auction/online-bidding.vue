@@ -2,6 +2,7 @@
 <template>
   <div class="main-section">
     <div>
+      <h3>Live Bidding</h3>
       <Carousel>
         <Slide v-for="slide in 10" :key="slide">
           <div class="carousel__item">{{ slide }}</div>

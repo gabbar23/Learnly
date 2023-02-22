@@ -7,7 +7,7 @@
       <h1>Bid 4 Good</h1>
     </div>
     <div class="col-sm-4 col-xs-4">
-      <a class="nav-link ml-auto" href="/">Home </a>
+      <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
     </div>
     <div></div>
   </nav>

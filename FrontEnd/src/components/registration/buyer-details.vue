@@ -1,72 +1,88 @@
 <template>
-      <FormKit type="form" @submit="login">
-        <section class="container parent_sect">
+  <div>
+    <FormKit type="button" :ignore="false" @click="SellerRegistraion()">
+      Register as Seller
+    </FormKit>
+  </div>
+  <FormKit type="form" @submit="login">
+    <section class="container parent_sect">
+      <FormKit type="text" label="First Name" validation="required|alpha" />
 
-        <FormKit type="text" label="First Name" validation="required|alpha" />
+      <FormKit type="text" label="Last Name" validation="required|alpha" />
 
-    <FormKit type="text" label="Last Name" validation="required|alpha" />
+      <FormKit type="email" label="Email" validation="required|email" />
 
-    <FormKit type="email" label="Email" validation="required|email" />
+      <FormKit
+        type="number"
+        label="Phone Number"
+        validation="required|number"
+      />
 
-    <FormKit type="number" label="Phone Number" validation="required|number" />
+      <FormKit
+        type="text"
+        label="Address Line 1"
+        validation="required|alphanumeric"
+      />
 
-    <FormKit type="text" label="Address Line 1" validation="required|alphanumeric" />
+      <FormKit
+        type="text"
+        label="Address Line 2"
+        validation="required|alphanumeric"
+      />
 
-    <FormKit type="text" label="Address Line 2" validation="required|alphanumeric" />
+      <FormKit
+        type="select"
+        label="Select City"
+        :options="[]"
+        validation="required|alpha"
+      />
 
-    <FormKit
-      type="select"
-      label="Select City"
-      :options="[]"
-      validation="required|alpha"
-    />
+      <FormKit
+        type="select"
+        label="State"
+        :options="[]"
+        validation="required|alpha"
+      />
 
-    <FormKit
-      type="select"
-      label="State"
-      :options="[]"
-      validation="required|alpha"
-    />
+      <FormKit
+        type="text"
+        label="Postal Zip Code"
+        :validation="[
+          ['required'],
+          ['matches', /^\w\d\w \w\d\w$/, /^\w\d\w-\w\d\w$/, /^\w\d\w\w\d\w$/],
+        ]"
+        help="format: a1b-c2d | a1bc2d | a1b c2d"
+      />
 
-    <FormKit type="text"
-            label="Postal Zip Code"
-            :validation="[
-              ['required'],
-              [
-                'matches',
-                /^\w\d\w \w\d\w$/,
-                /^\w\d\w-\w\d\w$/,
-                /^\w\d\w\w\d\w$/,
-              ],
-            ]"
-            help="format: a1b-c2d | a1bc2d | a1b c2d"/>
-
-    <FormKit 
-        type="file" 
-        label="Photo of Government ID" 
-        validation="required" 
+      <FormKit
+        type="file"
+        label="Photo of Government ID"
+        validation="required"
         accept=".pdf,.jpg,.jpeg,.png"
         help="Upload a goverment approved ID such as Driving License or Passport. 
         Only .pdf,.jpg,.jpeg,.png files allowed"
-        />
-    <FormKit type="textarea" label="Description" validation="required|alpha" />
+      />
+      <FormKit
+        type="textarea"
+        label="Description"
+        validation="required|alpha"
+      />
 
-    <FormKit
-      type="checkbox"
+      <FormKit
+        type="checkbox"
         label="Terms and Conditions"
         help="Do you agree to our terms of service?"
         name="terms"
         :value="false"
         validation="accepted"
         validation-visibility="dirty"
-    />
-  </section>
-
+      />
+    </section>
   </FormKit>
 
   <FormKit type="button" :ignore="false" @click="login()">
-      Already have an account? Sign In!
-    </FormKit>
+    Already have an account? Sign In!
+  </FormKit>
 </template>
 <script lang="ts">
 import router from "@/router";
@@ -95,13 +111,17 @@ export default defineComponent({
     },
   },
   setup(props) {},
-  methods: {login() {
+  methods: {
+    login() {
       router.push("/login");
     },
-    sellerRegistrationPage(){
+    sellerRegistrationPage() {
       router.push("/");
     },
-},
+    SellerRegistraion(){
+      router.push("/reg-seller");
+    }
+  },
 });
 </script>
 <style>

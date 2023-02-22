@@ -2,8 +2,8 @@
 <template>
   <div>
     <h2>Home Page</h2>
-    <div class="main-section">
-      <div class="main-card card" v-for="slide in 30">
+    <div class="main-section main-card">
+      <div class=" card" v-for="slide in 30">
         <div class="img">
           <img src="" alt="" />
         </div>
@@ -37,13 +37,10 @@ export default {
 </script>
 <style>
 .main-card {
-  border: 1px solid;
-  max-width: 30vw;
-  margin: 0.5em;
+
 }
 
 .main-card > .img{
-    height: 30vh;
 }
 .main-section {
   height: 30vh;
