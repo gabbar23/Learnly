@@ -5,7 +5,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Navigation from "./components/navigation.vue";
+import Navigation from "../src/components/navigation/Navigation.vue";
 export default defineComponent({
   components: { Navigation },
 });

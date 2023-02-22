@@ -7,12 +7,17 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../components/seller-registration.vue"),
+      component: () => import("../components/registration/seller-registration.vue"),
+    },
+    {
+      path: "/buyer-details",
+      name: "buyer details",
+      component: () => import("../components/registration/buyer-details.vue"),
     },
     {
       path: "/",
       name: "buyer",
-      component: () => import("../components/buyer-registration.vue"),
+      component: () => import("../components/registration/buyer-registration.vue"),
       children:[
         { path: '/buyer', component: BuyerDetails },
         { path: '/donations', component: DonationDetails },
@@ -23,7 +28,7 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      component: () => import("../components/login.vue"),
+      component: () => import("../components/login/user-login.vue"),
     },
     {
       path: "/interim-homepage",
@@ -38,12 +43,12 @@ const router = createRouter({
     {
       path: "/make-bid",
       name: "Make Bidding",
-      component: () => import("../components/online-bidding.vue"),
+      component: () => import("../components/auction/online-bidding.vue"),
     },
     {
       path: "/sell-item",
       name: "Sell Item",
-      component: () => import("../components/sell-item-landing.vue"),
+      component: () => import("../components/auction/sell-item-landing.vue"),
     },
     {
       path: "/homepage",
@@ -53,12 +58,12 @@ const router = createRouter({
     {
       path: "/make-blind-auction",
       name: "Blind Auction",
-      component: () => import("../components/blind-auction.vue"),
+      component: () => import("../components/auction/blind-auction.vue"),
     },
     {
       path: "/make-sell",
       name: "Simply Sell",
-      component: () => import("../components/simple-sell.vue"),
+      component: () => import("../components/auction/simple-sell.vue"),
     },
   ],
 });
