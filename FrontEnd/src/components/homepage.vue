@@ -40,7 +40,9 @@ export default {
 </script>
 <style>
 .main-card {
-
+  border: 1px solid;
+  max-width: 30vw;
+  margin: 0.5em;
 }
 
 .main-card > .img {
