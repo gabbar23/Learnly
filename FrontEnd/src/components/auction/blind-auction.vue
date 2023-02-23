@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div class="main-section">
+  <div class="main-section w-50 mx-auto m-2">
     <div>
       <Carousel>
         <Slide v-for="slide in 10" :key="slide">
@@ -16,11 +16,10 @@
       <div>
         <div class="details">
           <p></p>
-          <div class="d-flex">
-            <label>Make Bid:</label><FormKit type="text" class="box" />
-            <div>
-              <button class="btn btn-danger">Submit Bid</button>
-            </div>
+          <div class = "d-flex">
+            <div class = "mr-4">Make Bid</div>
+            <FormKit  type="text" />
+            <button class="btn btn-danger ml-5">Submit Bid</button>
           </div>
         </div>
       </div>

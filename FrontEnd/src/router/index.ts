@@ -46,7 +46,7 @@ const router = createRouter({
       component: () => import("../components/auction/online-bidding.vue"),
     },
     {
-      path: "/sell-item",
+      path: "/sell-item",// I dont think so its needed anymore
       name: "Sell Item",
       component: () => import("../components/auction/sell-item-landing.vue"),
     },
