@@ -1,25 +1,18 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div class="main-section">
-    <div>
-      <h3>Simple Sell</h3>
-      <Carousel>
-        <Slide v-for="slide in 10" :key="slide">
-          <div class="carousel__item">{{ slide }}</div>
-        </Slide>
-        <template #addons>
-          <Navigation />
-          <Pagination />
-        </template>
-      </Carousel>
-    </div>
-    <div>
-      <div>
-        <div class="details">
-          <p></p>
-          <button class="btn btn-danger">Pay</button>
-        </div>
-      </div>
+  <div class="main-section w-50 mx-auto m-2">
+    <h3>Simple Sell</h3>
+    <Carousel>
+      <Slide v-for="slide in 10" :key="slide">
+        <div class="carousel__item">{{ slide }}</div>
+      </Slide>
+      <template #addons>
+        <Navigation />
+        <Pagination />
+      </template>
+    </Carousel>
+    <div class="mx-auto">
+      <button class="btn btn-danger">Pay</button>
     </div>
   </div>
 </template>
