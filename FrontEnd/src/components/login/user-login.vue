@@ -1,5 +1,4 @@
 <template>
-
   <FormKit type="form" @submit="route" class="parent_sect">
     <FormKit
       type="text"
@@ -19,22 +18,21 @@
       placeholder="Password"
     />
   </FormKit>
-  
+  <div>
+    <p>Not a Registered User? <router-link to="/reg-buyer">SignUp</router-link></p>
+  </div>
 </template>
 
 <script lang="ts">
-import router from '@/router';
-import axios from 'axios';
-import { FormKit } from '@formkit/vue';
-import {defineComponent} from 'vue';
+import router from "@/router";
+import axios from "axios";
+import { FormKit } from "@formkit/vue";
+import { defineComponent } from "vue";
 export default defineComponent({
-  methods:
-  {
-    route(){
-
-      
-        router.push("/homepage");
-    }
-  }
-})
+  methods: {
+    route() {
+      router.push("/homepage");
+    },
+  },
+});
 </script>

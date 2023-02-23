@@ -2,6 +2,7 @@
 <template>
   <div class="main-section w-50 mx-auto m-2">
     <div>
+      <h3>Blind Auction</h3>
       <Carousel>
         <Slide v-for="slide in 10" :key="slide">
           <div class="carousel__item">{{ slide }}</div>

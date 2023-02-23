@@ -2,17 +2,17 @@
 <template>
   <div class="main">
     <section class="side-bar">
-      <div>Details</div>
-      <div>Donations</div>
-      <div>Orders</div>
-      <div>Report</div>
+      <div><router-link to="/buyer">Details</router-link></div>
+      <!-- <div><router-link to="/buyer">SignUp</router-link>Donations</div> -->
+      <div><router-link to="/buyer/orders">Orders</router-link></div>
+      <div>
+        <router-link to="/buyer/report-issue">Report an Issue</router-link>
+      </div>
     </section>
     <section>
       <router-view></router-view>
     </section>
   </div>
-
-  
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
