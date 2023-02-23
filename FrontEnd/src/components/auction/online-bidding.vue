@@ -1,9 +1,9 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div class="main-section">
-    <div>
-      <Carousel>
-        <Slide v-for="slide in 10" :key="slide">
+  <div class="main-section w-50 mx-auto m-2">
+    <div class = "w-100 m-1">
+      <Carousel :autoplay="2000" :wrap-around="true">
+        <Slide v-for="slide in 4" :key="slide">
           <div class="carousel__item">{{ slide }}</div>
         </Slide>
         <template #addons>
@@ -13,17 +13,15 @@
       </Carousel>
     </div>
     <div>
-      <div>
+      <div class = "row">
         <div class="details">
-          <p></p>
-          <div>Closing At:</div>
-
-          <div>Current Max:</div>
-          <div class="d-flex">
-            <label>Bid:</label><FormKit type="text" class="box" />
-            <div>
-              <button class="btn btn-danger">Submit Bid</button>
-            </div>
+          <div>Description</div>
+          <div>Closing At: 40$</div>
+          <div>Current Max: 40$</div>
+          <div class = "d-flex">
+            <div class = "mr-4">Make Bid</div>
+            <FormKit  type="text" />
+            <button class="btn btn-danger ml-5">Submit Bid</button>
           </div>
         </div>
       </div>
@@ -42,9 +40,16 @@ export default defineComponent({
 </script>
 
 <style>
+.in {
+  display: inline-block;
+}
+
+.details > div{
+  padding: 2em;
+}
+
 .main-section {
   border: 1px solid;
-  width: 50vw;
 }
 .carousel__item {
   min-height: 200px;

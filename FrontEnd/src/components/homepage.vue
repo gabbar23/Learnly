@@ -2,14 +2,17 @@
 <template>
   <div>
     <h2>Home Page</h2>
-    <div class="main-section">
+    <div class="main-home-section">
       <div class="main-card card" v-for="slide in 30">
         <div class="img">
           <img src="" alt="" />
         </div>
         <div>
           <div>Description</div>
-          <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi eligendi voluptatum id voluptate dolorem, mollitia esse! </div>
+          <div>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi
+            eligendi voluptatum id voluptate dolorem, mollitia esse!
+          </div>
           <div>Price</div>
         </div>
       </div>
@@ -42,10 +45,10 @@ export default {
   margin: 0.5em;
 }
 
-.main-card > .img{
-    height: 30vh;
+.main-card > .img {
+  height: 30vh;
 }
-.main-section {
+.main-home-section {
   height: 30vh;
   display: flex;
   flex-wrap: wrap;
