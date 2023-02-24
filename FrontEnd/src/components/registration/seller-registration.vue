@@ -5,107 +5,116 @@
       Register as Buyer
     </FormKit>
   </section>
-    <FormKit type="form" @submit="sellerRegister()">
-      
-      <section class="container parent_sect">
-        
-    <FormKit type="text" label="First Name" validation="required|alpha" />
+  <FormKit type="form" @submit="sellerRegister()">
+    <section class="container parent_sect">
+      <FormKit type="text" label="First Name" validation="required|alpha" />
 
-    <FormKit type="text" label="Last Name" validation="required|alpha" />
+      <FormKit type="text" label="Last Name" validation="required|alpha" />
 
-    <FormKit type="email" label="Email" validation="required|email" />
+      <FormKit type="email" label="Email" validation="required|email" />
 
-    <FormKit type="number" label="Phone Number" validation="required|number" />
+      <FormKit
+        type="number"
+        label="Phone Number"
+        validation="required|number"
+      />
 
-    <FormKit type="text" label="Name Of Offering" validation="required|alpha" />
+      <FormKit
+        type="text"
+        label="Name Of Offering"
+        validation="required|alpha"
+      />
 
-    <FormKit type="number" label="Estimated Value" validation="required|number" />
+      <FormKit
+        type="number"
+        label="Estimated Value"
+        validation="required|number"
+      />
 
-    <FormKit type="text" label="Address Line 1" validation="required|alpha" />
+      <FormKit type="text" label="Address Line 1" validation="required|alpha" />
 
-    <FormKit type="text" label="Address Line 2" validation="required|alpha" />
+      <FormKit type="text" label="Address Line 2" validation="required|alpha" />
 
-    <FormKit
-      type="select"
-      label="Select City"
-      :options="[]"
-      validation="required|alpha"
-    />
+      <FormKit
+        type="select"
+        label="Select City"
+        :options="[]"
+        validation="required|alpha"
+      />
 
-    <FormKit 
-      type="select"
-      label="State"
-      placeholder="Select a State"
-      validation="required|alpha"
-    >
-  <optgroup label="States">
-    <option v-for="state in stateOptions" value={{state.province}}>{{state.province}}</option>
-  </optgroup>
-    </FormKit>
+      <FormKit
+        type="select"
+        label="State"
+        placeholder="Select a State"
+        validation="required|alpha"
+      >
+        <optgroup label="States">
+          <option v-for="state in stateOptions" value="{{state.province}}">
+            {{ state.province }}
+          </option>
+        </optgroup>
+      </FormKit>
 
-    <FormKit type="text"
-            label="Postal Zip Code"
-            :validation="[
-              ['required'],
-              [
-                'matches',
-                /^\w\d\w \w\d\w$/,
-                /^\w\d\w-\w\d\w$/,
-                /^\w\d\w\w\d\w$/,
-              ],
-            ]"
-            help="format: a1b-c2d | a1bc2d | a1b c2d"/>
+      <FormKit
+        type="text"
+        label="Postal Zip Code"
+        :validation="[
+          ['required'],
+          ['matches', /^\w\d\w \w\d\w$/, /^\w\d\w-\w\d\w$/, /^\w\d\w\w\d\w$/],
+        ]"
+        help="format: a1b-c2d | a1bc2d | a1b c2d"
+      />
 
-    
-    <FormKit 
-        type="file" 
-        label="Photo of Government ID" 
-        validation="required" 
+      <FormKit
+        type="file"
+        label="Photo of Government ID"
+        validation="required"
         accept=".pdf,.jpg,.jpeg,.png"
         help="Upload a goverment approved ID such as Driving License or Passport. 
         Only .pdf,.jpg,.jpeg,.png files allowed"
-        />
+      />
 
-    <FormKit type="textarea" label="Description" validation="required|alpha" />
+      <FormKit
+        type="textarea"
+        label="Description"
+        validation="required|alpha"
+      />
 
-    <FormKit
-      type="checkbox"
+      <FormKit
+        type="checkbox"
         label="Terms and Conditions"
         help="Do you agree to our terms of service?"
         name="terms"
         :value="false"
         validation="accepted"
         validation-visibility="dirty"
-    />
-  </section>
-
+      />
+    </section>
   </FormKit>
-    <FormKit type="button" :ignore="false" @click="login()">
-      Already have an account? Sign In!
-    </FormKit>
-  
+  <FormKit type="button" :ignore="false" @click="login()">
+    Already have an account? Sign In!
+  </FormKit>
 </template>
 <script lang="ts">
 import { validation } from "@/constants";
 import router from "@/router";
-import AuthService from '@/services/AuthService'
+import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
 import { defineComponent } from "vue";
 export default defineComponent({
   components: {},
-  mounted(){
-
-    setTimeout(()=>{
+  mounted() {
+    setTimeout(() => {
       AuthService.getStates()
-      .then((result)=> {
-        this.stateOptions= result.data
-      })
-      .catch(()=>console.log("could not fetch."));
-    },100);
+        .then((result) => {
+          this.stateOptions = result.data;
+        })
+        .catch(() => console.log("could not fetch."));
+    }, 100);
   },
   data() {
     return {
-      stateOptions:new Array<any>
+      stateOptions: new Array<any>(),
     };
   },
   props: {
@@ -126,22 +135,19 @@ export default defineComponent({
       },
     },
   },
-  watch:{
-    state(value){
-
-    }
+  watch: {
+    state(value) {},
   },
   setup(props) {},
   methods: {
     login() {
       router.push("/login");
     },
-    buyerPage(){
+    buyerPage() {
       router.push("/buyer-details");
     },
 
     async sellerRegister() {
-
       const response = await AuthService.register({});
 
       console.log("worked");
