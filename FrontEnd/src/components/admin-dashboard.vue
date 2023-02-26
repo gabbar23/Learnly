@@ -6,15 +6,19 @@
         <th class="text-left">Address</th>
         <th class="text-left">Email</th>
         <th class="text-left">Phone</th>
-
+        <th class="text-left">Action</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item in desserts" :key="item.name">
         <td>{{ item.name }}</td>
         <td>{{ item.calories }}</td>
-        <td>test@123.com</td>
-        <td>981223455</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.phone }}</td>
+        <td>
+          <button class="btn btn-primary">Approve</button>
+          <button class="ml-2 btn btn-danger">Decline</button>
+        </td>
       </tr>
     </tbody>
   </v-table>
@@ -33,44 +37,64 @@ export default {
       page: 1,
       desserts: [
         {
-          name: "Frozen Yogurt",
+          name: "Sonia Sobush",
           calories: 159,
+          email: "soniasob@gmail.com",
+          phone: "+1 782-882-4928",
         },
         {
-          name: "Ice cream sandwich",
+          name: "Timothy Nguyen",
           calories: 237,
+          email: "timNguyen@gmail.com",
+          phone: "+1 873-882-7843",
         },
         {
-          name: "Eclair",
+          name: "Lisa Mitch",
           calories: 262,
+          email: "LisaMit@yahoo.com",
+          phone: "+1 787-342-1245",
         },
         {
-          name: "Cupcake",
+          name: "Bobbi Zara",
           calories: 305,
+          email: "BobbiAST@gmail.com",
+          phone: "+1 430-234-3252",
         },
         {
-          name: "Gingerbread",
+          name: "Mahesh Singh",
           calories: 356,
+          email: "maheshS@gmail.com",
+          phone: "+1 743-324-5839",
         },
         {
-          name: "Jelly bean",
+          name: "Harmeet Singh",
           calories: 375,
+          email: "harmeetSi@gmail.com",
+          phone: "+1 983-323-4323",
         },
         {
-          name: "Lollipop",
+          name: "Jack Reacher",
           calories: 392,
+          email: "JackReacher1@gmail.com",
+          phone: "+1 734-325-2346",
         },
         {
-          name: "Honeycomb",
+          name: "Jimmy",
           calories: 408,
+          email: "jimmmyben@gmail.com",
+          phone: "+1 984-324-5342",
         },
         {
-          name: "Donut",
+          name: "Diana",
           calories: 452,
+          email: "dianaD@gmail.com",
+          phone: "+1 874-324-4234",
         },
         {
-          name: "KitKat",
+          name: "Oriyomi",
           calories: 518,
+          email: "oriyomiO@gmail.com",
+          phone: "+1 859-324-3423",
         },
       ],
     };
