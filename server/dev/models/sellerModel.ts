@@ -20,10 +20,40 @@ const Seller = sequelize.define("seller", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  password:{
+    type:DataTypes.STRING,
+    allowNull:false
+  },
   age: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  address:{
+    type: DataTypes.STRING,
+    allowNull : true,
+  },
+  phone:{
+    type : DataTypes.STRING,
+    allowNull:false
+  },
+  postalCode:{
+    type:DataTypes.STRING,
+    allowNull:false
+  },
+
+  dateOfbirth:{
+    type: DataTypes.DATE,
+    allowNull:false
+  },
+  city:{
+    type: DataTypes.STRING,
+    allowNull:false
+  },
+  province:{
+    type:DataTypes.STRING,
+    allowNull:false    
+  }
+
 },
 {
   timestamps:false,

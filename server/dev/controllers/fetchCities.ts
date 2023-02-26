@@ -26,10 +26,11 @@ const fetchStates = (req : Request, res : Response ) => {
 
     const fetchCity = ( req : Request ,res : Response ) => {
 
+        console.log(req.body);
         StatesCity
           .findAll({
               where: {
-                province_name: "Nova Scotia"
+                province_name: req.query.state
             },
               order: [ 
                   ['city','ASC']
@@ -40,7 +41,9 @@ const fetchStates = (req : Request, res : Response ) => {
           }).then((result)=>{
               console.log(req);
               res.send(result);
-          })
+          }).catch((result)=>{
+            res.send(result);
+          });
 
         }
 //Getting city and States

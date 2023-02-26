@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { sellerModel } from "../models/sellerModel";
 
 //register User
-export const registerSeller = (req: Request, res: Response) => {
+const registerSeller = (req: Request, res: Response) => {
   const fname = req.body.fname;
   const lname = req.body.lname;
   const email = req.body.email;
@@ -15,6 +15,14 @@ export const registerSeller = (req: Request, res: Response) => {
       lname: lname,
       email: email,
       age: age,
+      phone:req.body.phone,
+      address:req.body.address,
+      password:req.body.password,
+      city: req.body.city,
+      province:req.body.province,
+      postalCode:req.body.postalCode,
+      dateOfbirth:req.body.dateOfbirth
+
     })
     .then((result) => {
       res.status(201).json({
@@ -27,3 +35,21 @@ export const registerSeller = (req: Request, res: Response) => {
       });
     });
 };
+
+const showUser = (req : Request , res : Response) =>{
+
+    console.log(req);
+    sellerModel.findAll({
+      
+      attributes: [
+          "fname","lname","address","email","phone"
+      ]
+  }).then((result)=>{
+      res.send(result);
+  })
+}
+
+export default{
+  registerSeller,
+  showUser,  
+}
