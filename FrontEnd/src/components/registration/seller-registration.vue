@@ -46,10 +46,10 @@
         type="select"
         label="State"
         placeholder="Select a State"
-        validation="required|alpha"
+        validation="required"
       >
         <optgroup label="States">
-          <option v-for="state in stateOptions" value="{{state.province}}">
+          <option v-for="state in states" value="state.province">
             {{ state.province }}
           </option>
         </optgroup>
@@ -97,66 +97,39 @@
 </template>
 <script lang="ts">
 import { validation } from "@/constants";
+import type { IGetStateDetails } from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   components: {},
-  mounted() {
-    setTimeout(() => {
-      AuthService.getStates()
-        .then((result) => {
-          this.stateOptions = result.data;
-        })
-        .catch(() => console.log("could not fetch."));
-    }, 100);
-  },
-  data() {
-    return {
-      stateOptions: new Array<any>(),
-    };
-  },
-  props: {
-    headerText: {
-      type: String,
-      default: "header",
-    },
-    list: {
-      type: Array,
-      default: () => {
-        return [];
-      },
-    },
-    options: {
-      type: Object,
-      default: () => {
-        return null;
-      },
-    },
-  },
-  watch: {
-    state(value) {},
-  },
-  setup(props) {},
-  methods: {
-    login() {
+  setup(props) {
+    const states = ref<IGetStateDetails[]>([]);
+    onMounted(async () => {
+      try {
+        let response = await AuthService.getStates();
+        states.value = response.data;
+      } catch (e) {
+        console.error("Error in fetching states", e);
+      }
+    });
+    const login = () => {
       router.push("/login");
-    },
-    buyerPage() {
+    };
+    const buyerPage = () => {
       router.push("/buyer-details");
-    },
+    };
 
-    async sellerRegister() {
+    const sellerRegister = async () => {
       const response = await AuthService.register({});
-
       console.log("worked");
-
-      // router.push("/login");
-    },
-    selectMade() {
+    };
+    const selectMade = async () => {
       console.warn("SELECT MADE HIT");
-    },
+    };
+
+    return { states, login, buyerPage,sellerRegister, selectMade };
   },
 });
 </script>
