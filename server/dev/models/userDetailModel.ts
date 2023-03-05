@@ -45,6 +45,12 @@ const UserDetailModel = sequelize.define("UserDetail", {
   updatedAt: {
     type: DataTypes.DATE,
   },
+  cityName: {
+    type: DataTypes.STRING,
+  },
+  provinceName: {
+    type: DataTypes.STRING,
+  },
 });
 
 export const UserDetail = UserDetailModel;

@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import { sellerModel } from "../models/sellerModel";
-
+import { UserDetail } from "../models/userDetailModel";
 //register User
 export const registerSeller = (req: Request, res: Response) => {
   const fname = req.body.fname;
   const lname = req.body.lname;
   const email = req.body.email;
   const age = req.body.age;
+
+  console.log(req.body);
 
   //saving data in db
   sellerModel
@@ -26,4 +28,6 @@ export const registerSeller = (req: Request, res: Response) => {
         message: err,
       });
     });
+
+  UserDetail.create();
 };
