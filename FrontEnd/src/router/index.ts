@@ -25,7 +25,7 @@ const router = createRouter({
       component: () =>
         import("../components/registration/buyer-registration.vue"),
       children: [
-        { path: "", component: BuyerDetails },
+        { path: "", name: "Buyer Details", component: BuyerDetails },
         { path: "/donations", component: DonationDetails },
         { path: "/buyer/orders", component: OrderDetails },
         { path: "/buyer/report-issue", component: ReportIssue },
@@ -52,7 +52,7 @@ const router = createRouter({
       component: () => import("../components/auction/online-bidding.vue"),
     },
     {
-      path: "/sell-item",// I dont think so its needed anymore
+      path: "/sell-item", // I dont think so its needed anymore
       name: "Sell Item",
       component: () => import("../components/auction/sell-item-landing.vue"),
     },
@@ -79,7 +79,8 @@ const router = createRouter({
     {
       path: "/reg-seller",
       name: "Seller Registration",
-      component: () => import("../components/registration/seller-registration.vue"),
+      component: () =>
+        import("../components/registration/seller-registration.vue"),
     },
   ],
 });
