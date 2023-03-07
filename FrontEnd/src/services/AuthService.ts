@@ -1,4 +1,7 @@
-import type { IGetState, IGetUserDetails } from "@/interfaces/seller-registration";
+import type {
+  IGetState,
+  IGetUserDetails,
+} from "@/interfaces/seller-registration";
 import apiClient from "../axios";
 
 export default {
@@ -13,15 +16,15 @@ export default {
     return apiClient.get("api/fetch/fetchCity");
   },
 
-  checkUserExist(email:string){
-    return apiClient.post("api/v1/register/is-user-present", {email});
+  checkUserExist(email: string) {
+    return apiClient.post("api/v1/register/is-user-present", { email });
   },
 
-  uploadImage(formData:any, config:any){
-    return apiClient.post("api/fetch/single-upload",formData,config);
+  uploadImage(formData: any, config: any) {
+    return apiClient.post("api/fetch/single-upload", formData, config);
   },
 
-  getUploadImage(){
+  getUploadImage() {
     return apiClient.get("api/fetch/upload");
   },
 };

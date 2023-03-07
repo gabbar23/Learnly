@@ -1,54 +1,61 @@
 import { Request, Response } from "express";
-import { sellerModel } from "../models/sellerModel";
-
+// import { sellerModel } from "../models/sellerModel";
+import { UserDetail } from "../models/userDetailModel";
 //register User
-const registerSeller = (req: Request, res: Response) => {
-  const fname = req.body.fname;
-  const lname = req.body.lname;
+export const registerUser = async (req: Request, res: Response) => {
+  const firstNames = req.body.firstName;
+  const lastName = req.body.lastName;
   const email = req.body.email;
   const age = req.body.age;
+  const dateOfBirth = req.body.dateOfBirth;
+  const gender = req.body.gender;
+  const isVerified = req.body.isVerified;
+  const phone = req.body.phone;
+  const streetAddress = req.body.streetAddress;
+  const cityName = req.body.cityName;
+  const provinceName = req.body.provinceName;
+  console.log(firstNames);
 
-  //saving data in db
-  sellerModel
-    .create({
-      fname: fname,
-      lname: lname,
+  console.log(req.body);
+
+  try {
+    //saving data in db
+    const result = await UserDetail.create({
+      firstName: firstNames,
+      lastName: lastName,
       email: email,
       age: age,
-      phone:req.body.phone,
-      address:req.body.address,
-      password:req.body.password,
-      city: req.body.city,
-      province:req.body.province,
-      postalCode:req.body.postalCode,
-      dateOfbirth:req.body.dateOfbirth
+      dateOfBirth: dateOfBirth,
+      gender: gender,
+      isVerified: isVerified,
+      phone: phone,
+      streetAddress: streetAddress,
+      cityName: cityName,
+      provinceName: provinceName,
+    });
+
+    res.status(201).json({
+      message: result.get({ plain: true }),
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err,
+    });
+  }
+};
+
+const showUser = (req: Request, res: Response) => {
+  console.log(req);
+  sellerModel
+    .findAll({
+      attributes: ["fname", "lname", "address", "email", "phone"],
     })
     .then((result) => {
-      res.status(201).json({
-        message: result.get({ plain: true }),
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        message: err,
-      });
+      res.send(result);
     });
 };
 
-const showUser = (req : Request , res : Response) =>{
-
-    console.log(req);
-    sellerModel.findAll({
-      
-      attributes: [
-          "fname","lname","address","email","phone"
-      ]
-  }).then((result)=>{
-      res.send(result);
-  })
-}
-
-export const checkUserExists = (req:Request, res: Response) =>{
+export const checkUserExists = (req: Request, res: Response) => {
   // const reqUserEmail = req.body.email;
   // LoginDetail.findOne({where: {
   //   email: reqUserEmail
@@ -63,8 +70,8 @@ export const checkUserExists = (req:Request, res: Response) =>{
   res.send([]);
 };
 
-export default{
-  registerSeller,
-  showUser,  
+export default {
+  registerUser,
+  showUser,
   checkUserExists,
-}
+};

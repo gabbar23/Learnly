@@ -35,6 +35,6 @@ export interface IGetUserDetails {
   province: string;
   postalCode: string;
   dateOfbirth: Date;
-  age:number| null;
+  age: number | null;
   photoDetail?: Blob | FormData;
 }
