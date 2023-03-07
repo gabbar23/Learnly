@@ -161,7 +161,7 @@ const sellerRegister = async (data: any) => {
   // Finally, we append the actual File object(s)
   data.idproof.forEach((fileItem: any) => {
     console.warn(fileItem);
-    body.append("idproof", fileItem.file);
+    body.append("image", fileItem.file);
   });
 
   for (const value of body.values()) {

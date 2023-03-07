@@ -12,7 +12,7 @@ const upload = multer({ storage: storage })
 // POST /api/fetch/fetchCity
 router.get("/fetchStates", region.fetchStates);
 router.get("/fetchCity", region.fetchCity);
-router.post("/upload", upload.single('idproof'),uploadFunc.uploadImage);
+router.post("/single-upload", upload.single('image'),uploadFunc.uploadImage);
 router.get("/upload",uploadFunc.getUploadedImage);
 
 export const fetch = router;

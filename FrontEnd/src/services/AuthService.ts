@@ -18,7 +18,7 @@ export default {
   },
 
   uploadImage(formData:any, config:any){
-    return apiClient.post("api/fetch/upload",formData,config);
+    return apiClient.post("api/fetch/single-upload",formData,config);
   },
 
   getUploadImage(){

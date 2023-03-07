@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client,  GetObjectCommand } from "@aws-sdk/client-s3";
 import * as dotenv from 'dotenv' 
 // import crypto from 'crypto';
-import sharp from 'sharp';
+// import sharp from 'sharp';
 import { ImageDetailModel } from "../models/imageDetails";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import aws from "../util/aws-image-store"
 
 dotenv.config();
 
@@ -33,40 +34,52 @@ const s3 = new S3Client({
 });
 
 const uploadImage = async(req: Request, res: Response) => {
-    const newBuffer = await sharp(req.file?.buffer).resize({height:1920, width:1080, fit: 'contain'}).toBuffer();
-    // const currentImageName = req.file?.originalname + randomImageName() + " ";
-    const params = {
-        Bucket:bucketName,
-        Key: req.file?.originalname,
-        Body: newBuffer,
-        ContentType: req.file?.mimetype,
-    };
-    const getObjectParams = {
-        Bucket: bucketName,
-        Key: req.file?.originalname,
-    };
-    const getObjCommand = new GetObjectCommand(getObjectParams);
-    const command = new PutObjectCommand(params);
-    try{
-        await s3.send(command);
-        const url = await getSignedUrl(s3, getObjCommand);
-        ImageDetailModel
-        .create({
-            imgName:req.file?.originalname,
-            imgDescription:'Testing upload',
-            imgUrl:url,
-        })
-        .then((result) => {
-          res.status(201).json(result);
-        })
-        .catch((err) => {
-          res.status(500).json({
-            message: err,
-          });
-        });
-    }catch(e){
-        console.log("Error Occured in AWS \n",e);
-    }
+    // const newBuffer = await sharp(req.file?.buffer).resize({height:1920, width:1080, fit: 'contain'}).toBuffer();
+    // // const currentImageName = req.file?.originalname + randomImageName() + " ";
+    // const params = {
+    //     Bucket:bucketName,
+    //     Key: req.file?.originalname,
+    //     Body: newBuffer,
+    //     ContentType: req.file?.mimetype,
+    // };
+    // const getObjectParams = {
+    //     Bucket: bucketName,
+    //     Key: req.file?.originalname,
+    // };
+    // const getObjCommand = new GetObjectCommand(getObjectParams);
+    // const command = new PutObjectCommand(params);
+    // try{
+    //     await s3.send(command);
+    //     const url = await getSignedUrl(s3, getObjCommand);
+    //     const imgResponse = Object.assign(url,req.file);
+        const uploadResult = await aws.uploadImageToAWS(req);
+        if(uploadResult){
+            res.send(uploadResult);
+        }else{
+            res.status(500).json({
+                message: "Image Upload to aws failed",
+              });
+        }
+        
+         
+
+        // ImageDetailModel
+        // .create({
+        //     imgName:req.file?.originalname,
+        //     imgDescription:'Testing upload',
+        //     imgUrl:url,
+        // })
+        // .then((result) => {
+        //   res.status(201).json(result);
+        // })
+        // .catch((err) => {
+        //   res.status(500).json({
+        //     message: err,
+        //   });
+        // });
+    // }catch(e){
+    //     console.log("Error Occured in AWS \n",e);
+    // }
 };
 
 const getUploadedImage = async(req: Request, res: Response)=>{
