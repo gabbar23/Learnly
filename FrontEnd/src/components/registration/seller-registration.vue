@@ -11,16 +11,9 @@
 
       <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
 
-      <FormKit
-        type="email"
-        label="Email"
-        v-model="userDetails.email"
-        @blur="checkUserExists(userDetails.email)"
-      />
-
       <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
 
-      <FormKit
+      <!-- <FormKit
         type="text"
         label="Name Of Offering"
         v-model="userDetails.nameOfOffering"
@@ -30,28 +23,9 @@
         type="number"
         label="Estimated Value"
         v-model="userDetails.estimatedValue"
-      />
-
-      <FormKit
-        type="text"
-        label="Address Line 1"
-        v-model="userDetails.address"
-      />
-
-      <!-- <FormKit
-        type="text"
-        label="Address Line 2"
-        validation="required|alpha"
-        v-model="userDetails.address.line2"
       /> -->
 
-      <FormKit
-        type="select"
-        label="City"
-        placeholder="Select City"
-        :options="cities"
-        v-model="userDetails.city"
-      />
+      <FormKit type="text" label="Address" v-model="userDetails.address" />
 
       <FormKit
         type="select"
@@ -62,6 +36,14 @@
         @change="triggerChange(userDetails.province)"
       >
       </FormKit>
+
+      <FormKit
+        type="select"
+        label="City"
+        placeholder="Select City"
+        :options="cities"
+        v-model="userDetails.city"
+      />
 
       <FormKit
         type="text"
@@ -80,11 +62,11 @@
         v-model="userDetails.photoId"
       />
 
-      <FormKit
+      <!-- <FormKit
         type="textarea"
         label="Description"
         v-model="userDetails.description"
-      />
+      /> -->
       <FormKit
         type="checkbox"
         label="Terms and Conditions"
@@ -93,9 +75,21 @@
         :value="false"
         v-model="userDetails.termsCondition"
       />
-      <FormKit type="button" :ignore="false" @click="login()">
-        Already have an account? Sign In!
-      </FormKit>
+
+      <hr />
+
+      <FormKit
+        type="email"
+        label="Email"
+        v-model="userDetails.email"
+        @blur="checkUserExists(userDetails.email)"
+      />
+
+      <FormKit type="password" label="Password" />
+
+      <FormKit type="password" label="Confirm Password" />
+
+      <FormKit type="button" label="Submit" />
     </section>
   </FormKit>
 </template>
@@ -183,10 +177,6 @@ const sellerRegister = async (data: any) => {
   await AuthService.uploadImage(body, headerConfig);
 
   // const response = await AuthService.register(userDetails);
-  console.log("worked");
-};
-const selectMade = async () => {
-  console.warn("SELECT MADE HIT");
 };
 
 const checkUserExists = async (email: string) => {
