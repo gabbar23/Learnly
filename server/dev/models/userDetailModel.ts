@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../util/database";
 
-const UserDetailModel = sequelize.define("UserDetail", {
+const UserDetailModel = sequelize.define("UserDetails", {
   userId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -25,6 +25,7 @@ const UserDetailModel = sequelize.define("UserDetail", {
   },
   gender: {
     type: DataTypes.STRING,
+
     allowNull: false,
   },
   isVerified: {
