@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { LoginDetail } from "../models/loginDetailModel";
 import { sellerModel } from "../models/sellerModel";
 
 //register User
@@ -50,16 +49,18 @@ const showUser = (req : Request , res : Response) =>{
 }
 
 export const checkUserExists = (req:Request, res: Response) =>{
-  const reqUserEmail = req.body.email;
-  LoginDetail.findOne({where: {
-    email: reqUserEmail
-  }}).then(result =>{
-    if(result){
-      res.send(result);
-    }else{
-      res.send([]);
-    }
-  });
+  // const reqUserEmail = req.body.email;
+  // LoginDetail.findOne({where: {
+  //   email: reqUserEmail
+  // }}).then(result =>{
+  //   if(result){
+  //     res.send(result);
+  //   }else{
+  //     res.send([]);
+  //   }
+  // });
+  console.log(req);
+  res.send([]);
 };
 
 export default{
