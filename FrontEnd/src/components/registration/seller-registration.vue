@@ -5,133 +5,222 @@
       Register as Buyer
     </FormKit>
   </section>
-  <FormKit type="form" @submit="sellerRegister()">
+  <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
     <section class="container parent_sect">
-      <FormKit type="text" label="First Name" validation="required|alpha" />
+      <FormKit type="text" label="First Name" v-model="userDetails.fname" />
 
-      <FormKit type="text" label="Last Name" validation="required|alpha" />
-
-      <FormKit type="email" label="Email" validation="required|email" />
+      <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
 
       <FormKit
-        type="number"
-        label="Phone Number"
-        validation="required|number"
+        type="email"
+        label="Email"
+        v-model="userDetails.email"
+        @blur="checkUserExists(userDetails.email)"
       />
+
+      <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
 
       <FormKit
         type="text"
         label="Name Of Offering"
-        validation="required|alpha"
+        v-model="userDetails.nameOfOffering"
       />
 
       <FormKit
         type="number"
         label="Estimated Value"
-        validation="required|number"
+        v-model="userDetails.estimatedValue"
       />
 
-      <FormKit type="text" label="Address Line 1" validation="required|alpha" />
+      <FormKit
+        type="text"
+        label="Address Line 1"
+        v-model="userDetails.address"
+      />
 
-      <FormKit type="text" label="Address Line 2" validation="required|alpha" />
+      <!-- <FormKit
+        type="text"
+        label="Address Line 2"
+        validation="required|alpha"
+        v-model="userDetails.address.line2"
+      /> -->
 
       <FormKit
         type="select"
-        label="Select City"
-        :options="[]"
-        validation="required|alpha"
+        label="City"
+        placeholder="Select City"
+        :options="cities"
+        v-model="userDetails.city"
       />
 
       <FormKit
         type="select"
         label="State"
         placeholder="Select a State"
-        validation="required"
+        :options="states"
+        v-model="userDetails.province"
+        @change="triggerChange(userDetails.province)"
       >
-        <optgroup label="States">
-          <option v-for="state in states" value="state.province">
-            {{ state.province }}
-          </option>
-        </optgroup>
       </FormKit>
 
       <FormKit
         type="text"
         label="Postal Zip Code"
-        :validation="[
-          ['required'],
-          ['matches', /^\w\d\w \w\d\w$/, /^\w\d\w-\w\d\w$/, /^\w\d\w\w\d\w$/],
-        ]"
         help="format: a1b-c2d | a1bc2d | a1b c2d"
+        v-model="userDetails.postalCode"
       />
 
       <FormKit
+        name="idproof"
         type="file"
         label="Photo of Government ID"
-        validation="required"
-        accept=".pdf,.jpg,.jpeg,.png"
+        accept=".jpg,.jpeg,.png"
         help="Upload a goverment approved ID such as Driving License or Passport. 
         Only .pdf,.jpg,.jpeg,.png files allowed"
+        v-model="userDetails.photoId"
       />
 
       <FormKit
         type="textarea"
         label="Description"
-        validation="required|alpha"
+        v-model="userDetails.description"
       />
-
       <FormKit
         type="checkbox"
         label="Terms and Conditions"
         help="Do you agree to our terms of service?"
         name="terms"
         :value="false"
-        validation="accepted"
-        validation-visibility="dirty"
+        v-model="userDetails.termsCondition"
       />
+      <FormKit type="button" :ignore="false" @click="login()">
+        Already have an account? Sign In!
+      </FormKit>
     </section>
   </FormKit>
-  <FormKit type="button" :ignore="false" @click="login()">
-    Already have an account? Sign In!
-  </FormKit>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import { validation } from "@/constants";
-import type { IGetStateDetails } from "@/interfaces/seller-registration";
+import type {
+  IGetStateDetails,
+  IGetUserDetails,
+  ISelectResponse,
+} from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
-import { defineComponent, onMounted, ref } from "vue";
-export default defineComponent({
-  components: {},
-  setup(props) {
-    const states = ref<IGetStateDetails[]>([]);
-    onMounted(async () => {
-      try {
-        let response = await AuthService.getStates();
-        states.value = response.data;
-      } catch (e) {
-        console.error("Error in fetching states", e);
-      }
-    });
-    const login = () => {
-      router.push("/login");
-    };
-    const buyerPage = () => {
-      router.push("/buyer-details");
-    };
-
-    const sellerRegister = async () => {
-      const response = await AuthService.register({});
-      console.log("worked");
-    };
-    const selectMade = async () => {
-      console.warn("SELECT MADE HIT");
-    };
-
-    return { states, login, buyerPage,sellerRegister, selectMade };
-  },
+import { defineComponent, onMounted, reactive, ref, watch } from "vue";
+const states = ref<ISelectResponse[]>([]);
+const cities = ref<ISelectResponse[]>([]);
+let userDetails = reactive<IGetUserDetails>({
+  fname: "",
+  lname: "",
+  email: "",
+  phone: "",
+  nameOfOffering: "",
+  estimatedValue: null,
+  photoId: "",
+  description: "",
+  termsCondition: false,
+  address: "",
+  password: "test123",
+  city: "",
+  province: "",
+  postalCode: "",
+  dateOfbirth: new Date(),
+  age: null,
 });
+let isUserAlreadyRegistered = ref<boolean>(false);
+onMounted(async () => {
+  try {
+    await AuthService.getUploadImage();
+    let response = await AuthService.getStates();
+    states.value = [];
+    for (let i = 0; i < response.data.length; i++) {
+      states.value.push({
+        label: response.data[i].province,
+        value: response.data[i].province,
+      });
+    }
+    console.warn(states.value);
+  } catch (e) {
+    console.error("Error in fetching states", e);
+  }
+});
+const login = () => {
+  router.push("/login");
+};
+const buyerPage = () => {
+  router.push("/buyer-details");
+};
+
+const sellerRegister = async (data: any) => {
+  userDetails.age = 20;
+  console.log(data);
+  const body = new FormData();
+  // Finally, we append the actual File object(s)
+  data.idproof.forEach((fileItem: any) => {
+    console.warn(fileItem);
+    body.append("idproof", fileItem.file);
+  });
+
+  for (const value of body.values()) {
+    console.error(value);
+  }
+
+  for (var key of body.entries()) {
+    console.log(key[0] + ", " + key[1]);
+  }
+
+  userDetails.photoDetail = body;
+  console.warn(body);
+  console.warn(userDetails.photoDetail);
+  const headerConfig = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
+  await AuthService.uploadImage(body, headerConfig);
+
+  // const response = await AuthService.register(userDetails);
+  console.log("worked");
+};
+const selectMade = async () => {
+  console.warn("SELECT MADE HIT");
+};
+
+const checkUserExists = async (email: string) => {
+  console.warn("User Exists", email);
+  try {
+    await AuthService.checkUserExist(email)
+      .then((res) => {
+        console.warn(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    console.log("TEst");
+  } catch {
+    console.error("Error in checking user existence");
+  }
+};
+const triggerChange = async (val: string) => {
+  console.warn(val);
+  cities.value = [];
+  try {
+    let response = await AuthService.getCities();
+    console.log(response);
+    for (let i = 0; i < response.data.length; i++) {
+      cities.value.push({
+        label: response.data[i].cities,
+        value: response.data[i].cities,
+      });
+    }
+    console.warn(cities.value);
+  } catch (e) {
+    console.error("Error in pulling cities");
+  }
+};
 </script>
 <style>
 .parent_sect {

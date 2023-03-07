@@ -1,16 +1,27 @@
-import type { IGetState } from "@/interfaces/seller-registration";
+import type { IGetState, IGetUserDetails } from "@/interfaces/seller-registration";
 import apiClient from "../axios";
 
 export default {
-  register(credentials: object) {
-    return apiClient.post("api/register/createSeller", credentials);
+  register(credentials: IGetUserDetails) {
+    return apiClient.post("api/v1/register/createSeller", credentials);
   },
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
   //add parameter state name to search city
-  getCities(state: IGetState) {
-    return apiClient.get("api/fetch/fetchCity", state);
+  getCities() {
+    return apiClient.get("api/fetch/fetchCity");
+  },
+
+  checkUserExist(email:string){
+    return apiClient.post("api/v1/register/is-user-present", {email});
+  },
+
+  uploadImage(formData:any, config:any){
+    return apiClient.post("api/fetch/upload",formData,config);
+  },
+
+  getUploadImage(){
+    return apiClient.get("api/fetch/upload");
   },
 };
-

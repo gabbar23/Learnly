@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { LoginDetail } from "../models/loginDetailModel";
 import { sellerModel } from "../models/sellerModel";
 
 //register User
@@ -22,7 +23,6 @@ const registerSeller = (req: Request, res: Response) => {
       province:req.body.province,
       postalCode:req.body.postalCode,
       dateOfbirth:req.body.dateOfbirth
-
     })
     .then((result) => {
       res.status(201).json({
@@ -49,7 +49,21 @@ const showUser = (req : Request , res : Response) =>{
   })
 }
 
+export const checkUserExists = (req:Request, res: Response) =>{
+  const reqUserEmail = req.body.email;
+  LoginDetail.findOne({where: {
+    email: reqUserEmail
+  }}).then(result =>{
+    if(result){
+      res.send(result);
+    }else{
+      res.send([]);
+    }
+  });
+};
+
 export default{
   registerSeller,
   showUser,  
+  checkUserExists,
 }
