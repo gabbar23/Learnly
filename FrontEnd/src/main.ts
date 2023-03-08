@@ -7,6 +7,8 @@ import "./assets/main.css";
 import { plugin, defaultConfig } from "@formkit/vue";
 import "@formkit/themes/genesis";
 
+import socketIO from 'socket.io-client';
+
 // Vuetify
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
