@@ -15,12 +15,15 @@ const server: http.Server = http.createServer(app);
 
 const io = new Server(server,{
   cors:{
-    origin:"http://localhost:5173/"
+    origin:"http://localhost:5173/make-bid"
   }
 });
 
 io.on('connection', (socket:Socket)=>{
   console.log(`⚡: ${socket.id} user just connected!`);
+
+  socket.emit('message','welcome to Auction Website');
+
   socket.on('disconnect', () => {
     console.log('🔥: A user disconnected');
   });

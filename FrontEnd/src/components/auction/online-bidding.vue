@@ -40,7 +40,7 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 
 import io from 'socket.io-client';
 import type {Socket} from 'socket.io-client'
-import auctionService from "@/services/auctionService";
+// import auctionService from "@/services/auctionService";
 
 export default {
   data() {
