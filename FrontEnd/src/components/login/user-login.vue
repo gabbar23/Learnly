@@ -43,7 +43,7 @@
 
 <script lang="ts" setup>
 import AuthService from "@/services/AuthService";
-import {  reactive } from "vue";
+import { reactive } from "vue";
 
 let loginDetails = reactive<ILoginDetails>({
   email: "",
@@ -53,7 +53,7 @@ let loginDetails = reactive<ILoginDetails>({
 const onSubmit = async () => {
   try {
     await AuthService.checkLogin(loginDetails);
-    router.push('/home');
+    router.push("/home");
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");
   }
