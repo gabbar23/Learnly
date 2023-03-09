@@ -2,15 +2,23 @@
 <template>
   <div id="login">
     <div id="form4">
-  <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
-    <section class="container parent_sect">
-      <FormKit type="text" label="First Name" v-model="userDetails.fname" />
+      <FormKit
+        type="form"
+        @submit="sellerRegister"
+        enctype="multipart/form-data"
+      >
+        <section class="container parent_sect">
+          <FormKit type="text" label="First Name" v-model="userDetails.fname" />
 
-      <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
+          <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
 
-      <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
-      <FormKit type="date" label="Date of birth"/>     
-      <!-- <FormKit
+          <FormKit
+            type="number"
+            label="Phone Number"
+            v-model="userDetails.phone"
+          />
+          <FormKit type="date" label="Date of birth" />
+          <!-- <FormKit
         type="text"
         label="Name Of Offering"
         v-model="userDetails.nameOfOffering"  
@@ -22,91 +30,90 @@
         v-model="userDetails.estimatedValue"
       /> -->
 
-      <FormKit type="text" label="Address" v-model="userDetails.address" />
+          <FormKit type="text" label="Address" v-model="userDetails.address" />
 
-      <FormKit
-        type="select"
-        label="State"
-        placeholder="Select a State"
-        :options="states"
-        v-model="userDetails.province"
-        @change="triggerChange(userDetails.province)"
-      >
-      </FormKit>
+          <FormKit
+            type="select"
+            label="State"
+            placeholder="Select a State"
+            :options="states"
+            v-model="userDetails.province"
+            @change="triggerChange(userDetails.province)"
+          >
+          </FormKit>
 
-      <FormKit
-        type="select"
-        label="City"
-        placeholder="Select City"
-        :options="cities"
-        v-model="userDetails.city"
-      />
+          <FormKit
+            type="select"
+            label="City"
+            placeholder="Select City"
+            :options="cities"
+            v-model="userDetails.city"
+          />
 
-      <FormKit
-        type="text"
-        label="Postal Zip Code"
-        help="format: a1b-c2d | a1bc2d | a1b c2d"
-        v-model="userDetails.postalCode"
-      />
+          <FormKit
+            type="text"
+            label="Postal Zip Code"
+            help="format: a1b-c2d | a1bc2d | a1b c2d"
+            v-model="userDetails.postalCode"
+          />
 
-      <FormKit
-        name="idproof"
-        type="file"
-        label="Photo of Government ID"
-        accept=".jpg,.jpeg,.png"
-        help="Upload a goverment approved ID such as Driving License or Passport. 
+          <FormKit
+            name="idproof"
+            type="file"
+            label="Photo of Government ID"
+            accept=".jpg,.jpeg,.png"
+            help="Upload a goverment approved ID such as Driving License or Passport. 
         Only .pdf,.jpg,.jpeg,.png files allowed"
-        v-model="userDetails.photoId"
-      />
+            v-model="userDetails.photoId"
+          />
 
-      <!-- <FormKit
+          <!-- <FormKit
         type="textarea"
         label="Description"
         v-model="userDetails.description"
       /> -->
-      <br/>
-      <FormKit
-        type="checkbox"
-        label="Terms and Conditions"
-        help="Do you agree to our terms of service?"
-        name="terms"
-        :value="false"
-        v-model="userDetails.termsCondition"
-      />
+          <br />
+          <FormKit
+            type="checkbox"
+            label="Terms and Conditions"
+            help="Do you agree to our terms of service?"
+            name="terms"
+            :value="false"
+            v-model="userDetails.termsCondition"
+          />
 
-      <br/>
-      <FormKit
-        type="email"
-        label="Email"
-        v-model="userDetails.email"
-      />
-      <br/>
-    <!--  @blur="checkUserExists(userDetails.email)"-->
+          <br />
+          <FormKit
+            type="email"
+            label="Email"
+            v-model="userDetails.email"
+            @blur="checkUserExists(userDetails.email)"
+          />
+          <div class="error" v-if="isUserAlreadyRegistered">
+            User Already Registered.
+          </div>
+          <br />
 
-      <FormKit type="password" label="Password" />
+          <FormKit type="password" label="Password" />
 
-      <FormKit type="password" label="Confirm Password" />
-
-    </section>
-  </FormKit>
-</div>
-</div>
-<section>
-  <div id="login" >
-    <div id="form" >
-      <FormKit type="button" :ignore="false" @click="login()">
-    Already have an account? Sign In!
-  </FormKit>
-  <h1 class="align_center">OR</h1>
-    <FormKit type="button" :ignore="false" @click="buyerPage()">
-      Register as Buyer
-    </FormKit>
-
+          <FormKit type="password" label="Confirm Password" />
+        </section>
+      </FormKit>
+    </div>
   </div>
-</div>
-</section>
-  
-
+  <!-- <section>
+    <div id="login">
+      <div id="form">
+        <FormKit type="button" :ignore="false" @click="login()">
+          Already have an account? Sign In!
+        </FormKit>
+        <h1 class="align_center">OR</h1>
+        <FormKit type="button" :ignore="false" @click="buyerPage()">
+          Register as Buyer
+        </FormKit>
+      </div>
+    </div>
+  </section> -->
 </template>
 <script lang="ts" setup>
 import { validation } from "@/constants";
@@ -139,7 +146,7 @@ let userDetails = reactive<IGetUserDetails>({
   dateOfbirth: new Date(),
   age: null,
 });
-let isUserAlreadyRegistered = ref<boolean>(false);
+const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
     //await AuthService.getUploadImage();
@@ -191,7 +198,7 @@ const sellerRegister = async (data: any) => {
   };
   //await AuthService.uploadImage(body, headerConfig);
 
-   const response = await AuthService.register(userDetails);
+  const response = await AuthService.register(userDetails);
 };
 
 const checkUserExists = async (email: string) => {
@@ -200,9 +207,11 @@ const checkUserExists = async (email: string) => {
     await AuthService.checkUserExist(email)
       .then((res) => {
         console.warn(res);
+        isUserAlreadyRegistered.value = res.data.isUserAlreadyPresent;
       })
       .catch((err) => {
         console.error(err);
+        isUserAlreadyRegistered.value = false;
       });
     console.log("TEst");
   } catch {
@@ -228,33 +237,28 @@ const triggerChange = async (val: string) => {
 };
 </script>
 <style>
-
-
-
 * {
   box-sizing: border-box;
   font-family: Verdana, sans-serif;
 }
 div#app div#login div#form4 {
   background-color: lightseagreen;
-  border-radius:10px;
+  border-radius: 10px;
   color: #ecf0f1;
-  box-shadow:0px 0px 30px 0px #666;
+  box-shadow: 0px 0px 30px 0px #666;
   width: 50%;
   padding: 35px;
-
 }
 
 div#login div#form3 {
   background-color: #34495e;
   align-items: center;
   justify-content: center;
-  border-radius:10px;
+  border-radius: 10px;
   color: #ecf0f1;
-  box-shadow:0px 0px 30px 0px #666;
+  box-shadow: 0px 0px 30px 0px #666;
   width: 50%;
   padding: 35px;
-
 }
 
 div#app div#login div#form3 label,
@@ -277,7 +281,7 @@ div#app div#login div#form4 label {
   color: #34495e;
   font-size: 0.9em;
 }
-div#app div#login div#form3 input{
+div#app div#login div#form3 input {
   background-color: transparent;
   border: none;
   color: #34495e;
@@ -288,7 +292,7 @@ div#app div#login div#form2 input {
   background-color: transparent;
   border: none;
   color: #ecf0f1;
-  
+
   font-size: 1.2em;
   margin-bottom: 20px;
 }
@@ -317,14 +321,12 @@ div#app div#login div#form2 button:hover {
 
 div#app div#login div#form2 {
   background-color: lightseagreen;
-  border-radius:10px;
+  border-radius: 10px;
   color: #ecf0f1;
-  box-shadow:0px 0px 30px 0px #666;
+  box-shadow: 0px 0px 30px 0px #666;
   width: 50%;
   padding: 35px;
-
 }
-
 
 html,
 body {
@@ -368,7 +370,7 @@ div#app div#login div#description p {
 
 div#app div#login div#form {
   background-color: lightseagreen;
-  border-radius:1000px;
+  border-radius: 1000px;
   box-shadow: 0px 0px 30px 0px #666;
   color: #ecf0f1;
   width: 100%;
@@ -383,7 +385,6 @@ div#app div#login div#form input {
 }
 
 div#app div#login div#form label {
-  
   color: #95a5a6;
   font-size: 0.8em;
 }
@@ -393,9 +394,11 @@ div#app div#login div#form input {
   border: none;
   color: #ecf0f1;
   font-size: 1em;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+}
 
-div#app div#login div#form ::placeholder,label {
+div#app div#login div#form ::placeholder,
+label {
   color: #ecf0f1;
   opacity: 1;
 }
@@ -445,5 +448,4 @@ div#app div#login div#form button:hover {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-
 </style>

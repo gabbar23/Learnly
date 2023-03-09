@@ -1,42 +1,43 @@
 <template>
-
   <div id="app">
     <div id="login">
       <div id="description">
         <h2>Bid4Good Login</h2>
-        <p>Welcome!<br>
-          Kindly enter your authorized credentials.</p>
+        <p>
+          Welcome!<br />
+          Kindly enter your authorized credentials.
+        </p>
       </div>
       <div id="form">
-    <FormKit type="form" @submit="route" class="parent_sect">
-    <FormKit
-      type="text"
-      name="email"
-      id="email"
-      validation="required|email"
-      label="Email"
-      placeholder="abc@abc.com"
-    />
+        <FormKit type="form" @submit="route" class="parent_sect">
+          <FormKit
+            type="text"
+            name="email"
+            id="email"
+            validation="required|email"
+            label="Email"
+            placeholder="abc@abc.com"
+          />
 
-    <FormKit
-      type="password"
-      name="password"
-      id="password"
-      validation="required"
-      label="Password"
-      placeholder="Password"
-    />
-  </FormKit>
-  <div>
-    <p>Not a Registered User? <router-link to="/reg-buyer">SignUp</router-link></p>
-  </div>
+          <FormKit
+            type="password"
+            name="password"
+            id="password"
+            validation="required"
+            label="Password"
+            placeholder="Password"
+          />
+        </FormKit>
+        <div>
+          <p>
+            Not a Registered User?
+            <router-link to="/reg-seller">SignUp</router-link>
+          </p>
+        </div>
       </div>
     </div>
   </div>
-
-
 </template>
-
 
 <style>
 * {
@@ -160,7 +161,6 @@ div#app div#login div#form button:hover {
 }
 </style>
 <script lang="ts">
-
 import router from "@/router";
 import axios from "axios";
 import { FormKit } from "@formkit/vue";

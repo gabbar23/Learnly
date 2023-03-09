@@ -89,10 +89,14 @@ const checkUserExists = async (req: Request, res: Response) => {
       {
         res.status(200).json({
           message: "User Exists",
+          isUserAlreadyPresent: true,
         });
       }
     } else {
-      res.status(500).json({ message: [] });
+      res.status(200).json({
+        message: "User Doesn't Exists",
+        isUserAlreadyPresent: false,
+      });
     }
   } catch (error) {
     console.error("Error checking if user exists:", error);
