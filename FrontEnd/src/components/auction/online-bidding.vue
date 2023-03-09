@@ -21,7 +21,7 @@
           <div class = "d-flex">
             <div class = "mr-4">Make Bid</div>
             <FormKit  type="text" />
-            <button class="btn btn-danger ml-5">Submit Bid</button>
+            <button class="btn btn-danger ml-5" @click="sendMessage">Submit Bid</button>
           </div>
         </div>
       </div>
@@ -30,13 +30,49 @@
 </template>
 
 <script lang="ts">
+
+
 import { defineComponent } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-export default defineComponent({
-  components: { Navigation, Carousel, Slide, Pagination },
-});
+
+
+import io from 'socket.io-client';
+import type {Socket} from 'socket.io-client'
+import auctionService from "@/services/auctionService";
+
+export default {
+  data() {
+    return {
+      socket: null as Socket | null,
+      messages:[""],
+      newMessage: '',
+    };
+  },
+  created() {
+    console.log("socket message init procrss.....");
+
+   // Connection to socket at server
+    this.socket = io('http://localhost:3000/');
+
+    // Listen for 'chat message' events from the server
+    this.socket.on('connection', (message) => {
+      console.log("got message");
+      this.messages.push(message);
+    });
+  },
+
+  methods: {
+    sendMessage() {
+      console.log("message sent");
+      // Emit a 'chat message' event to the server
+      this.socket.emit('chat message', this.newMessage);
+      this.newMessage = '';
+    }
+  }
+};
+
 </script>
 
 <style>

@@ -7,6 +7,6 @@ const router = express.Router();
 
 
 // POST /api/fetch/fetchCity
-router.get('/makeBid/',)
+router.get('/pushBid/')
 
 export const fetch = router;
