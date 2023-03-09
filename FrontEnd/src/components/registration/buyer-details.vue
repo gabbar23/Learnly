@@ -19,16 +19,16 @@
 
       <FormKit
         type="text"
-        label="Address Line 1"
+        label="Address"
         validation="required|alphanumeric"
       />
-
+<!--
       <FormKit
         type="text"
         label="Address Line 2"
         validation="required|alphanumeric"
       />
-
+-->
       <FormKit
         type="select"
         label="Select City"
@@ -68,6 +68,7 @@
         label="Description"
         validation="required|alpha"
       />
+      <br/>
 
       <FormKit
         type="checkbox"
