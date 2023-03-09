@@ -76,7 +76,7 @@ const showUser = (req: Request, res: Response) => {
   });
 };
 
-export const checkUserExists = async (req: Request, res: Response) => {
+const checkUserExists = async (req: Request, res: Response) => {
   try {
     const reqUserEmail = req.body.email;
     const result = await LoginDetail.findOne({
@@ -86,13 +86,45 @@ export const checkUserExists = async (req: Request, res: Response) => {
     });
 
     if (result) {
-      res.send(result);
+      {
+        res.status(200).json({
+          message: "User Exists",
+        });
+      }
     } else {
-      res.send([]);
+      res.status(500).json({ message: [] });
     }
   } catch (error) {
     console.error("Error checking if user exists:", error);
-    res.send([]);
+    res.status(500).json({ message: [] });
+  }
+};
+
+const checkLoginCredentials = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find the user with the given email
+    const user = await LoginDetail.findOne({ where: { email } });
+
+    // If the user doesn't exist, return an error
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // Check if the password matches
+    const userpassword = await user.get().password;
+
+    // If the password doesn't match, return an error
+    if (userpassword != password) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    // If the email and password match, return the user object
+    res.status(200).json({ message: "User Authenticated" });
+  } catch (error) {
+    console.error("Error checking login credentials:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -100,4 +132,5 @@ export default {
   registerUser,
   showUser,
   checkUserExists,
+  checkLoginCredentials,
 };
