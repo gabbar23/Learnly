@@ -11,7 +11,6 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  //add parameter state name to search city
   getCities() {
     return apiClient.get("api/fetch/fetchCity");
   },
