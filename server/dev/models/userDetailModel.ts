@@ -1,0 +1,66 @@
+import { DataTypes } from "sequelize";
+import { sequelize } from "../util/database";
+
+const UserDetailModel = sequelize.define("UserDetails", {
+  userId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  gender: {
+    type: DataTypes.STRING,
+
+    allowNull: false,
+  },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  isBuyer: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+  },
+  cityName: {
+    type: DataTypes.STRING,
+  },
+  provinceName: {
+    type: DataTypes.STRING,
+  },
+  postalCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  govtIdUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+});
+
+export const UserDetail = UserDetailModel;

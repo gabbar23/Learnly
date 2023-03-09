@@ -3,7 +3,7 @@ import PropertiesReader from "properties-reader";
 import { dirPath } from "./path";
 
 const properties = PropertiesReader(
-  dirPath.join(__dirname,"../../../dbconfig/properties.ini")
+  dirPath.join(__dirname, "../../dbconfig/properties.ini")
 );
 
 const sequelize = new Sequelize(
@@ -11,10 +11,9 @@ const sequelize = new Sequelize(
   `${properties.get("dev.username")}`,
   `${properties.get("dev.password")}`,
   {
-    dialect:  "mysql",
-    host:  `${properties.get("dev.host")}`,
+    dialect: "mysql",
+    host: `${properties.get("dev.host")}`,
   }
 );
-
 
 export { sequelize };

@@ -34,7 +34,7 @@ const router = createRouter({
     {
       path: "/home",
       name: "Home",
-      component: () => import("../components/homepage.vue"),
+      component: () => import("../components/homepage-new.vue"),
     },
     {
       path: "/interim-home",
@@ -59,7 +59,7 @@ const router = createRouter({
     {
       path: "/homepage",
       name: "Homepage",
-      component: () => import("../components/homepage.vue"),
+      component: () => import("../components/homepage-new.vue"),
     },
     {
       path: "/make-blind-auction",
@@ -81,6 +81,11 @@ const router = createRouter({
       name: "Seller Registration",
       component: () =>
         import("../components/registration/seller-registration.vue"),
+    },
+    {
+      path: "/post-bid",
+      name: "Post Bid",
+      component: () => import("../components/post-bid.vue"),
     },
   ],
 });
