@@ -1,10 +1,7 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <section>
-    <FormKit type="button" :ignore="false" @click="buyerPage()">
-      Register as Buyer
-    </FormKit>
-  </section>
+  <div id="login">
+    <div id="form4">
   <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
     <section class="container parent_sect">
       <FormKit type="text" label="First Name" v-model="userDetails.fname" />
@@ -12,11 +9,11 @@
       <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
 
       <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
-
+      <FormKit type="date" label="Date of birth"/>     
       <!-- <FormKit
         type="text"
         label="Name Of Offering"
-        v-model="userDetails.nameOfOffering"
+        v-model="userDetails.nameOfOffering"  
       />
 
       <FormKit
@@ -67,6 +64,7 @@
         label="Description"
         v-model="userDetails.description"
       /> -->
+      <br/>
       <FormKit
         type="checkbox"
         label="Terms and Conditions"
@@ -76,22 +74,39 @@
         v-model="userDetails.termsCondition"
       />
 
-      <hr />
-
+      <br/>
       <FormKit
         type="email"
         label="Email"
         v-model="userDetails.email"
-        @blur="checkUserExists(userDetails.email)"
       />
+      <br/>
+    <!--  @blur="checkUserExists(userDetails.email)"-->
 
       <FormKit type="password" label="Password" />
 
       <FormKit type="password" label="Confirm Password" />
 
-      <FormKit type="button" label="Submit" />
     </section>
   </FormKit>
+</div>
+</div>
+<section>
+  <div id="login" >
+    <div id="form" >
+      <FormKit type="button" :ignore="false" @click="login()">
+    Already have an account? Sign In!
+  </FormKit>
+  <h1 class="align_center">OR</h1>
+    <FormKit type="button" :ignore="false" @click="buyerPage()">
+      Register as Buyer
+    </FormKit>
+
+  </div>
+</div>
+</section>
+  
+
 </template>
 <script lang="ts" setup>
 import { validation } from "@/constants";
@@ -104,6 +119,7 @@ import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
 import { defineComponent, onMounted, reactive, ref, watch } from "vue";
+import { BuyerDetails } from "../component";
 const states = ref<ISelectResponse[]>([]);
 const cities = ref<ISelectResponse[]>([]);
 let userDetails = reactive<IGetUserDetails>({
@@ -127,7 +143,7 @@ let userDetails = reactive<IGetUserDetails>({
 let isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
-    await AuthService.getUploadImage();
+    //await AuthService.getUploadImage();
     let response = await AuthService.getStates();
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {
@@ -142,7 +158,7 @@ onMounted(async () => {
   }
 });
 const login = () => {
-  router.push("/login");
+  router.push("/");
 };
 const buyerPage = () => {
   router.push("/buyer-details");
@@ -174,9 +190,9 @@ const sellerRegister = async (data: any) => {
       "content-type": "multipart/form-data",
     },
   };
-  await AuthService.uploadImage(body, headerConfig);
+  //await AuthService.uploadImage(body, headerConfig);
 
-  // const response = await AuthService.register(userDetails);
+   const response = await AuthService.register(userDetails);
 };
 
 const checkUserExists = async (email: string) => {
@@ -213,8 +229,222 @@ const triggerChange = async (val: string) => {
 };
 </script>
 <style>
+
+
+
+* {
+  box-sizing: border-box;
+  font-family: Verdana, sans-serif;
+}
+div#app div#login div#form4 {
+  background-color: lightseagreen;
+  border-radius:10px;
+  color: #ecf0f1;
+  box-shadow:0px 0px 30px 0px #666;
+  width: 50%;
+  padding: 35px;
+
+}
+
+div#login div#form3 {
+  background-color: #34495e;
+  align-items: center;
+  justify-content: center;
+  border-radius:10px;
+  color: #ecf0f1;
+  box-shadow:0px 0px 30px 0px #666;
+  width: 50%;
+  padding: 35px;
+
+}
+
+div#app div#login div#form3 label,
+div#app div#login div#form3 input,
+div#app div#login div#form2 label,
+div#app div#login div#form2 input {
+  outline: none;
+  width: 100%;
+}
+
+div#app div#login div#form3 label {
+  color: #95a5a6;
+  font-size: 0.8em;
+}
+div#app div#login div#form2 label {
+  color: #34495e;
+  font-size: 0.9em;
+}
+div#app div#login div#form4 label {
+  color: #34495e;
+  font-size: 0.9em;
+}
+div#app div#login div#form3 input{
+  background-color: transparent;
+  border: none;
+  color: #34495e;
+  font-size: 0.8em;
+  margin-bottom: 20px;
+}
+div#app div#login div#form2 input {
+  background-color: transparent;
+  border: none;
+  color: #ecf0f1;
+  
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+div#app div#login div#form3 ::placeholder,
+div#app div#login div#form2 ::placeholder {
+  color: #ecf0f1;
+  opacity: 1;
+}
+
+div#app div#login div#form3 button,
+div#app div#login div#form2 button {
+  background-color: #eadfdf;
+  color: #000;
+  cursor: pointer;
+  border: none;
+  padding: 10px;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%;
+}
+
+div#app div#login div#form3 button:hover,
+div#app div#login div#form2 button:hover {
+  color: #ecf0f1;
+  background-color: #381e1e;
+}
+
+div#app div#login div#form2 {
+  background-color: lightseagreen;
+  border-radius:10px;
+  color: #ecf0f1;
+  box-shadow:0px 0px 30px 0px #666;
+  width: 50%;
+  padding: 35px;
+
+}
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+div#app {
+  width: 100%;
+  height: 100%;
+}
+
+div#app div#login {
+  align-items: center;
+  background-color: darkcyan;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+div#app div#login div#description {
+  background-color: #ffffff;
+  width: 280px;
+  padding: 35px;
+  text-align: center;
+}
+
+div#app div#login div#description h1,
+div#app div#login div#description p {
+  margin: 0;
+}
+
+div#app div#login div#description p {
+  font-size: 0.8em;
+  color: #95a5a6;
+  margin-top: 10px;
+}
+
+div#app div#login div#form {
+  background-color: lightseagreen;
+  border-radius:1000px;
+  box-shadow: 0px 0px 30px 0px #666;
+  color: #ecf0f1;
+  width: 100%;
+  padding: 35px;
+}
+
+div#app div#login div#form label,
+div#app div#login div#form input {
+  margin: 10x;
+  outline: none;
+  width: 100%;
+}
+
+div#app div#login div#form label {
+  
+  color: #95a5a6;
+  font-size: 0.8em;
+}
+
+div#app div#login div#form input {
+  background-color: transparent;
+  border: none;
+  color: #ecf0f1;
+  font-size: 1em;
+  margin-bottom: 20px;}
+
+div#app div#login div#form ::placeholder,label {
+  color: #ecf0f1;
+  opacity: 1;
+}
+
+div#app div#login div#form button {
+  background-color: #eadfdf;
+  color: #000;
+  cursor: pointer;
+  border: none;
+  padding: 10px;
+  transition: background-color 0.2s ease-in-out;
+  width: 100%;
+}
+
+div#app div#login div#form button:hover {
+  color: #ecf0f1;
+  background-color: #381e1e;
+}
+
+@media screen and (max-width: 100%) {
+  div#app div#login {
+    align-items: unset;
+    background-color: unset;
+    display: unset;
+    justify-content: unset;
+  }
+
+  div#app div#login div#description {
+    margin: 0 auto;
+    max-width: 350px;
+    width: 100%;
+  }
+
+  div#app div#login div#form {
+    border-radius: unset;
+    box-shadow: unset;
+    width: 100%;
+  }
+
+  div#app div#login div#form form {
+    margin: 0 auto;
+    max-width: 2px;
+    width: 100%;
+  }
+}
 .parent_sect {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 </style>
