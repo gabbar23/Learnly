@@ -1,12 +1,12 @@
 import express from "express";
 
-import userOperations from "../controllers/registerCont";
+import registerCont from "../controllers/registerCont";
 
 const router = express.Router();
 
 // POST /api/v1/register/createSeller
-router.post("/createSeller", userOperations.registerSeller);
-router.get("/showUsers", userOperations.showUser);
-router.post("/is-user-present", userOperations.checkUserExists);
+router.post("/registerUser", registerCont.registerUser);
+router.get("/showUsers", registerCont.showUser);
+router.post("/is-user-present", registerCont.checkUserExists);
 
 export const registerRoutes = router;

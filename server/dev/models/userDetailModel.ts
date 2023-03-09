@@ -12,9 +12,6 @@ const UserDetailModel = sequelize.define("UserDetails", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  middleName: {
-    type: DataTypes.STRING,
-  },
   lastName: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -32,11 +29,15 @@ const UserDetailModel = sequelize.define("UserDetails", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
+  isBuyer: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
   phone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  streetAddress: {
+  address: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -51,6 +52,14 @@ const UserDetailModel = sequelize.define("UserDetails", {
   },
   provinceName: {
     type: DataTypes.STRING,
+  },
+  postalCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  govtIdUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
 });
 

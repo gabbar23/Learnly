@@ -53,6 +53,9 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
+// UserDetail.sync({ force: true }).then((_) => {
+//   console.log("UserDetails Loaded");
+// });
 // syncing models
 sequelize
   .sync()
