@@ -85,8 +85,7 @@ const router = createRouter({
     {
       path: "/post-bid",
       name: "Post Bid",
-      component: () =>
-        import("../components/post-bid.vue"),
+      component: () => import("../components/post-bid.vue"),
     },
   ],
 });

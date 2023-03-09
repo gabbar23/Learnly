@@ -1,3 +1,4 @@
+import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,
   IGetUserDetails,
@@ -26,4 +27,8 @@ export default {
   getUploadImage() {
     return apiClient.get("api/fetch/upload");
   },
+
+  checkLogin(loginDetails: ILoginDetails){
+    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails);
+  }
 };

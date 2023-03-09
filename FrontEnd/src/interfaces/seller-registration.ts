@@ -1,4 +1,4 @@
-import type { BidTypeEnum } from "@/enums/BidTypeEnum";
+import type { BidTypeEnum } from "./../enums/BidTypeEnum";
 
 export interface IGetState {
   state: string;
@@ -54,7 +54,7 @@ export interface IGetSellerBidDetails {
   address: string;
   description: string;
   imageDetails: IBidImageDetails[];
-  bidType: BidTypeEnum
+  bidType: BidTypeEnum;
 }
 
 export interface IBidImageDetails {
