@@ -14,4 +14,4 @@ export { default as BuyerDetails } from "./registration/buyer-details.vue";
 export { default as DonationDetails } from "./auction/donation-details.vue";
 export { default as OrderDetails } from "./auction/order-details.vue";
 export { default as ReportIssue } from "./auction/report-issue.vue";
-
+export { default as PostBid } from "../components/post-bid.vue";

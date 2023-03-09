@@ -58,8 +58,6 @@ const uploadImageToAWS = async(req: Request) => {
     return imgResponse;
 };
 
-
-
 export default{
     uploadImageToAWS,
 }
