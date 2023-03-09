@@ -1,10 +1,12 @@
+import type { BidTypeEnum } from "@/enums/BidTypeEnum";
+
 export interface IGetState {
   state: string;
 }
 
-export interface ISelectResponse {
+export interface ISelectResponse<T> {
   label: string;
-  value: string;
+  value: T;
 }
 
 export interface IGetStateDetails {
@@ -37,4 +39,25 @@ export interface IGetUserDetails {
   dateOfbirth: Date;
   age: number | null;
   photoDetail?: Blob | FormData;
+}
+
+export interface IGetSellerBidDetails {
+  nameOfOffering: string;
+  startDate: Date | string;
+  startTime: Date | string;
+  endDate: Date | string;
+  endTime: Date | string;
+  estimatedValue: string;
+  province: string;
+  city: string;
+  postalCode: string;
+  address: string;
+  description: string;
+  imageDetails: IBidImageDetails[];
+  bidType: BidTypeEnum
+}
+
+export interface IBidImageDetails {
+  imageName: string;
+  imageUrl: string;
 }

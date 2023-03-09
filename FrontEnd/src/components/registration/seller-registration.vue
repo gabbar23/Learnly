@@ -119,9 +119,8 @@ import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
 import { defineComponent, onMounted, reactive, ref, watch } from "vue";
-import { BuyerDetails } from "../component";
-const states = ref<ISelectResponse[]>([]);
-const cities = ref<ISelectResponse[]>([]);
+const states = ref<ISelectResponse<string>[]>([]);
+const cities = ref<ISelectResponse<string>[]>([]);
 let userDetails = reactive<IGetUserDetails>({
   fname: "",
   lname: "",
