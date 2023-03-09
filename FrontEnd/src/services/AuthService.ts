@@ -21,6 +21,10 @@ export default {
     return apiClient.post("api/fetch/single-upload",formData,config);
   },
 
+  uploadMultiImage(formData:any, config:any){
+    return apiClient.post("api/fetch/multiple-upload",formData,config);
+  },
+
   getUploadImage(){
     return apiClient.get("api/fetch/upload");
   },

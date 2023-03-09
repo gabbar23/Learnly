@@ -5,13 +5,39 @@
       <FormKit
         type="text"
         label="Name Of Offering"
-        v-model="userDetails.nameOfOffering"
+        v-model="sellerDetails.nameOfOffering"
       />
 
       <FormKit
         type="number"
         label="Estimated Value"
-        v-model="userDetails.estimatedValue"
+        v-model="sellerDetails.estimatedValue"
+      />
+
+      <FormKit
+        type="date"
+        label="Start Date Of Auction"
+        v-model="sellerDetails.startDate"
+      />
+
+      <FormKit
+        type="time"
+        label="Start Time Of Auction"
+        help="What time will the auction start?"
+        v-model="sellerDetails.startTime"
+      />
+
+      <FormKit
+        type="date"
+        label="End Date Of Auction"
+        v-model="sellerDetails.endDate"
+      />
+
+      <FormKit
+        type="time"
+        label="End Time Of Auction"
+        help="What time will the auction end?"
+        v-model="sellerDetails.endTime"
       />
 
       <FormKit
@@ -19,8 +45,8 @@
         label="State"
         placeholder="Select a State"
         :options="states"
-        v-model="userDetails.province"
-        @change="triggerChange(userDetails.province)"
+        v-model="sellerDetails.province"
+        @change="triggerChange(sellerDetails.province)"
       >
       </FormKit>
 
@@ -29,68 +55,90 @@
         label="City"
         placeholder="Select City"
         :options="cities"
-        v-model="userDetails.city"
+        v-model="sellerDetails.city"
       />
 
       <FormKit
         type="text"
         label="Postal Zip Code"
         help="format: a1b-c2d | a1bc2d | a1b c2d"
-        v-model="userDetails.postalCode"
+        v-model="sellerDetails.postalCode"
       />
 
+      <FormKit type="text" label="Address" v-model="sellerDetails.address" />
+
       <FormKit
-        name="idproof"
+        name="bidPhotos"
         type="file"
         label="Photo of Items"
         accept=".jpg,.jpeg,.png"
         help="Only .pdf,.jpg,.jpeg,.png files allowed"
-        v-model="userDetails.photoId"
+        multiple="true"
+        v-model="bidPhotos"
+        @blur="uploadImages(bidPhotos)"
       />
+
+      <FormKit
+        type="select"
+        label="Bid Type"
+        placeholder="Post Bid as"
+        :options="bidTypeOptions"
+        v-model="sellerDetails.bidType"
+      >
+      </FormKit>
 
       <FormKit
         type="textarea"
         label="Description"
-        v-model="userDetails.description"
+        v-model="sellerDetails.description"
       />
     </section>
   </FormKit>
 </template>
 <script lang="ts" setup>
-import { validation } from "@/constants";
+import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
 import type {
-  IGetStateDetails,
-  IGetUserDetails,
+  IBidImageDetails,
+  IGetSellerBidDetails,
   ISelectResponse,
 } from "@/interfaces/seller-registration";
-import router from "@/router";
 import AuthService from "@/services/AuthService";
-import type { register } from "@formkit/core";
-import { defineComponent, onMounted, reactive, ref, watch } from "vue";
-const states = ref<ISelectResponse[]>([]);
-const cities = ref<ISelectResponse[]>([]);
-let userDetails = reactive<IGetUserDetails>({
-  fname: "",
-  lname: "",
-  email: "",
-  phone: "",
+import { onMounted, reactive, ref } from "vue";
+const states = ref<ISelectResponse<string>[]>([]);
+const cities = ref<ISelectResponse<string>[]>([]);
+const allImages = ref<any>([]);
+const bidPhotos = ref<any>({});
+let sellerDetails = reactive<IGetSellerBidDetails>({
   nameOfOffering: "",
-  estimatedValue: null,
-  photoId: "",
-  description: "",
-  termsCondition: false,
-  address: "",
-  password: "test123",
-  city: "",
+  startDate: "",
+  startTime: "",
+  endDate: "",
+  endTime: "",
+  estimatedValue: "",
   province: "",
+  city: "",
   postalCode: "",
-  dateOfbirth: new Date(),
-  age: null,
+  address: "",
+  description: "",
+  imageDetails: [],
+  bidType: BidTypeEnum.liveBidding,
 });
-let isUserAlreadyRegistered = ref<boolean>(false);
+const bidTypeOptions: ISelectResponse<BidTypeEnum>[] = [
+  {
+    label: BidDescriptionEnum[BidTypeEnum.liveBidding],
+    value: BidTypeEnum.liveBidding,
+  },
+  {
+    label: BidDescriptionEnum[BidTypeEnum.normalBidding],
+    value: BidTypeEnum.normalBidding,
+  },{
+    label: BidDescriptionEnum[BidTypeEnum.simpleSell],
+    value: BidTypeEnum.simpleSell,
+  },
+];
+
 onMounted(async () => {
   try {
-    await AuthService.getUploadImage();
     let response = await AuthService.getStates();
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {
@@ -104,59 +152,39 @@ onMounted(async () => {
     console.error("Error in fetching states", e);
   }
 });
-const login = () => {
-  router.push("/login");
-};
-const buyerPage = () => {
-  router.push("/buyer-details");
-};
 
-const sellerRegister = async (data: any) => {
-  userDetails.age = 20;
-  console.log(data);
-  const body = new FormData();
-  // Finally, we append the actual File object(s)
-  data.idproof.forEach((fileItem: any) => {
-    console.warn(fileItem);
-    body.append("image", fileItem.file);
-  });
-
-  for (const value of body.values()) {
-    console.error(value);
-  }
-
-  for (var key of body.entries()) {
-    console.log(key[0] + ", " + key[1]);
-  }
-
-  userDetails.photoDetail = body;
-  console.warn(body);
-  console.warn(userDetails.photoDetail);
+const uploadImages = async (data: any) => {
   const headerConfig = {
     headers: {
       "content-type": "multipart/form-data",
     },
   };
-  await AuthService.uploadImage(body, headerConfig);
-
-  // const response = await AuthService.register(userDetails);
+  console.log(data);
+  // if(data.length > 3){
+  //   console.log("Only 3 Images are allowed");
+  //   return;
+  // }
+  data.forEach(async (fileItem: any) => {
+    const body = new FormData();
+    console.warn(fileItem);
+    body.append("image", fileItem.file);
+    const image = await AuthService.uploadImage(body, headerConfig);
+    console.warn(image);
+    const imageDetails: IBidImageDetails = {
+      imageUrl: image.data.url,
+      imageName: image.data.originalname,
+    };
+    allImages.value.push(imageDetails);
+  });
+  console.log(allImages.value);
 };
 
-const checkUserExists = async (email: string) => {
-  console.warn("User Exists", email);
-  try {
-    await AuthService.checkUserExist(email)
-      .then((res) => {
-        console.warn(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-    console.log("TEst");
-  } catch {
-    console.error("Error in checking user existence");
-  }
+const sellerRegister = async () => {
+  console.warn(allImages.value);
+  sellerDetails.imageDetails = allImages.value;
+  console.warn(sellerDetails);
 };
+
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
