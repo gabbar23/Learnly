@@ -31,7 +31,11 @@ const UserDetailModel = sequelize.define("UserDetails", {
   },
   isBuyer: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: true,
+  },
+  isSeller: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
   },
   phone: {
     type: DataTypes.STRING,

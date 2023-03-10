@@ -10,6 +10,7 @@ export const registerUser = async (req: Request, res: Response) => {
   const gender = req.body.gender;
   const isVerified = req.body.isVerified;
   const isBuyer = req.body.isBuyer;
+  const isSeller = req.body.isSeller;
   const phone = req.body.phone;
   const address = req.body.address;
   const cityName = req.body.cityName;
@@ -26,6 +27,7 @@ export const registerUser = async (req: Request, res: Response) => {
       gender: gender,
       isVerified: isVerified,
       isBuyer: isBuyer,
+      isSeller: isSeller,
       govtIdUrl: govtIdUrl,
       phone: phone,
       address: address,
