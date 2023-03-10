@@ -12,6 +12,7 @@ export interface IVerfiedSeller {
   postalCode: string;
   provinceName: string;
   userId: number;
+  editInProgress: boolean;
 }
 
 export interface IVerifiedSellerLoginDetails {

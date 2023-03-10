@@ -6,6 +6,7 @@
         <th class="text-left">Address</th>
         <th class="text-left">Email</th>
         <th class="text-left">Phone</th>
+        <th class="text-left">Identity Doc</th>
         <th class="text-left">Action</th>
       </tr>
     </thead>
@@ -15,6 +16,16 @@
         <td>{{ item.address }}</td>
         <td>{{ item.loginDetail?.email }}</td>
         <td>{{ item.phone }}</td>
+        <td >
+          <div v-if="!item.editInProgress">
+          <!-- <font-awesome-icon icon="fas fa-edit" /> -->
+            <button @click = "item.editInProgress = !item.editInProgress">Show ID</button>
+          </div>
+          <div v-else class = "d-flex">
+            <button @click = "item.editInProgress = !item.editInProgress">Hide ID</button>
+            <img src="{{ item.govtIdUrl }}" />
+          </div>
+        </td>
         <td>
           <button class="btn btn-primary" @click="approve(item)">
             Approve
@@ -46,6 +57,11 @@ onMounted(async () => {
   try {
     const response = await AuthService.verifiedSellers();
     verifiedSellers.value = response.data;
+    verifiedSellers.value.map((seller) => {
+      return {
+        editInProgress: false,
+      };
+    });
   } catch (e) {
     console.error("Error in fetching states", e);
   }
