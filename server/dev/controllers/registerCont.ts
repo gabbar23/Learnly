@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-// import { sellerModel } from "../models/sellerModel";
+import { hashPassword, checkPassword } from "../util/passwordHashing";
 import { UserDetail } from "../models/userDetailModel";
 import { LoginDetail } from "../models/loginDetailModel";
+// import { fetchInstance } from "../util/dbMethods";
 // register User
 export const registerUser = async (req: Request, res: Response) => {
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const dateOfBirth = req.body.dateOfBirth;
   const gender = req.body.gender;
-  const isVerified = req.body.isVerified;
   const isBuyer = req.body.isBuyer;
   const isSeller = req.body.isSeller;
   const phone = req.body.phone;
@@ -19,13 +19,13 @@ export const registerUser = async (req: Request, res: Response) => {
   const email = req.body.email;
   const password = req.body.password;
   const postalCode = req.body.postalCode;
+  let userId = "";
   try {
     const userDetail = await UserDetail.create({
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: dateOfBirth,
       gender: gender,
-      isVerified: isVerified,
       isBuyer: isBuyer,
       isSeller: isSeller,
       govtIdUrl: govtIdUrl,
@@ -35,13 +35,15 @@ export const registerUser = async (req: Request, res: Response) => {
       provinceName: provinceName,
       postalCode: postalCode,
     });
-    const userId = userDetail.get().userId;
+    userId = userDetail.get().userId;
     // Create a new LoginDetail instance and associate it with the UserDetail instance
+    const hashedPassword = await hashPassword(password);
     const loginDetail = await LoginDetail.create({
       user_id: userId,
       email: email,
       isAdmin: "false",
-      password: password,
+      isVerified: "false",
+      password: hashedPassword,
     });
 
     res.status(201).json({
@@ -51,6 +53,13 @@ export const registerUser = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
+    UserDetail.destroy({
+      where: {
+        userId: userId,
+      },
+    });
+    console.log();
+
     res.status(500).json({
       message: err,
     });
@@ -64,8 +73,7 @@ const showUser = (req: Request, res: Response) => {
       "firstName",
       "lastName",
       "dateOfBirth",
-      "gender",
-      "isVerified",
+      "isSeller",
       "isBuyer",
       "govtIdUrl",
       "phone",
@@ -108,26 +116,43 @@ const checkUserExists = async (req: Request, res: Response) => {
 
 const checkLoginCredentials = async (req: Request, res: Response) => {
   try {
+    // let userDetails: any;
     const { email, password } = req.body;
 
     // Find the user with the given email
-    const user = await LoginDetail.findOne({ where: { email } });
-
+    const login = await LoginDetail.findOne({ where: { email } });
+    // const user = await UserDetail.findByPk("4");
     // If the user doesn't exist, return an error
-    if (!user) {
+    if (!login) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     // Check if the password matches
-    const userpassword = await user.get().password;
+    const userpassword = await login.get().password;
+    const passwordMatches = checkPassword(password, userpassword);
+    passwordMatches.then((result) => {
+      if (!result) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
 
-    // If the password doesn't match, return an error
-    if (userpassword != password) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+      const loginDetails = login.get({ plain: true });
+
+      res.status(200).json({
+        message: {
+          userId: loginDetails.user_id,
+          email: loginDetails.email,
+          // isSeller: user.isSeller,
+        },
+      });
+    });
+
+    // // If the password doesn't match, return an error
+    // if (userpassword != password) {
+    //   return res.status(401).json({ error: "Invalid credentials" });
+    // }
 
     // If the email and password match, return the user object
-    res.status(200).json({ message: "User Authenticated" });
+    // res.status(200).json({ message: "User Authenticated" });
   } catch (error) {
     console.error("Error checking login credentials:", error);
     res.status(500).json({ error: "Internal server error" });
