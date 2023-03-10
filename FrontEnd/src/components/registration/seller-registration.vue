@@ -42,9 +42,11 @@
         type="select"
         label="City"
         placeholder="Select City"
-        :options="cities"
+        :options="cityOptions"
         v-model="userDetails.cityName"
-      />
+        @change="(userDetails.cityName)"
+        
+      ></FormKit>
 
           <FormKit
             type="text"
@@ -119,12 +121,20 @@ import type {
 } from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
-import type { register } from "@formkit/core";
+import type { FormKitProps, register } from "@formkit/core";
 import { fa } from "@formkit/i18n";
-import { label } from "@formkit/inputs";
-import { defineComponent, onMounted, reactive, ref, watch } from "vue";
+import { label, selectInput } from "@formkit/inputs";
+import { computed, defineComponent, onMounted, reactive, ref, watch } from "vue";
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
+let cityOptions = computed(() => {
+      return cities.value.map(city => {
+        return {
+          label: city.label,
+          value: city.value,
+        }
+      })
+    });
 let userDetails = reactive<IGetUserDetails>({
   firstName: "",
   lastName: "",
@@ -148,6 +158,7 @@ let userDetails = reactive<IGetUserDetails>({
   gender:"male",
   
 });
+
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
@@ -169,9 +180,10 @@ onMounted(async () => {
 const login = () => {
   router.push("/");
 };
-const buyerPage = () => {
+/*const buyerPage = () => {
   router.push("/buyer-details");
 };
+*/
 
 const sellerRegister = async (data: any) => {
   userDetails.age = 20;
@@ -225,21 +237,23 @@ const checkUserExists = async (email: string) => {
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
+  let temp=[];
   try {
     let response = await AuthService.getCities();
   //  console.log(response);
     for (let i = 0; i < response.data.length; i++) {
-      console.log(response.data[i].city)
       cities.value.push({
         label: response.data[i].city,
         value: response.data[i].city,
       });
     }
-    console.log(cities);
-  } catch (e) {
+
+  }
+    catch (e) {
     console.error("Error in pulling cities");
   }
 };
+
 </script>
 <style>
 * {
