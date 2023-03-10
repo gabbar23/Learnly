@@ -1,8 +1,6 @@
+import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
-import type {
-  IGetState,
-  IGetUserDetails,
-} from "@/interfaces/seller-registration";
+import type { IGetUserDetails } from "@/interfaces/seller-registration";
 import apiClient from "../axios";
 
 export default {
@@ -37,5 +35,9 @@ export default {
 
   verifiedSellers() {
     return apiClient.get("api/v1/register/verifiedSellers");
+  },
+
+  approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
+    return apiClient.put("api/v1/register/markAsVerified", {query: payload});
   },
 };
