@@ -20,18 +20,13 @@ const UserDetailModel = sequelize.define("UserDetails", {
     type: DataTypes.DATEONLY,
     allowNull: false,
   },
-  gender: {
-    type: DataTypes.STRING,
-
-    allowNull: false,
-  },
-  isVerified: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
   isBuyer: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: true,
+  },
+  isSeller: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
   },
   phone: {
     type: DataTypes.STRING,
@@ -42,9 +37,6 @@ const UserDetailModel = sequelize.define("UserDetails", {
     allowNull: false,
   },
   createdAt: {
-    type: DataTypes.DATE,
-  },
-  updatedAt: {
     type: DataTypes.DATE,
   },
   cityName: {

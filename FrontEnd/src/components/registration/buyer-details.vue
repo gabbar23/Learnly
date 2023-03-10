@@ -1,59 +1,62 @@
 <!-- eslint-disable vue/require-v-for-key -->
-<template> 
+<template>
   <div id="login">
     <div id="form4">
-  <FormKit type="form" @submit="login" enctype="multipart/form-data">
-    <section class="container parent_sect">
-      <FormKit type="text" label="First Name" validation="required|alpha" />
+      <FormKit type="form" @submit="login" enctype="multipart/form-data">
+        <section class="container parent_sect">
+          <FormKit type="text" label="First Name" validation="required|alpha" />
 
-      <FormKit type="text" label="Last Name" validation="required|alpha" />
+          <FormKit type="text" label="Last Name" validation="required|alpha" />
 
+          <FormKit
+            type="number"
+            label="Phone Number"
+            validation="required|number"
+          />
+          <FormKit type="date" label="Date of birth" />
 
-      <FormKit
-        type="number"
-        label="Phone Number"
-        validation="required|number"
-      />
-      <FormKit type="date" label="Date of birth"/>     
-
-
-      <FormKit
-        type="text"
-        label="Address"
-        validation="required|alphanumeric"
-      />
-<!--
+          <FormKit
+            type="text"
+            label="Address"
+            validation="required|alphanumeric"
+          />
+          <!--
       <FormKit
         type="text"
         label="Address Line 2"
         validation="required|alphanumeric"
       />
 -->
-      <FormKit
-        type="select"
-        label="Select City"
-        :options="[]"
-        validation="required|alpha"
-      />
+          <FormKit
+            type="select"
+            label="Select City"
+            :options="[]"
+            validation="required|alpha"
+          />
 
-      <FormKit
-        type="select"
-        label="State"
-        :options="[]"
-        validation="required|alpha"
-      />
+          <FormKit
+            type="select"
+            label="State"
+            :options="[]"
+            validation="required|alpha"
+          />
 
-      <FormKit
-        type="text"
-        label="Postal Zip Code"
-        :validation="[
-          ['required'],
-          ['matches', /^\w\d\w \w\d\w$/, /^\w\d\w-\w\d\w$/, /^\w\d\w\w\d\w$/],
-        ]"
-        help="format: a1b-c2d | a1bc2d | a1b c2d"
-      />
-      
-  <!--    <FormKit
+          <FormKit
+            type="text"
+            label="Postal Zip Code"
+            :validation="[
+              ['required'],
+              [
+                'matches',
+                /^\w\d\w \w\d\w$/,
+                /^\w\d\w-\w\d\w$/,
+                /^\w\d\w\w\d\w$/,
+              ],
+            ]"
+            help="format: a1b-c2d | a1bc2d | a1b c2d"
+          />
+
+          <!--    <FormKit
         type="file"
         label="Photo of Government ID"
         validation="required"
@@ -63,56 +66,52 @@
       />
 
       -->
-      <FormKit
-        type="textarea"
-        label="Description"
-        validation="required|alpha"
-      />
-      <br/>
+          <FormKit
+            type="textarea"
+            label="Description"
+            validation="required|alpha"
+          />
+          <br />
 
-      <FormKit
-        type="checkbox"
-        label="Terms and Conditions"
-        help="Do you agree to our terms of service?"
-        name="terms"
-        :value="false"
-        validation="accepted"
-        validation-visibility="dirty"
-      />
-      <br/>
-      
-      
-    <!--  @blur="checkUserExists(userDetails.email)"-->
-    <FormKit
-        type="email"
-        label="Email"
-      /> 
-      <br/>
-      <FormKit type="password" label="Password" validation="required|email" />
+          <FormKit
+            type="checkbox"
+            label="Terms and Conditions"
+            help="Do you agree to our terms of service?"
+            name="terms"
+            :value="false"
+            validation="accepted"
+            validation-visibility="dirty"
+          />
+          <br />
 
-      <FormKit type="password" label="Confirm Password" />
-    
-    </section>
-    
-    </FormKit>
-</div>
-</div>
+          <!--  @blur="checkUserExists(userDetails.email)"-->
+          <FormKit type="email" label="Email" />
+          <br />
+          <FormKit
+            type="password"
+            label="Password"
+            validation="required|email"
+          />
 
-<section>
-  <div id="login" >
-    <div id="form" >
-      <FormKit type="button" :ignore="false" @click="login()">
-    Already have an account? Sign In!
-  </FormKit>
-  <h1 class="align_center">OR</h1>
-    <FormKit type="button" :ignore="false" @click="SellerRegistration()">
-      Register as Seller
-    </FormKit>
-
+          <FormKit type="password" label="Confirm Password" />
+        </section>
+      </FormKit>
+    </div>
   </div>
-</div>
-</section>
-  
+
+  <section>
+    <div id="login">
+      <div id="form">
+        <FormKit type="button" :ignore="false" @click="login()">
+          Already have an account? Sign In!
+        </FormKit>
+        <h1 class="align_center">OR</h1>
+        <FormKit type="button" :ignore="false" @click="SellerRegistration()">
+          Register as Seller
+        </FormKit>
+      </div>
+    </div>
+  </section>
 </template>
 <script lang="ts">
 import router from "@/router";
@@ -145,33 +144,31 @@ export default defineComponent({
     login() {
       router.push("/");
     },
-    SellerRegistration(){
+    SellerRegistration() {
       router.push("/reg-seller");
-    }
+    },
   },
 });
 </script>
 <style>
 div#app div#login div#form4 {
   background-color: lightseagreen;
-  border-radius:10px;
+  border-radius: 10px;
   color: #ecf0f1;
-  box-shadow:0px 0px 30px 0px #666;
+  box-shadow: 0px 0px 30px 0px #666;
   width: 50%;
   padding: 35px;
-
 }
 
 div#login div#form3 {
   background-color: #34495e;
   align-items: center;
   justify-content: center;
-  border-radius:10px;
+  border-radius: 10px;
   color: #ecf0f1;
-  box-shadow:0px 0px 30px 0px #666;
+  box-shadow: 0px 0px 30px 0px #666;
   width: 50%;
   padding: 35px;
-
 }
 
 div#app div#login div#form3 label,
@@ -194,7 +191,7 @@ div#app div#login div#form4 label {
   color: #34495e;
   font-size: 0.9em;
 }
-div#app div#login div#form3 input{
+div#app div#login div#form3 input {
   background-color: transparent;
   border: none;
   color: #34495e;
@@ -205,7 +202,7 @@ div#app div#login div#form2 input {
   background-color: transparent;
   border: none;
   color: #ecf0f1;
-  
+
   font-size: 1.2em;
   margin-bottom: 20px;
 }

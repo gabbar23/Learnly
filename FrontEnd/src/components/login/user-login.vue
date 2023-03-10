@@ -1,43 +1,64 @@
 <template>
-
   <div id="app">
     <div id="login">
       <div id="description">
         <h2>Bid4Good Login</h2>
-        <p>Welcome!<br>
-          Kindly enter your authorized credentials.</p>
+        <p>
+          Welcome!<br />
+          Kindly enter your authorized credentials.
+        </p>
       </div>
       <div id="form">
-    <FormKit type="form" @submit="route" class="parent_sect">
-    <FormKit
-      type="text"
-      name="email"
-      id="email"
-      validation="required|email"
-      label="Email"
-      placeholder="abc@abc.com"
-    />
+        <FormKit type="form" @submit="onSubmit" class="parent_sect">
+          <FormKit
+            type="text"
+            name="email"
+            id="email"
+            validation="required|email"
+            label="Email"
+            placeholder="abc@abc.com"
+            v-model="loginDetails.email"
+          />
 
-    <FormKit
-      type="password"
-      name="password"
-      id="password"
-      validation="required"
-      label="Password"
-      placeholder="Password"
-    />
-  </FormKit>
-  <div>
-    <p>Not a Registered User? <router-link to="/reg-buyer">SignUp</router-link></p>
-  </div>
+          <FormKit
+            type="password"
+            name="password"
+            id="password"
+            validation="required"
+            label="Password"
+            placeholder="Password"
+            v-model="loginDetails.password"
+          />
+        </FormKit>
+        <div>
+          <p>
+            Not a Registered User?
+            <router-link to="/reg-seller">SignUp</router-link>
+          </p>
+        </div>
       </div>
     </div>
   </div>
-
-
 </template>
 
+<script lang="ts" setup>
+import AuthService from "@/services/AuthService";
+import { reactive } from "vue";
 
+let loginDetails = reactive<ILoginDetails>({
+  email: "",
+  password: "",
+});
+
+const onSubmit = async () => {
+  try {
+    await AuthService.checkLogin(loginDetails);
+    router.push("/home");
+  } catch (e) {
+    console.error("Something went wrong while logging in Please try again.");
+  }
+};
+</script>
 <style>
 * {
   box-sizing: border-box;
@@ -160,11 +181,10 @@ div#app div#login div#form button:hover {
 }
 </style>
 <script lang="ts">
-
 import router from "@/router";
-import axios from "axios";
 import { FormKit } from "@formkit/vue";
 import { defineComponent } from "vue";
+import type { ILoginDetails } from "@/interfaces/bid-for-good";
 export default defineComponent({
   methods: {
     route() {
