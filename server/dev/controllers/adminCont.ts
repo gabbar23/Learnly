@@ -23,18 +23,21 @@ const getVerfiedSellers = async (req: Request, res: Response) => {
             "provinceName",
           ],
         where: {
-            isSeller: 1,
+            isSeller: 0,
             isVerified: 0,
           }
       });
-
-    //   const transformedSellers:any = verifiedSellers.map(user => {
-    //     return {
-    //       id: user.userId,
-    //       fullName: `${user.firstName} ${user.lastName}`,
-    //     };
-    //   });
-      res.status(200).json(verifiedSellers);
+      // const transformedSellers:any = verifiedSellers.map(user => {
+      //   return {
+      //     id: user.userId,
+      //     fullName: `${user.firstName} ${user.lastName}`,
+      //   };
+      // });
+      if(verifiedSellers.length > 0){
+        res.status(200).json(verifiedSellers);
+      }else{
+        res.status(200).json([]);
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server error" });
@@ -57,9 +60,6 @@ const getVerfiedSellers = async (req: Request, res: Response) => {
       res.status(500).json({ message: "Internal Server error" });
     }
   };
-
-
-
 
   export default{
     getVerfiedSellers,
