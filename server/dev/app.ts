@@ -1,13 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import * as http from 'http';
+import http from 'http';
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
-import { sellerModel } from "./models/sellerModel";
-import { StatesCity } from "./models/citiesState";
 import { Socket,Server } from "socket.io";
+
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -22,16 +21,23 @@ const app = express();
 
 const server: http.Server = http.createServer(app);
 
-const io = new Server(server,{
-  cors:{
-    origin:"http://localhost:5173/make-bid"
-  }
-});
+const io = new Server(server);
 
 io.on('connection', (socket:Socket)=>{
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.emit('message','welcome to Auction Website');
+  socket.on('placeBid', (data) => {
+    // Update the bid in the database
+    // ...
+    console.log("bid pressed");
+    // Emit a bid update event to all connected clients
+    
+    io.emit('bidUpdate', data);
+  });
+
+
+  io.emit('message','welcome to Auction Website');
+
 
   socket.on('disconnect', () => {
     console.log('🔥: A user disconnected');

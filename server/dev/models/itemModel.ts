@@ -26,4 +26,5 @@ const ItemModel = sequelize.define("item", {
     type: DataTypes.DATE,
   },
 });
+
 export const Item = ItemModel;

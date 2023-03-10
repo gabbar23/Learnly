@@ -152,6 +152,7 @@ onMounted(async () => {
     //await AuthService.getUploadImage();
     let response = await AuthService.getStates();
     states.value = [];
+    console.log(states);
     for (let i = 0; i < response.data.length; i++) {
       states.value.push({
         label: response.data[i].province,

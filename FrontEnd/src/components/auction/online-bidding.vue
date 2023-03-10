@@ -16,12 +16,13 @@
       <div class = "row">
         <div class="details">
           <div>Description</div>
-          <div>Closing At: 40$</div>
+          <div>Closing At: {{value}}</div>
           <div>Current Max: 40$</div>
           <div class = "d-flex">
             <div class = "mr-4">Make Bid</div>
             <FormKit  type="text" />
             <button class="btn btn-danger ml-5" @click="sendMessage">Submit Bid</button>
+            <p class="time">{{currentTime}}</p>
           </div>
         </div>
       </div>
@@ -40,17 +41,26 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 
 import io from 'socket.io-client';
 import type {Socket} from 'socket.io-client'
+import { number } from "@formkit/inputs";
 // import auctionService from "@/services/auctionService";
+import {formatDistance} from 'date-fns';
 
 export default {
   data() {
     return {
+      value: 0 ,
       socket: null as Socket | null,
       messages:[""],
       newMessage: '',
+      currentTime: new Date().toLocaleString()
     };
   },
   created() {
+
+    setInterval(()=>{
+      this.currentTime= new Date().toLocaleString()
+    },500);
+
     console.log("socket message init procrss.....");
 
    // Connection to socket at server
@@ -61,13 +71,14 @@ export default {
       console.log("got message");
       this.messages.push(message);
     });
+
   },
 
   methods: {
     sendMessage() {
       console.log("message sent");
       // Emit a 'chat message' event to the server
-      this.socket.emit('chat message', this.newMessage);
+      this.socket.emit('placebid', this.newMessage);
       this.newMessage = '';
     }
   }
