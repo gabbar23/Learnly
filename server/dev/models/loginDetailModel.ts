@@ -17,6 +17,10 @@ const loginDetailModel = sequelize.define("loginDetail", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  isVerified: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
   isAdmin: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
