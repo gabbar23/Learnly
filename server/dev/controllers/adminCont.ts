@@ -23,7 +23,7 @@ const getVerfiedSellers = async (req: Request, res: Response) => {
             "provinceName",
           ],
         where: {
-            isSeller: 0,
+            isSeller: 1,
             isVerified: 0,
           }
       });
