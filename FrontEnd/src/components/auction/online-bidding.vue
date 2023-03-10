@@ -46,6 +46,9 @@ import { number } from "@formkit/inputs";
 import {formatDistance} from 'date-fns';
 
 export default {
+  
+  components:{ Navigation, Carousel, Slide, Pagination },
+
   data() {
     return {
       value: 0 ,
@@ -57,6 +60,8 @@ export default {
   },
   created() {
 
+
+
     setInterval(()=>{
       this.currentTime= new Date().toLocaleString()
     },500);
@@ -64,12 +69,16 @@ export default {
     console.log("socket message init procrss.....");
 
    // Connection to socket at server
-    this.socket = io('http://localhost:3000/');
+    this.socket = io();
 
     // Listen for 'chat message' events from the server
-    this.socket.on('connection', (message) => {
+    this.socket.on('connection', (message:string) => {
       console.log("got message");
       this.messages.push(message);
+
+      this.socket?.on('disconnect', () => {
+        console.log('user disconnected');
+      });
     });
 
   },
@@ -78,7 +87,7 @@ export default {
     sendMessage() {
       console.log("message sent");
       // Emit a 'chat message' event to the server
-      this.socket.emit('placebid', this.newMessage);
+      this.socket!.emit('placebid', this.newMessage);
       this.newMessage = '';
     }
   }

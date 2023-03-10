@@ -24,6 +24,7 @@ const server: http.Server = http.createServer(app);
 const io = new Server(server);
 
 io.on('connection', (socket:Socket)=>{
+  
   console.log(`⚡: ${socket.id} user just connected!`);
 
   socket.on('placeBid', (data) => {
