@@ -28,7 +28,14 @@ export default {
     return apiClient.get("api/fetch/upload");
   },
 
-  checkLogin(loginDetails: ILoginDetails){
-    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails);
-  }
+  checkLogin(loginDetails: ILoginDetails) {
+    return apiClient.post(
+      "api/v1/register/checkLoginCredentials",
+      loginDetails
+    );
+  },
+
+  verifiedSellers() {
+    return apiClient.get("api/v1/register/verifiedSellers");
+  },
 };
