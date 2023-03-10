@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
+import {bidRoutes} from "./routes/bidRoutes"
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -12,6 +13,7 @@ import { Report } from "./models/reportsModel";
 import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
+import { ImageDetailModel } from "./models/imageDetails";
 
 const app = express();
 
@@ -32,6 +34,7 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
+app.use("/api/bid",bidRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -53,10 +56,14 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
+Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
 // UserDetail.sync({ force: true }).then((_) => {
 //   console.log("UserDetails Loaded");
 // });
 // syncing models
+Item.sync({force:true}).then((_)=>{
+  console.log("Models Loaded");
+})
 sequelize
   .sync()
   .then((_) => {

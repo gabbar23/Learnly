@@ -30,5 +30,5 @@ export default {
 
   checkLogin(loginDetails: ILoginDetails){
     return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails);
-  }
+  },
 };

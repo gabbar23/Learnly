@@ -6,24 +6,24 @@ const properties = PropertiesReader(
   dirPath.join(__dirname, "../../dbconfig/properties.ini")
 );
 
-// const sequelize = new Sequelize(
-//   `${properties.get("dev.db")}`,
-//   `${properties.get("dev.username")}`,
-//   `${properties.get("dev.password")}`,
-//   {
-//     dialect: "mysql",
-//     host: `${properties.get("dev.host")}`,
-//   }
-// );
-
 const sequelize = new Sequelize(
-  `${properties.get("test.db")}`,
-  `${properties.get("test.username")}`,
-  `${properties.get("test.password")}`,
+  `${properties.get("dev.db")}`,
+  `${properties.get("dev.username")}`,
+  `${properties.get("dev.password")}`,
   {
     dialect: "mysql",
-    host: `${properties.get("test.host")}`,
+    host: `${properties.get("dev.host")}`,
   }
 );
+
+// const sequelize = new Sequelize(
+//   `${properties.get("test.db")}`,
+//   `${properties.get("test.username")}`,
+//   `${properties.get("test.password")}`,
+//   {
+//     dialect: "mysql",
+//     host: `${properties.get("test.host")}`,
+//   }
+// );
 
 export { sequelize };
