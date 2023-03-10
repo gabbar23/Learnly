@@ -89,26 +89,26 @@
           </div>
           <br />
 
-          <FormKit type="password" label="Password" />
+          <FormKit type="password" label="Password" v-model="userDetails.password" />
 
           <FormKit type="password" label="Confirm Password" />
         </section>
       </FormKit>
     </div>
   </div>
-  <!-- <section>
+  <section>
     <div id="login">
       <div id="form">
         <FormKit type="button" :ignore="false" @click="login()">
           Already have an account? Sign In!
         </FormKit>
-        <h1 class="align_center">OR</h1>
+    <!--    <h1 class="align_center">OR</h1>
         <FormKit type="button" :ignore="false" @click="buyerPage()">
           Register as Buyer
-        </FormKit>
+        </FormKit>  -->
       </div>
     </div>
-  </section> -->
+  </section>
 </template>
 <script lang="ts" setup>
 import { validation } from "@/constants";
