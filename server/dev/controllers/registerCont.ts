@@ -2,50 +2,59 @@ import { Request, Response } from "express";
 import { hashPassword, checkPassword } from "../util/passwordHashing";
 import { UserDetail } from "../models/userDetailModel";
 import { LoginDetail } from "../models/loginDetailModel";
-// import { fetchInstance } from "../util/dbMethods";
-// register User
+
+// Registers a new user
 export const registerUser = async (req: Request, res: Response) => {
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const dateOfBirth = req.body.dateOfBirth;
-  const gender = req.body.gender;
-  const isBuyer = req.body.isBuyer;
-  const isSeller = req.body.isSeller;
-  const phone = req.body.phone;
-  const address = req.body.address;
-  const cityName = req.body.cityName;
-  const provinceName = req.body.provinceName;
-  const govtIdUrl = req.body.govtIdUrl;
-  const email = req.body.email;
-  const password = req.body.password;
-  const postalCode = req.body.postalCode;
+  // Extract data from request body
+  const {
+    firstName,
+    lastName,
+    dateOfBirth,
+    gender,
+    isBuyer,
+    isSeller,
+    phone,
+    address,
+    cityName,
+    provinceName,
+    govtIdUrl,
+    email,
+    password,
+    postalCode,
+  } = req.body;
+
   let userId = "";
   try {
+    // Create a new user detail instance
     const userDetail = await UserDetail.create({
-      firstName: firstName,
-      lastName: lastName,
-      dateOfBirth: dateOfBirth,
-      gender: gender,
-      isBuyer: isBuyer,
-      isSeller: isSeller,
-      govtIdUrl: govtIdUrl,
-      phone: phone,
-      address: address,
-      cityName: cityName,
-      provinceName: provinceName,
-      postalCode: postalCode,
+      firstName,
+      lastName,
+      dateOfBirth,
+      gender,
+      isBuyer,
+      isSeller,
+      govtIdUrl,
+      phone,
+      address,
+      cityName,
+      provinceName,
+      postalCode,
     });
+
+    // Get the user ID
     userId = userDetail.get().userId;
-    // Create a new LoginDetail instance and associate it with the UserDetail instance
+
+    // Create a new login detail instance and associate it with the user detail instance
     const hashedPassword = await hashPassword(password);
     const loginDetail = await LoginDetail.create({
       user_id: userId,
-      email: email,
+      email,
       isAdmin: "false",
       isVerified: "false",
       password: hashedPassword,
     });
 
+    // Send response with user and login details
     res.status(201).json({
       message: {
         userDetail: userDetail.get({ plain: true }),
@@ -53,21 +62,25 @@ export const registerUser = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
+    // If there is an error, delete the user detail instance and send an error response
     UserDetail.destroy({
       where: {
-        userId: userId,
+        userId,
       },
     });
-    console.log();
 
+    console.log(err);
     res.status(500).json({
       message: err,
     });
   }
 };
 
+// Retrieves user details
 const showUser = (req: Request, res: Response) => {
   console.log(req);
+
+  // Find all user details and send response
   UserDetail.findAll({
     attributes: [
       "firstName",
@@ -85,74 +98,61 @@ const showUser = (req: Request, res: Response) => {
     res.send(result);
   });
 };
-
 const checkUserExists = async (req: Request, res: Response) => {
   try {
-    const reqUserEmail = req.body.email;
+    const requestedUserEmail = req.body.email;
     const result = await LoginDetail.findOne({
       where: {
-        email: reqUserEmail,
+        email: requestedUserEmail,
       },
     });
 
     if (result) {
-      {
-        res.status(200).json({
-          message: "User Exists",
-          isUserAlreadyPresent: true,
-        });
-      }
+      res.status(200).json({
+        message: "User Exists",
+        isUserAlreadyPresent: true,
+      });
     } else {
       res.status(200).json({
-        message: "User Doesn't Exists",
+        message: "User Doesn't Exist",
         isUserAlreadyPresent: false,
       });
     }
   } catch (error) {
     console.error("Error checking if user exists:", error);
-    res.status(500).json({ message: [] });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
 const checkLoginCredentials = async (req: Request, res: Response) => {
   try {
-    // let userDetails: any;
     const { email, password } = req.body;
 
-    // Find the user with the given email
     const login = await LoginDetail.findOne({ where: { email } });
-    // const user = await UserDetail.findByPk("4");
-    // If the user doesn't exist, return an error
     if (!login) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Check if the password matches
-    const userpassword = await login.get().password;
-    const passwordMatches = checkPassword(password, userpassword);
-    passwordMatches.then((result) => {
-      if (!result) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
+    const loginDetails = login.get({ plain: true });
+    const user = await UserDetail.findByPk(loginDetails.user_id);
+    const userDetails = user?.get({ plain: true });
 
-      const loginDetails = login.get({ plain: true });
+    const passwordMatches = await checkPassword(
+      password,
+      loginDetails.password
+    );
+    if (!passwordMatches) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
 
-      res.status(200).json({
-        message: {
-          userId: loginDetails.user_id,
-          email: loginDetails.email,
-          // isSeller: user.isSeller,
-        },
-      });
+    res.status(200).json({
+      message: {
+        userId: loginDetails.user_id,
+        email: loginDetails.email,
+        isVerified: loginDetails.isVerified,
+        isSeller: userDetails.isSeller,
+        isBuyer: userDetails.isBuyer,
+      },
     });
-
-    // // If the password doesn't match, return an error
-    // if (userpassword != password) {
-    //   return res.status(401).json({ error: "Invalid credentials" });
-    // }
-
-    // If the email and password match, return the user object
-    // res.status(200).json({ message: "User Authenticated" });
   } catch (error) {
     console.error("Error checking login credentials:", error);
     res.status(500).json({ error: "Internal server error" });
