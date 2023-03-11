@@ -7,7 +7,7 @@ import apiClient from "../axios";
 
 export default {
   register(credentials: IGetUserDetails) {
-    return apiClient.post("api/v1/register/createSeller", credentials);
+    return apiClient.post("api/v1/register/registerUser", credentials);
   },
   getStates() {
     return apiClient.get("api/fetch/fetchStates");

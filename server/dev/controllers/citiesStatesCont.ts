@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { cityProvince } from "../models/citiesState";
 import { sequelize } from "../util/database";
-// import { sequelize } from "../util/database";
 
 console.log("req recevied for fetching city");
 
@@ -28,16 +27,17 @@ const fetchStates = async (req: Request, res: Response) => {
 const fetchCity = async (req: Request, res: Response) => {
   try {
     //retrievel from db
-    console.log(req);
+    console.log(req.body);
+    console.log(req.body.province_name);
     const cities = await cityProvince.findAll({
       where: {
-        province_name: "Nova scotia",
+        province_name: req.body.province_name,
       },
       attributes: ["city"],
       // distinct: true,
       order: [["city", "ASC"]],
     });
-
+    console.log(cities);
     res.status(200).json(cities);
   } catch (error) {
     console.error(error);
