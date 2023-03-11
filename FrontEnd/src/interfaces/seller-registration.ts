@@ -22,8 +22,8 @@ export interface IGetAddress {
 }
 
 export interface IGetUserDetails {
-  fname: string;
-  lname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   nameOfOffering: string;
@@ -33,10 +33,13 @@ export interface IGetUserDetails {
   termsCondition: boolean;
   address: string;
   password: string;
-  city: string;
-  province: string;
+  cityName: string;
+  provinceName: string;
   postalCode: string;
-  dateOfbirth: Date;
+  dateOfBirth: Date;
+  gender: string;
+  isBuyer:boolean;
+  isVerified:boolean;
   age: number | null;
   photoDetail?: Blob | FormData;
 }

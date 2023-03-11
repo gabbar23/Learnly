@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
+ 
   <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
     <section class="container parent_sect">
       <FormKit
@@ -94,6 +95,7 @@
       />
     </section>
   </FormKit>
+
 </template>
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
@@ -208,4 +210,5 @@ const triggerChange = async (val: string) => {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
 </style>

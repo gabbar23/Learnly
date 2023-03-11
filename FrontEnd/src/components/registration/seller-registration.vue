@@ -8,17 +8,13 @@
         enctype="multipart/form-data"
       >
         <section class="container parent_sect">
-          <FormKit type="text" label="First Name" v-model="userDetails.fname" />
+          <FormKit type="text" label="First Name" v-model="userDetails.firstName" />
 
-          <FormKit type="text" label="Last Name" v-model="userDetails.lname" />
+      <FormKit type="text" label="Last Name" v-model="userDetails.lastName" />
 
-          <FormKit
-            type="number"
-            label="Phone Number"
-            v-model="userDetails.phone"
-          />
-          <FormKit type="date" label="Date of birth" />
-          <!-- <FormKit
+      <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
+      <FormKit type="date" label="Date of birth"/>     
+      <!-- <FormKit
         type="text"
         label="Name Of Offering"
         v-model="userDetails.nameOfOffering"  
@@ -32,23 +28,23 @@
 
           <FormKit type="text" label="Address" v-model="userDetails.address" />
 
-          <FormKit
-            type="select"
-            label="State"
-            placeholder="Select a State"
-            :options="states"
-            v-model="userDetails.province"
-            @change="triggerChange(userDetails.province)"
-          >
-          </FormKit>
+      <FormKit
+        type="select"
+        label="State"
+        placeholder="Select a State"
+        :options="states"
+        v-model="userDetails.provinceName"
+        @change="triggerChange(userDetails.provinceName)"
+      >
+      </FormKit>
 
-          <FormKit
-            type="select"
-            label="City"
-            placeholder="Select City"
-            :options="cities"
-            v-model="userDetails.city"
-          />
+      <FormKit
+        type="select"
+        label="City"
+        placeholder="Select City"
+        :options="cities"
+        v-model="userDetails.cityName"
+      />
 
           <FormKit
             type="text"
@@ -64,8 +60,7 @@
             accept=".jpg,.jpeg,.png"
             help="Upload a goverment approved ID such as Driving License or Passport. 
         Only .pdf,.jpg,.jpeg,.png files allowed"
-            v-model="userDetails.photoId"
-          />
+      />
 
           <!-- <FormKit
         type="textarea"
@@ -94,26 +89,26 @@
           </div>
           <br />
 
-          <FormKit type="password" label="Password" />
+          <FormKit type="password" label="Password" v-model="userDetails.password" />
 
           <FormKit type="password" label="Confirm Password" />
         </section>
       </FormKit>
     </div>
   </div>
-  <!-- <section>
+  <section>
     <div id="login">
       <div id="form">
         <FormKit type="button" :ignore="false" @click="login()">
           Already have an account? Sign In!
         </FormKit>
-        <h1 class="align_center">OR</h1>
+    <!--    <h1 class="align_center">OR</h1>
         <FormKit type="button" :ignore="false" @click="buyerPage()">
           Register as Buyer
-        </FormKit>
+        </FormKit>  -->
       </div>
     </div>
-  </section> -->
+  </section>
 </template>
 <script lang="ts" setup>
 import { validation } from "@/constants";
@@ -125,26 +120,33 @@ import type {
 import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { register } from "@formkit/core";
+import { fa } from "@formkit/i18n";
+import { label } from "@formkit/inputs";
 import { defineComponent, onMounted, reactive, ref, watch } from "vue";
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
 let userDetails = reactive<IGetUserDetails>({
-  fname: "",
-  lname: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
   nameOfOffering: "",
   estimatedValue: null,
-  photoId: "",
-  description: "",
+  photoId: "1",
+  description: "a",
   termsCondition: false,
   address: "",
-  password: "test123",
-  city: "",
-  province: "",
-  postalCode: "",
-  dateOfbirth: new Date(),
+  password: "",
+  cityName: "",
+  provinceName: "",
+  photoDetail:undefined,
+  postalCode: "a1b-c2d",
+  dateOfBirth: new Date(),
   age: null,
+  isBuyer:false,
+  isVerified:true,
+  gender:"male",
+  
 });
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
@@ -154,12 +156,13 @@ onMounted(async () => {
     states.value = [];
     console.log(states);
     for (let i = 0; i < response.data.length; i++) {
+      console.warn(response.data[i].province_name)
       states.value.push({
-        label: response.data[i].province,
-        value: response.data[i].province,
+        label: response.data[i].province_name,
+        value: response.data[i].province_name,
       });
     }
-    console.warn(states.value);
+    console.log(states.value);
   } catch (e) {
     console.error("Error in fetching states", e);
   }
@@ -219,19 +222,21 @@ const checkUserExists = async (email: string) => {
     console.error("Error in checking user existence");
   }
 };
+
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
   try {
     let response = await AuthService.getCities();
-    console.log(response);
+  //  console.log(response);
     for (let i = 0; i < response.data.length; i++) {
+      console.log(response.data[i].city)
       cities.value.push({
-        label: response.data[i].cities,
-        value: response.data[i].cities,
+        label: response.data[i].city,
+        value: response.data[i].city,
       });
     }
-    console.warn(cities.value);
+    console.log(cities);
   } catch (e) {
     console.error("Error in pulling cities");
   }
