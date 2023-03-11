@@ -29,6 +29,8 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails){
-    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails);
+    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails).then((res)=>{
+      console.log(res);
+    });
   }
 };
