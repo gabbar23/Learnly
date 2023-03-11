@@ -44,8 +44,7 @@
         placeholder="Select City"
         :options="cityOptions"
         v-model="userDetails.cityName"
-        @change="(userDetails.cityName)"
-        
+        @change="triggerChange(userDetails.provinceName)"
       ></FormKit>
 
           <FormKit
@@ -237,9 +236,8 @@ const checkUserExists = async (email: string) => {
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
-  let temp=[];
   try {
-    let response = await AuthService.getCities();
+    let response = await AuthService.getCities(val);
   //  console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
@@ -247,7 +245,7 @@ const triggerChange = async (val: string) => {
         value: response.data[i].city,
       });
     }
-
+      console.log(cityOptions)
   }
     catch (e) {
     console.error("Error in pulling cities");
