@@ -1,5 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
+import session  from "express-session";
+
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
@@ -13,7 +15,28 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 
+
+declare module 'express-session' {
+  interface Session{
+    userId: string;
+  }
+}
+
 const app = express();
+
+app.use(
+  session({
+    secret: 'wearegroup5', // replace with your own secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // set to true if using HTTPS
+      maxAge: 60 * 60 * 1000, // session expires after 1 day
+      httpOnly:true,
+    }
+  })
+);
+
 
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
