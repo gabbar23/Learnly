@@ -27,19 +27,17 @@ const fetchStates = async (req: Request, res: Response) => {
 
 const fetchCity = async (req: Request, res: Response) => {
   try {
-    //retrievel from db
-    console.log("lololol")
-    console.log(req.body)
-    console.log(req.body.province_name);
+    //retrievel from db 
+
     const cities = await cityProvince.findAll({
       where: {
-        province_name: req.body.province_name,
+        province_name: req.query.province,
       },
       attributes: ["city"],
       // distinct: true,
       order: [["city", "ASC"]],
     });
-    console.log(cities)
+    //console.log(cities)
     res.status(200).json(cities);
   } catch (error) {
     console.error(error);

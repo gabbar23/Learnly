@@ -39,6 +39,7 @@ export interface IGetUserDetails {
   dateOfBirth: Date;
   gender: string;
   isBuyer:boolean;
+  isSeller:boolean;
   isVerified:boolean;
   age: number | null;
   photoDetail?: Blob | FormData;

@@ -1,14 +1,18 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <div id="login">
-    <div id="form4">
+  <div id="app">
+  <div id="login2">
+    <div id="form2">
       <FormKit
         type="form"
         @submit="sellerRegister"
         enctype="multipart/form-data"
       >
         <section class="container parent_sect">
-          <FormKit type="text" label="First Name" v-model="userDetails.firstName" />
+          <FormKit 
+          type="text" 
+          label="First Name" 
+          v-model="userDetails.firstName" 
+          />
 
       <FormKit type="text" label="Last Name" v-model="userDetails.lastName" />
 
@@ -44,7 +48,6 @@
         placeholder="Select City"
         :options="cityOptions"
         v-model="userDetails.cityName"
-        @change="triggerChange(userDetails.provinceName)"
       ></FormKit>
 
           <FormKit
@@ -55,6 +58,7 @@
           />
 
           <FormKit
+            id="fileUpload"
             name="idproof"
             type="file"
             label="Photo of Government ID"
@@ -68,15 +72,6 @@
         label="Description"
         v-model="userDetails.description"
       /> -->
-          <br />
-          <FormKit
-            type="checkbox"
-            label="Terms and Conditions"
-            help="Do you agree to our terms of service?"
-            name="terms"
-            :value="false"
-            v-model="userDetails.termsCondition"
-          />
 
           <br />
           <FormKit
@@ -93,12 +88,32 @@
           <FormKit type="password" label="Password" v-model="userDetails.password" />
 
           <FormKit type="password" label="Confirm Password" />
+
+          <FormKit
+            type="checkbox"
+            label="Terms and Conditions"
+            help="Do you agree to our terms of service?"
+            name="terms"
+            :value="false"
+            v-model="userDetails.termsCondition"
+          />
+          <FormKit
+            type="checkbox"
+            label="Register as Buyer/Seller or Both"
+            name="terms"
+            :options="['buyer','seller']"
+            v-model="buyerSeller"
+            ${section}-i
+            @input="checkIsBuyerIsSeller(userDetails.isSeller,userDetails.isBuyer)"
+          />
+
+
         </section>
       </FormKit>
     </div>
   </div>
   <section>
-    <div id="login">
+    <div id="app2">
       <div id="form">
         <FormKit type="button" :ignore="false" @click="login()">
           Already have an account? Sign In!
@@ -107,10 +122,13 @@
         <FormKit type="button" :ignore="false" @click="buyerPage()">
           Register as Buyer
         </FormKit>  -->
-      </div>
+        </div>
     </div>
+  
   </section>
+  </div>
 </template>
+
 <script lang="ts" setup>
 import { validation } from "@/constants";
 import type {
@@ -121,8 +139,8 @@ import type {
 import router from "@/router";
 import AuthService from "@/services/AuthService";
 import type { FormKitProps, register } from "@formkit/core";
-import { fa } from "@formkit/i18n";
-import { label, selectInput } from "@formkit/inputs";
+import { fa, tr } from "@formkit/i18n";
+import { label, options, selectInput } from "@formkit/inputs";
 import { computed, defineComponent, onMounted, reactive, ref, watch } from "vue";
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -153,11 +171,12 @@ let userDetails = reactive<IGetUserDetails>({
   dateOfBirth: new Date(),
   age: null,
   isBuyer:false,
+  isSeller:false,
   isVerified:true,
   gender:"male",
   
 });
-
+let buyerSeller=["",""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
@@ -232,6 +251,29 @@ const checkUserExists = async (email: string) => {
     console.error("Error in checking user existence");
   }
 };
+const checkIsBuyerIsSeller=async(val:any,val2:any)=>{
+  if(buyerSeller.length==0)
+  {
+    userDetails.isBuyer=false;
+    userDetails.isSeller=false;
+  }
+if(buyerSeller.length==2){
+userDetails.isSeller=true;
+userDetails.isBuyer=true;
+}
+else if(buyerSeller.length==1){
+if(buyerSeller[0]=="buyer"){
+  userDetails.isBuyer=true;
+  userDetails.isSeller=false;
+}
+if(buyerSeller[0]=="seller"){
+  userDetails.isSeller=true;
+  userDetails.isBuyer=false;
+}}
+console.log(buyerSeller)
+console.log(userDetails.isBuyer)
+console.log(userDetails.isSeller)
+};
 
 const triggerChange = async (val: string) => {
   console.warn(val);
@@ -258,211 +300,137 @@ const triggerChange = async (val: string) => {
   box-sizing: border-box;
   font-family: Verdana, sans-serif;
 }
-div#app div#login div#form4 {
-  background-color: lightseagreen;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
 
-div#login div#form3 {
-  background-color: #34495e;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
-
-div#app div#login div#form3 label,
-div#app div#login div#form3 input,
-div#app div#login div#form2 label,
-div#app div#login div#form2 input {
-  outline: none;
-  width: 100%;
-}
-
-div#app div#login div#form3 label {
-  color: #95a5a6;
-  font-size: 0.8em;
-}
-div#app div#login div#form2 label {
-  color: #34495e;
-  font-size: 0.9em;
-}
-div#app div#login div#form4 label {
-  color: #34495e;
-  font-size: 0.9em;
-}
-div#app div#login div#form3 input {
-  background-color: transparent;
-  border: none;
-  color: #34495e;
-  font-size: 0.8em;
-  margin-bottom: 20px;
-}
-div#app div#login div#form2 input {
-  background-color: transparent;
-  border: none;
-  color: #ecf0f1;
-
-  font-size: 1.2em;
-  margin-bottom: 20px;
-}
-div#app div#login div#form3 ::placeholder,
-div#app div#login div#form2 ::placeholder {
-  color: #ecf0f1;
-  opacity: 1;
-}
-
-div#app div#login div#form3 button,
-div#app div#login div#form2 button {
-  background-color: #eadfdf;
-  color: #000;
-  cursor: pointer;
-  border: none;
-  padding: 10px;
-  transition: background-color 0.2s ease-in-out;
-  width: 100%;
-}
-
-div#app div#login div#form3 button:hover,
-div#app div#login div#form2 button:hover {
-  color: #ecf0f1;
-  background-color: #381e1e;
-}
-
-div#app div#login div#form2 {
-  background-color: lightseagreen;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
 
 div#app {
   width: 100%;
   height: 100%;
+  background-color: #eadfdf;
 }
-
-div#app div#login {
-  align-items: center;
-  background-color: darkcyan;
-  display: flex;
-  justify-content: center;
+div#app2{
   width: 100%;
   height: 100%;
+justify-content: center;
+background-color: #eadfdf;
+display: flex;
 }
 
-div#app div#login div#description {
-  background-color: #ffffff;
-  width: 280px;
-  padding: 35px;
-  text-align: center;
+div#app div#login2 {
+  align-items: center;
+  background-color: #eadfdf;
+  display:flex;
+  justify-content:center;
+  width:auto;
+  height:auto;
 }
 
-div#app div#login div#description h1,
-div#app div#login div#description p {
-  margin: 0;
-}
-
-div#app div#login div#description p {
-  font-size: 0.8em;
-  color: #95a5a6;
-  margin-top: 10px;
-}
-
-div#app div#login div#form {
-  background-color: lightseagreen;
-  border-radius: 1000px;
+div#app2 div#form {
+  background-color: #34495e;
+  border-radius: 5px;
   box-shadow: 0px 0px 30px 0px #666;
-  color: #ecf0f1;
-  width: 100%;
+  color: #eadfdf;
+  justify-content:flex-end;
+  width: 260px;
   padding: 35px;
 }
 
-div#app div#login div#form label,
-div#app div#login div#form input {
-  margin: 10x;
+div#app2  div#form label,
+div#app2  div#form input {
+  outline: none;
+  width: 100%;
+}
+div#app2 div#form label {
+  color: #eadfdf;
+  font-size: 0.8em;
+}
+
+div#app div#login2 div#form2 {
+  background-color: teal;
+  border-radius: 5px;
+  box-shadow: 0px 0px 30px 0px #666;
+  color: #eadfdf;
+  width:900px;
+  padding: 35px;
+}
+
+div#app div#login2 div#form2 label{
   outline: none;
   width: 100%;
 }
 
-div#app div#login div#form label {
-  color: #95a5a6;
+div#app div#login2 div#form2 label {
+  color: #eadfdf;
   font-size: 0.8em;
 }
 
-div#app div#login div#form input {
+div#app div#login2 div#form2 input {
   background-color: transparent;
   border: none;
-  color: #ecf0f1;
+  color:#eadfdf;
   font-size: 1em;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+}
+[data-type="checkbox"] .formkit-input ~ .formkit-decorator, [data-type="radio"] .formkit-input ~ .formkit-decorator  {
+  color: var(--fk-color-primary);
+}
+#input_15 > ul > li:nth-child(1) > label > div > span > span > svg > polygon{
+  color:#eadfdf;
+}
+#input_15 > ul > li:nth-child(2) > label > div > span > span > svg > polygon{
+  color: #eadfdf;
 }
 
-div#app div#login div#form ::placeholder,
-label {
-  color: #ecf0f1;
+
+div#app div#login2 div#form2 form ::placeholder,
+div#app div#login2 div#form2 select  {
+  color: #eadfdf;
   opacity: 1;
 }
 
-div#app div#login div#form button {
+div#app div#login2 div#form2 button {
   background-color: #eadfdf;
   color: #000;
   cursor: pointer;
   border: none;
   padding: 10px;
   transition: background-color 0.2s ease-in-out;
-  width: 100%;
+  width: 75%;
 }
 
-div#app div#login div#form button:hover {
+div#app div#login2 div#form2 button:hover {
   color: #ecf0f1;
   background-color: #381e1e;
 }
 
-@media screen and (max-width: 100%) {
-  div#app div#login {
+@media screen and (max-width: 600px) {
+  div#app div#login2 {
     align-items: unset;
     background-color: unset;
     display: unset;
     justify-content: unset;
   }
 
-  div#app div#login div#description {
-    margin: 0 auto;
-    max-width: 350px;
-    width: 100%;
-  }
 
-  div#app div#login div#form {
+  div#app div#login2 div#form2 {
     border-radius: unset;
     box-shadow: unset;
     width: 100%;
   }
 
-  div#app div#login div#form form {
+  div#app div#login2 div#form2 form {
     margin: 0 auto;
-    max-width: 2px;
+    max-width: min-content;
     width: 100%;
   }
-}
+  div#app div#login2 div#form2 {
+    color: #eadfdf;
+    
+  }
+  
 .parent_sect {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 
+  1fr 1fr;
+}
 }
 </style>
