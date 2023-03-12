@@ -1,11 +1,15 @@
 import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
-import type { IGetUserDetails } from "@/interfaces/seller-registration";
+import type {
+  IGetState,
+  IGetUserDetails,
+} from "@/interfaces/seller-registration";
+import router from "@/router";
 import apiClient from "../axios";
 
 export default {
   register(credentials: IGetUserDetails) {
-    return apiClient.post("api/v1/register/createSeller", credentials);
+    return apiClient.post("api/v1/register/registerUser", credentials);
   },
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
@@ -27,10 +31,15 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails) {
-    return apiClient.post(
-      "api/v1/register/checkLoginCredentials",
-      loginDetails
-    );
+    return apiClient
+      .post("api/v1/register/checkLoginCredentials", loginDetails)
+      .then((res) => {
+        localStorage.setItem("sessionId", res.data.sessionId);
+        console.log(res.data.sessionId);
+      })
+      .catch(() => {
+        router.push("/login");
+      });
   },
 
   verifiedSellers() {
@@ -38,6 +47,6 @@ export default {
   },
 
   approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
-    return apiClient.put("api/v1/register/markAsVerified", {query: payload});
+    return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
 };
