@@ -3,6 +3,7 @@ import type {
   IGetState,
   IGetUserDetails,
 } from "@/interfaces/seller-registration";
+import router from "@/router";
 import apiClient from "../axios";
 
 export default {
@@ -29,6 +30,11 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails){
-    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails);
+    return apiClient.post("api/v1/register/checkLoginCredentials",loginDetails).then((res)=>{
+      localStorage.setItem('sessionId', res.data.sessionId);
+      console.log(res.data.sessionId);
+    }).catch(()=>{
+      router.push("/login");
+    });
   }
 };
