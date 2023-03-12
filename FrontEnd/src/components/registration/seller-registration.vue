@@ -5,7 +5,6 @@
       <FormKit
         type="form" 
         @submit="sellerRegister"
-        @submit-invalid="errorAlert"
         enctype="multipart/form-data"
       >
         <section class="container parent_sect">
@@ -254,9 +253,7 @@ const login = () => {
   router.push("/buyer-details");
 };
 */
-const errorAlert=async()=>{
-  alert("Oops! The data you entered is incorrect")
-}
+
 
 const sellerRegister = async (data: any) => {
   userDetails.age = 20;
