@@ -87,6 +87,17 @@ const router = createRouter({
       name: "Post Bid",
       component: () => import("../components/post-bid.vue"),
     },
+    {
+      path: "/error",
+      name: "error",
+      component: () => import("../components/misc pages/error.vue"),
+    },
+    {
+      path: "/congratulations",
+      name: "congratulations",
+      component: () => import("../components/misc pages/congratulations.vue"),
+    },
+
   ],
 });
 
