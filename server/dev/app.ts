@@ -14,6 +14,7 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
+import {UserBidding} from "./models/userBidDetailsModel";
 
 const app = express();
 
@@ -57,13 +58,26 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
 Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
-// UserDetail.sync({ force: true }).then((_) => {
+
+//UserBidding
+
+Item.hasMany(UserBidding, { foreignKey: "itemId" });
+
+//UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+
+Bidding.hasMany(UserBidding,{foreignKey: "bidId"});
+
+Item.hasMany(ImageDetailModel,{foreignKey:"itemId"});
+
+UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+
+// Bidding.sync({ force: true }).then((_) => {
 //   console.log("UserDetails Loaded");
 // });
 // syncing models
-Item.sync({force:true}).then((_)=>{
-  console.log("Models Loaded");
-})
+// UserBidding.sync({force:true}).then((_)=>{
+//   console.log("Models Loaded");
+// })
 sequelize
   .sync()
   .then((_) => {
