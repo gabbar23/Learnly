@@ -3,8 +3,9 @@
   <div id="login2">
     <div id="form2">
       <FormKit
-        type="form"
+        type="form" 
         @submit="sellerRegister"
+        @submit-invalid="errorAlert"
         enctype="multipart/form-data"
       >
         <section class="container parent_sect">
@@ -13,12 +14,27 @@
           label="First Name" 
           v-model="userDetails.firstName" 
           style="color: black;"
+          validation="required|alpha"
           />
 
-      <FormKit type="text" label="Last Name" v-model="userDetails.lastName" style="color: black;" />
+      <FormKit type="text" 
+      label="Last Name" 
+      v-model="userDetails.lastName" 
+      style="color: black;" 
+      validation="required|alpha"/>
 
-      <FormKit type="number" label="Phone Number" v-model="userDetails.phone"  style="color: black;"/>
-      <FormKit type="date" label="Date of birth"  style="color: black;"/>     
+      <FormKit type="tel" 
+      label="Phone Number" 
+      v-model="userDetails.phone" 
+       style="color: black;"
+       validation="required|number|length:10,10"
+  validation-visibility="dirty"/>
+
+       <FormKit type="date" 
+       label="Date of birth"  
+       style="color: black;"
+       validation="required"
+        />     
       <!-- <FormKit
         type="text"
         label="Name Of Offering"
@@ -31,7 +47,10 @@
         v-model="userDetails.estimatedValue"
       /> -->
 
-          <FormKit type="text" label="Address" v-model="userDetails.address"  style="color: black;"/>
+          <FormKit type="text" label="Address" 
+          v-model="userDetails.address"  
+          style="color: black;"
+          validation="required"/>
 
       <FormKit
         type="select"
@@ -39,6 +58,7 @@
         placeholder="Select a State"
         :options="states"
         v-model="userDetails.provinceName"
+        validation="required"
         @change="triggerChange(userDetails.provinceName)"
         
       >
@@ -49,6 +69,7 @@
         label="City"
         placeholder="Select City"
         :options="cityOptions"
+        validation="required"
         v-model="userDetails.cityName"
       ></FormKit>
 
@@ -56,6 +77,15 @@
             type="text"
             label="Postal Zip Code"
             help="format: a1b-c2d | a1bc2d | a1b c2d"
+            :validation="[
+              ['required'],
+              [
+                'matches',
+                /^\w\d\w \w\d\w$/,
+                /^\w\d\w-\w\d\w$/,
+                /^\w\d\w\w\d\w$/,
+              ],
+            ]"
             v-model="userDetails.postalCode"
             style="color: black;"
           />
@@ -82,6 +112,7 @@
             label="Email"
             v-model="userDetails.email"
             @blur="checkUserExists(userDetails.email)"
+            validation="required|email"
             style="color: black;"
           />
           <div class="error" v-if="isUserAlreadyRegistered">
@@ -89,17 +120,31 @@
           </div>
           <br />
 
-          <FormKit type="password" label="Password" v-model="userDetails.password" 
-          style="color: black;"/>
+          <FormKit 
+          type="password"
+        name="password"
+        validation="required"
+        label="Password"
+        placeholder="Password"
+          v-model="userDetails.password" 
+          style="color: black;"
+          />
 
-          <FormKit type="password" label="Confirm Password" 
-          style="color: black;"/>
+          <FormKit 
+          type="password"
+        name="password_confirm"
+        validation="required|confirm"
+        label="Confirm Password"
+        placeholder="Re-Enter Password"
+          style="color: black;"
+          />
 
           <FormKit
             type="checkbox"
             label="Terms and Conditions"
             help="Do you agree to our terms of service?"
             name="terms"
+            validation="accepted"
             :value="false"
             v-model="userDetails.termsCondition"
           />
@@ -108,8 +153,8 @@
             label="Register as Buyer/Seller or Both"
             name="terms"
             :options="['buyer','seller']"
+            validation="required"
             v-model="buyerSeller"
-            ${section}-i
             @input="checkIsBuyerIsSeller(userDetails.isSeller,userDetails.isBuyer)"
           />
 
@@ -144,9 +189,9 @@ import type {
 } from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
-import type { FormKitProps, register } from "@formkit/core";
+import type { error, FormKitProps, register } from "@formkit/core";
 import { fa, tr } from "@formkit/i18n";
-import { label, options, selectInput } from "@formkit/inputs";
+import { email, label, options, selectInput, submit } from "@formkit/inputs";
 import { computed, defineComponent, onMounted, reactive, ref, watch } from "vue";
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -182,6 +227,7 @@ let userDetails = reactive<IGetUserDetails>({
   gender:"male",
   
 });
+
 let buyerSeller=["",""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
@@ -208,6 +254,9 @@ const login = () => {
   router.push("/buyer-details");
 };
 */
+const errorAlert=async()=>{
+  alert("Oops! The data you entered is incorrect")
+}
 
 const sellerRegister = async (data: any) => {
   userDetails.age = 20;
@@ -236,7 +285,7 @@ const sellerRegister = async (data: any) => {
     },
   };
   //await AuthService.uploadImage(body, headerConfig);
-
+  
   const response = await AuthService.register(userDetails);
 };
 
@@ -252,7 +301,7 @@ const checkUserExists = async (email: string) => {
         console.error(err);
         isUserAlreadyRegistered.value = false;
       });
-    console.log("TEst");
+    //console.log("TEst");
   } catch {
     console.error("Error in checking user existence");
   }
@@ -276,9 +325,9 @@ if(buyerSeller[0]=="seller"){
   userDetails.isSeller=true;
   userDetails.isBuyer=false;
 }}
-console.log(buyerSeller)
-console.log(userDetails.isBuyer)
-console.log(userDetails.isSeller)
+//console.log(buyerSeller)
+//console.log(userDetails.isBuyer)
+//console.log(userDetails.isSeller)
 };
 
 const triggerChange = async (val: string) => {
