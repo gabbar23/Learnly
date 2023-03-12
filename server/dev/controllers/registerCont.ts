@@ -147,6 +147,10 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+  req.session.userId = email;
+
+  console.log(req.session.userId);
+    
     res.status(200).json({
       message: {
         userId: loginDetails.user_id,
@@ -155,6 +159,7 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
         isSeller: userDetails.isSeller,
         isBuyer: userDetails.isBuyer,
       },
+      sessionId:req.session.id,
     });
   } catch (error) {
     console.error("Error checking login credentials:", error);
