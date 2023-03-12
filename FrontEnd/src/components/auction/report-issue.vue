@@ -3,7 +3,37 @@
     <h1>Report issue</h1>
   </section>
   <div class="text-center">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <FormKit
+        type="form"
+      
+      >
+      <FormKit
+        type="select"
+        label="Issue"
+        placeholder="Select the type of issue"
+        :options="[{label:'Return',value:'return'}, 
+        {label:'Refund',value:'refund'},
+        {label:'Cancellation',value:'cancellation'}]"
+      >
+      </FormKit>
+
+      <FormKit
+        type="select"
+        label="Status"
+        placeholder="Status"
+        :options="[{label:'active',value:'active'},
+      {label:'resolved',value:'resolved'}
+      ]"
+      >
+      </FormKit>
+    
+    <FormKit 
+    type="textarea" 
+    label="Concern" 
+    placeholder="Please explain your concern in detail..."
+     ></FormKit>
+
+    </FormKit>
   </div>
 </template>
 <script lang="ts">
