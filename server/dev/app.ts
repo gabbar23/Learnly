@@ -5,6 +5,7 @@ import http from 'http';
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
+import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
 import { Socket,Server } from "socket.io";
 
 // import { sellerModel } from "./models/sellerModel";
@@ -21,28 +22,33 @@ const app = express();
 
 const server: http.Server = http.createServer(app);
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST']
+  }
+});
+
+// const io = new Server(server);
 
 io.on('connection', (socket:Socket)=>{
   
-  console.log(`⚡: ${socket.id} user just connected!`);
+  console.log("user just connected!");
 
   socket.on('placeBid', (data) => {
     // Update the bid in the database
     // ...
-    console.log("bid pressed");
+    console.log("bid pressed",data);
     // Emit a bid update event to all connected clients
     
-    io.emit('bidUpdate', data);
+    socket.emit('bidUpdate', (data + 20));
   });
-
-
-  io.emit('message','welcome to Auction Website');
 
 
   socket.on('disconnect', () => {
-    console.log('🔥: A user disconnected');
+    console.log('User disconnected');
   });
+
 });
 
 
@@ -65,6 +71,7 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
+app.use("/api/auction/",auctionRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -99,4 +106,4 @@ sequelize
     console.log(error);
   });
 
-app.listen(3000);
+server.listen(3000);

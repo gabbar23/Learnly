@@ -9,4 +9,5 @@ router.post("/registerUser", registerCont.registerUser);
 router.get("/showUsers", registerCont.showUser);
 router.post("/is-user-present", registerCont.checkUserExists);
 router.post("/checkLoginCredentials", registerCont.checkLoginCredentials);
+
 export const registerRoutes = router;

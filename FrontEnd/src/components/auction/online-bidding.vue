@@ -16,13 +16,18 @@
       <div class = "row">
         <div class="details">
           <div>Description</div>
-          <div>Closing At: {{value}}</div>
-          <div>Current Max: 40$</div>
+          <div>Starting At: {{startTime}}</div>
+          <div>Closing At: {{endTime}}</div>
+          <div>Start Price: {{startVal}}$</div>
+          <div>Current Max: {{hiestBid}}$</div>
           <div class = "d-flex">
             <div class = "mr-4">Make Bid</div>
             <FormKit  type="text" />
             <button class="btn btn-danger ml-5" @click="sendMessage">Submit Bid</button>
-            <p class="time">{{currentTime}}</p>
+          </div>
+          <div>
+            <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
+            <div v-else>Time's up!</div>
           </div>
         </div>
       </div>
@@ -42,7 +47,7 @@ import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import io from 'socket.io-client';
 import type {Socket} from 'socket.io-client'
 import { number } from "@formkit/inputs";
-// import auctionService from "@/services/auctionService";
+import auctionService from "./../../services/auctionService";
 import {formatDistance} from 'date-fns';
 
 export default {
@@ -51,30 +56,54 @@ export default {
 
   data() {
     return {
-      value: 0 ,
+      hiestBid:0,
+      startVal:0,
+      myVal:0,
+      startTime:"",
+      endTime:"",
+      timer:new Date().toLocaleString(),
       socket: null as Socket | null,
-      messages:[""],
-      newMessage: '',
-      currentTime: new Date().toLocaleString()
     };
   },
+
   created() {
 
+    let id:number = 1
+
+    auctionService.getAuctionEndTime(id).then((res)=>{
+      this.timer = res.data;
+    }).catch((res)=>{
+      console.log("time not fetched");
+    });
+
+    auctionService.getAuctionDetails(id).then((res)=> {
+      
+      console.log(res.data.message);
+      this.startVal = res.data.message.startVal;
+      this.timer = res.data.message.endTime;
+
+    }).catch(()=>{
+      
+    })
 
 
     setInterval(()=>{
-      this.currentTime= new Date().toLocaleString()
+      this.timer= new Date().toLocaleString()
     },500);
 
     console.log("socket message init procrss.....");
 
    // Connection to socket at server
-    this.socket = io();
+    this.socket = io("http://localhost:3000/");
+    
 
     // Listen for 'chat message' events from the server
     this.socket.on('connection', (message:string) => {
-      console.log("got message");
-      this.messages.push(message);
+      
+      this.socket?.on('bidUpdate',(data)=>{
+          this.hiestBid = data
+          console.log(this.hiestBid);
+      })
 
       this.socket?.on('disconnect', () => {
         console.log('user disconnected');
@@ -87,9 +116,15 @@ export default {
     sendMessage() {
       console.log("message sent");
       // Emit a 'chat message' event to the server
-      this.socket!.emit('placebid', this.newMessage);
-      this.newMessage = '';
-    }
+      this.socket!.emit('placeBid', 80);
+
+    },
+
+    formatTime(time:any) {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    },
   }
 };
 
