@@ -1,5 +1,6 @@
 <template>
   <!-- <h1>{{ $route.path }}</h1> -->
+  <notifications />
   <Navigation />
   <RouterView />
 </template>
