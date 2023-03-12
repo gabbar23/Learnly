@@ -21,7 +21,7 @@ const biddingModel = sequelize.define("bidding", {
     allowNull: false,
   },
   bidType: {
-    type: DataTypes.ENUM("live", "blind"),
+    type: DataTypes.ENUM("live", "blind","simple"),
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -29,5 +29,22 @@ const biddingModel = sequelize.define("bidding", {
   updatedAt: {
     type: DataTypes.DATE,
   },
+
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
+  cityName: {
+    type: DataTypes.STRING,
+  },
+  provinceName: {
+    type: DataTypes.STRING,
+  },
+  postalCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  
 });
 export const Bidding = biddingModel;
