@@ -6,99 +6,83 @@
         <th class="text-left">Address</th>
         <th class="text-left">Email</th>
         <th class="text-left">Phone</th>
+        <th class="text-left">Identity Doc</th>
         <th class="text-left">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in desserts" :key="item.name">
-        <td>{{ item.name }}</td>
-        <td>{{ item.calories }}</td>
-        <td>{{ item.email }}</td>
+      <tr v-for="item in verifiedSellers" :key="item.cityName">
+        <td>{{ item.firstName }} {{ item.lastName }}</td>
+        <td>{{ item.address }}</td>
+        <td>{{ item.loginDetail?.email }}</td>
         <td>{{ item.phone }}</td>
+        <td >
+          <div v-if="!item.editInProgress">
+          <!-- <font-awesome-icon icon="fas fa-edit" /> -->
+            <button @click = "item.editInProgress = !item.editInProgress">Show ID</button>
+          </div>
+          <div v-else class = "d-flex">
+            <button @click = "item.editInProgress = !item.editInProgress">Hide ID</button>
+            <img src="{{ item.govtIdUrl }}" />
+          </div>
+        </td>
         <td>
-          <button class="btn btn-primary">Approve</button>
-          <button class="ml-2 btn btn-danger">Decline</button>
+          <button class="btn btn-primary" @click="approve(item)">
+            Approve
+          </button>
+          <button class="ml-2 btn btn-danger" @click="decline(item)">
+            Decline
+          </button>
         </td>
       </tr>
     </tbody>
   </v-table>
   <div>
-    <v-pagination v-model="page" :length="options.pageCount"></v-pagination>
+    <v-pagination v-model="page" :length="pageCount"></v-pagination>
   </div>
 </template>
+<script lang="ts" setup>
+import type {
+  IApproveOrDeclineReqPayload,
+  IVerfiedSeller,
+} from "@/interfaces/admin";
+import AuthService from "@/services/AuthService";
+import { onMounted, ref } from "vue";
 
-<script>
-export default {
-  data() {
-    return {
-      options: {
-        pageCount: 1,
-      },
-      page: 1,
-      desserts: [
-        {
-          name: "Sonia Sobush",
-          calories: 159,
-          email: "soniasob@gmail.com",
-          phone: "+1 782-882-4928",
-        },
-        {
-          name: "Timothy Nguyen",
-          calories: 237,
-          email: "timNguyen@gmail.com",
-          phone: "+1 873-882-7843",
-        },
-        {
-          name: "Lisa Mitch",
-          calories: 262,
-          email: "LisaMit@yahoo.com",
-          phone: "+1 787-342-1245",
-        },
-        {
-          name: "Bobbi Zara",
-          calories: 305,
-          email: "BobbiAST@gmail.com",
-          phone: "+1 430-234-3252",
-        },
-        {
-          name: "Mahesh Singh",
-          calories: 356,
-          email: "maheshS@gmail.com",
-          phone: "+1 743-324-5839",
-        },
-        {
-          name: "Harmeet Singh",
-          calories: 375,
-          email: "harmeetSi@gmail.com",
-          phone: "+1 983-323-4323",
-        },
-        {
-          name: "Jack Reacher",
-          calories: 392,
-          email: "JackReacher1@gmail.com",
-          phone: "+1 734-325-2346",
-        },
-        {
-          name: "Jimmy",
-          calories: 408,
-          email: "jimmmyben@gmail.com",
-          phone: "+1 984-324-5342",
-        },
-        {
-          name: "Diana",
-          calories: 452,
-          email: "dianaD@gmail.com",
-          phone: "+1 874-324-4234",
-        },
-        {
-          name: "Oriyomi",
-          calories: 518,
-          email: "oriyomiO@gmail.com",
-          phone: "+1 859-324-3423",
-        },
-      ],
-    };
-  },
+const page = 2;
+const pageCount = 10;
+const verifiedSellers = ref<IVerfiedSeller[]>([]);
+
+onMounted(async () => {
+  try {
+    const response = await AuthService.verifiedSellers();
+    verifiedSellers.value = response.data;
+    verifiedSellers.value.map((seller) => {
+      return {
+        editInProgress: false,
+      };
+    });
+  } catch (e) {
+    console.error("Error in fetching states", e);
+  }
+});
+
+const approve = async (seller: IVerfiedSeller) => {
+  console.warn(seller);
+  const reqPayload: IApproveOrDeclineReqPayload = {
+    userId: seller.userId,
+    isVerified: true,
+  };
+  await AuthService.approveOrDeclineSeller(reqPayload);
+};
+
+const decline = async (seller: IVerfiedSeller) => {
+  console.warn(seller);
+  const reqPayload: IApproveOrDeclineReqPayload = {
+    userId: seller.userId,
+    isVerified: false,
+  };
+  await AuthService.approveOrDeclineSeller(reqPayload);
 };
 </script>
 <style>
