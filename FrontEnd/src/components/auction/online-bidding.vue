@@ -78,9 +78,10 @@ export default {
 
     auctionService.getAuctionDetails(id).then((res)=> {
       
-      console.log(res.data.message);
+      console.log(res.data.message.startTime);
+      this.startTime = res.data.message.startTime;
+      this.endTime = res.data.message.endTime;
       this.startVal = res.data.message.startVal;
-      this.timer = res.data.message.endTime;
 
     }).catch(()=>{
       
@@ -116,7 +117,7 @@ export default {
     sendMessage() {
       console.log("message sent");
       // Emit a 'chat message' event to the server
-      this.socket!.emit('placeBid', 80);
+      this.socket!.emit('placeBid', 120);
 
     },
 

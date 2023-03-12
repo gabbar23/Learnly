@@ -30,6 +30,7 @@ const getAuctionDetails = (_req : Request, res: Response) => {
     
 }
 
+
 const endTime = (_req : Request, res : Response)=> {
     
     console.log("timer");
