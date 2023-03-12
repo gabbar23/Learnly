@@ -50,6 +50,10 @@ let loginDetails = reactive<ILoginDetails>({
   password: "",
 });
 
+if(localStorage.getItem("sessionId")){
+  router.push('/homepage');
+}
+
 const onSubmit = async () => {
   try {
     await AuthService.checkLogin(loginDetails);
