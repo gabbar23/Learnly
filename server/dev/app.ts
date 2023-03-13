@@ -86,8 +86,6 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
-Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
-
 //userBidDetailsModel
 
 Item.hasMany(userBidDetailsModel, { foreignKey: "itemId" });
@@ -99,6 +97,7 @@ Bidding.hasMany(userBidDetailsModel,{foreignKey: "bidId"});
 userBidDetailsModel.belongsTo(Bidding,{foreignKey:"bidId"})
 
 Item.hasMany(ImageDetailModel,{foreignKey:"itemId"});
+ImageDetailModel.belongsTo(Item,{foreignKey:"itemId"});
 
 UserDetail.hasMany(userBidDetailsModel,{foreignKey: "userId"});
 userBidDetailsModel.belongsTo(UserDetail,{foreignKey: "userId"});
