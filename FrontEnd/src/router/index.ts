@@ -14,18 +14,18 @@ const router = createRouter({
       name: "Login",
       component: () => import("../components/login/user-login.vue"),
     },
-    {
+/*    {
       path: "/buyer-details",
       name: "buyer details",
-      component: () => import("../components/registration/buyer-details.vue"),
-    },
+      component: () => import("../components/registration/buyer-details.vue"), 
+    }, */
     {
       path: "/buyer",
       name: "buyer",
       component: () =>
         import("../components/registration/buyer-registration.vue"),
       children: [
-        { path: "", name: "Buyer Details", component: BuyerDetails },
+       /* { path: "", name: "Buyer Details", component: BuyerDetails }, */
         { path: "/donations", component: DonationDetails },
         { path: "/buyer/orders", component: OrderDetails },
         { path: "/buyer/report-issue", component: ReportIssue },
@@ -86,6 +86,11 @@ const router = createRouter({
       path: "/post-bid",
       name: "Post Bid",
       component: () => import("../components/post-bid.vue"),
+    },
+    {
+      path: "/add-card",
+      name: "Post Bid",
+      component: () => import("../components/card-details.vue"),
     },
   ],
 });

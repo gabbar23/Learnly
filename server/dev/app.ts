@@ -6,6 +6,7 @@ import session from "express-session";
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
+import {bidRoutes} from "./routes/bidRoutes"
 import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
 import { Socket,Server } from "socket.io";
 
@@ -18,6 +19,8 @@ import { Report } from "./models/reportsModel";
 import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
+import { ImageDetailModel } from "./models/imageDetails";
+import {UserBidding} from "./models/userBidDetailsModel";
 
 
 declare module 'express-session' {
@@ -100,6 +103,7 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
+app.use("/api/bid",bidRoutes);
 app.use("/api/auction/",auctionRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
@@ -122,10 +126,27 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
-// UserDetail.sync({ force: true }).then((_) => {
+Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
+
+//UserBidding
+
+Item.hasMany(UserBidding, { foreignKey: "itemId" });
+
+//UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+
+Bidding.hasMany(UserBidding,{foreignKey: "bidId"});
+
+Item.hasMany(ImageDetailModel,{foreignKey:"itemId"});
+
+UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+
+// Bidding.sync({ force: true }).then((_) => {
 //   console.log("UserDetails Loaded");
 // });
 // syncing models
+// UserBidding.sync({force:true}).then((_)=>{
+//   console.log("Models Loaded");
+// })
 sequelize
   .sync()
   .then((_) => {

@@ -16,4 +16,5 @@ router.get("/fetchCity", citiesStatesCont.fetchCity);
 router.post("/single-upload", upload.single("image"), uploadCont.uploadImage);
 router.get("/upload", uploadCont.getUploadedImage);
 
+
 export const fetch = router;
