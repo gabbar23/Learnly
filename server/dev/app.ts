@@ -1,5 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
+import session  from "express-session";
+import cors from "cors";
+
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
@@ -16,14 +19,40 @@ import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
 import {userBidDetailsModel} from "./models/userBidDetails";
 
+
+declare module 'express-session' {
+  interface Session{
+    userId: string;
+  }
+}
+
 const app = express();
+
+app.use(
+  session({
+    secret: 'wearegroup5', // replace with your own secret key
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // set to true if using HTTPS
+      maxAge: 60 * 60 * 1000, // session expires after 1 day
+      httpOnly:true,
+    }
+  })
+);
+
 
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
