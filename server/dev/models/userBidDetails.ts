@@ -20,4 +20,4 @@ const userBiddingModel = sequelize.define("userBidDetails", {
         allowNull: false,
     },
     });
-export const UserBidding = userBiddingModel;
+export const userBidDetailsModel = userBiddingModel;
