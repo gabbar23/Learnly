@@ -50,6 +50,7 @@ import { number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
 import {formatDistance} from 'date-fns';
 
+
 export default {
   
   components:{ Navigation, Carousel, Slide, Pagination },
@@ -109,8 +110,9 @@ export default {
     });
     
 
-    this.socket.on('bidUpdate',(data)=>{
+    this.socket.on('bidUpdate',(data,sessionId)=>{
           this.hiestBid = data
+    
           console.log(this.hiestBid);
       })
 
@@ -120,7 +122,9 @@ export default {
     sendMessage() {
       console.log("message sent");
       // Emit a 'chat message' event to the server
-      this.socket!.emit('placeBid', 120);
+      const seesionId = localStorage.getItem("sessionId");
+      const bidVal = 100;
+      this.socket!.emit('placeBid',{seesionId:seesionId,bidVal:bidVal});
 
     },
 

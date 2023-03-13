@@ -43,10 +43,16 @@ const endTime = (_req : Request, res : Response)=> {
 }
 
 
+const validateAmount = () => {
+  console.log();
+}
+
 
 export default{
     makeBid,
     showCurrentAuctions,
     getAuctionDetails,
     endTime,
+    validateAmount,
+    
 }

@@ -14,10 +14,14 @@ export function initSocket(server: any): void {
 
 
     io.on('connection', (socket:Socket)=>{
+
+      console.log(socket.request);
     
         console.log("user just connected!");
     
         socket.on('placeBid', (data) => {
+
+          console.log(data.sessionId,data.bidVal);
         // Update the bid in the database
         // ...
         
