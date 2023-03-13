@@ -1,7 +1,7 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
   <div class="main-section w-50 mx-auto m-2">
-    <div class = "w-100 m-1">
+    <div class="w-100 m-1">
       <Carousel :autoplay="2000" :wrap-around="true">
         <Slide v-for="slide in 4" :key="slide">
           <div class="carousel__item">{{ slide }}</div>
@@ -13,15 +13,25 @@
       </Carousel>
     </div>
     <div>
-      <div class = "row">
+      <div class="row">
         <div class="details">
           <div>Description</div>
           <div>Closing At: 40$</div>
           <div>Current Max: 40$</div>
-          <div class = "d-flex">
-            <div class = "mr-4">Make Bid</div>
-            <FormKit  type="text" />
-            <button class="btn btn-danger ml-5">Submit Bid</button>
+          <div class="d-flex">
+            <div class="mr-4">Make Bid</div>
+            <FormKit
+              type="form"
+              submit-label="Make Bid"
+              :actions="false"
+              @submit="makeBid"
+            >
+              <FormKit type="text" />
+              <button class="btn btn-danger ml-5" :disabled="isBidMade">
+                Submit Bid
+              </button>
+              <div v-if = "isBidMade">{{ timeLeft }} sec</div>
+            </FormKit>
           </div>
         </div>
       </div>
@@ -29,13 +39,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { ref, watch } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-export default defineComponent({
-  components: { Navigation, Carousel, Slide, Pagination },
+
+const isBidMade = ref<boolean>(false);
+const timeLeft = ref(10); // 60 seconds
+let timer: any;
+
+const makeBid = () => {
+  isBidMade.value = true;
+  timer = setInterval(() => {
+    timeLeft.value--;
+    if (timeLeft.value === 0) {
+      clearInterval(timer);
+    }
+  }, 1000);
+};
+
+watch(timeLeft, (newValue, oldValue) => {
+  console.log(`Count changed from ${oldValue} to ${newValue}`);
+  if (newValue == 0) {
+    isBidMade.value = false;
+    clearInterval(timer);
+    timeLeft.value = 10;
+  }
 });
 </script>
 
@@ -44,7 +74,7 @@ export default defineComponent({
   display: inline-block;
 }
 
-.details > div{
+.details > div {
   padding: 2em;
 }
 
