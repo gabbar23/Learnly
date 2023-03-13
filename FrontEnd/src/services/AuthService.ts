@@ -14,8 +14,9 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  getCities() {
-    return apiClient.get("api/fetch/fetchCity");
+  getCities(province:any) {
+    console.log(province)
+    return apiClient.get("api/fetch/fetchCity?province=" + province);
   },
 
   checkUserExist(email: string) {

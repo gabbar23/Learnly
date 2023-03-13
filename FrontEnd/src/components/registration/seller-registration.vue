@@ -1,19 +1,39 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <div id="login">
-    <div id="form4">
+  <div id="app">
+  <div id="login2">
+    <div id="form2">
       <FormKit
-        type="form"
+        type="form" 
         @submit="sellerRegister"
         enctype="multipart/form-data"
       >
         <section class="container parent_sect">
-          <FormKit type="text" label="First Name" v-model="userDetails.firstName" />
+          <FormKit 
+          type="text" 
+          label="First Name" 
+          v-model="userDetails.firstName" 
+          style="color: black;"
+          validation="required|alpha"
+          />
 
-      <FormKit type="text" label="Last Name" v-model="userDetails.lastName" />
+      <FormKit type="text" 
+      label="Last Name" 
+      v-model="userDetails.lastName" 
+      style="color: black;" 
+      validation="required|alpha"/>
 
-      <FormKit type="number" label="Phone Number" v-model="userDetails.phone" />
-      <FormKit type="date" label="Date of birth"/>     
+      <FormKit type="tel" 
+      label="Phone Number" 
+      v-model="userDetails.phone" 
+       style="color: black;"
+       validation="required|number|length:10,10"
+  validation-visibility="dirty"/>
+
+       <FormKit type="date" 
+       label="Date of birth"  
+       style="color: black;"
+       validation="required"
+        />     
       <!-- <FormKit
         type="text"
         label="Name Of Offering"
@@ -26,7 +46,10 @@
         v-model="userDetails.estimatedValue"
       /> -->
 
-          <FormKit type="text" label="Address" v-model="userDetails.address" />
+          <FormKit type="text" label="Address" 
+          v-model="userDetails.address"  
+          style="color: black;"
+          validation="required"/>
 
       <FormKit
         type="select"
@@ -34,7 +57,9 @@
         placeholder="Select a State"
         :options="states"
         v-model="userDetails.provinceName"
+        validation="required"
         @change="triggerChange(userDetails.provinceName)"
+        
       >
       </FormKit>
 
@@ -42,18 +67,30 @@
         type="select"
         label="City"
         placeholder="Select City"
-        :options="cities"
+        :options="cityOptions"
+        validation="required"
         v-model="userDetails.cityName"
-      />
+      ></FormKit>
 
           <FormKit
             type="text"
             label="Postal Zip Code"
             help="format: a1b-c2d | a1bc2d | a1b c2d"
+            :validation="[
+              ['required'],
+              [
+                'matches',
+                /^\w\d\w \w\d\w$/,
+                /^\w\d\w-\w\d\w$/,
+                /^\w\d\w\w\d\w$/,
+              ],
+            ]"
             v-model="userDetails.postalCode"
+            style="color: black;"
           />
 
           <FormKit
+            id="fileUpload"
             name="idproof"
             type="file"
             label="Photo of Government ID"
@@ -67,15 +104,6 @@
         label="Description"
         v-model="userDetails.description"
       /> -->
-          <br />
-          <FormKit
-            type="checkbox"
-            label="Terms and Conditions"
-            help="Do you agree to our terms of service?"
-            name="terms"
-            :value="false"
-            v-model="userDetails.termsCondition"
-          />
 
           <br />
           <FormKit
@@ -83,21 +111,59 @@
             label="Email"
             v-model="userDetails.email"
             @blur="checkUserExists(userDetails.email)"
+            validation="required|email"
+            style="color: black;"
           />
           <div class="error" v-if="isUserAlreadyRegistered">
             User Already Registered.
           </div>
           <br />
 
-          <FormKit type="password" label="Password" v-model="userDetails.password" />
+          <FormKit 
+          type="password"
+        name="password"
+        validation="required"
+        label="Password"
+        placeholder="Password"
+          v-model="userDetails.password" 
+          style="color: black;"
+          />
 
-          <FormKit type="password" label="Confirm Password" />
+          <FormKit 
+          type="password"
+        name="password_confirm"
+        validation="required|confirm"
+        label="Confirm Password"
+        placeholder="Re-Enter Password"
+          style="color: black;"
+          />
+
+          <FormKit
+            type="checkbox"
+            label="Terms and Conditions"
+            help="Do you agree to our terms of service?"
+            name="terms"
+            validation="accepted"
+            :value="false"
+            v-model="userDetails.termsCondition"
+          />
+          <FormKit
+            type="checkbox"
+            label="Register as Buyer/Seller or Both"
+            name="terms"
+            :options="['buyer','seller']"
+            validation="required"
+            v-model="buyerSeller"
+            @input="checkIsBuyerIsSeller(userDetails.isSeller,userDetails.isBuyer)"
+          />
+
+
         </section>
       </FormKit>
     </div>
   </div>
   <section>
-    <div id="login">
+    <div id="app2">
       <div id="form">
         <FormKit type="button" :ignore="false" @click="login()">
           Already have an account? Sign In!
@@ -106,10 +172,13 @@
         <FormKit type="button" :ignore="false" @click="buyerPage()">
           Register as Buyer
         </FormKit>  -->
-      </div>
+        </div>
     </div>
+  
   </section>
+  </div>
 </template>
+
 <script lang="ts" setup>
 import { validation } from "@/constants";
 import type {
@@ -119,12 +188,20 @@ import type {
 } from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
-import type { register } from "@formkit/core";
-import { fa } from "@formkit/i18n";
-import { label } from "@formkit/inputs";
-import { defineComponent, onMounted, reactive, ref, watch } from "vue";
+import type { error, FormKitProps, register } from "@formkit/core";
+import { fa, tr } from "@formkit/i18n";
+import { email, label, options, selectInput, submit } from "@formkit/inputs";
+import { computed, defineComponent, onMounted, reactive, ref, watch } from "vue";
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
+let cityOptions = computed(() => {
+      return cities.value.map(city => {
+        return {
+          label: city.label,
+          value: city.value,
+        }
+      })
+    });
 let userDetails = reactive<IGetUserDetails>({
   firstName: "",
   lastName: "",
@@ -140,14 +217,17 @@ let userDetails = reactive<IGetUserDetails>({
   cityName: "",
   provinceName: "",
   photoDetail:undefined,
-  postalCode: "a1b-c2d",
+  postalCode: "",
   dateOfBirth: new Date(),
   age: null,
   isBuyer:false,
+  isSeller:false,
   isVerified:true,
   gender:"male",
   
 });
+
+let buyerSeller=["",""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
@@ -169,9 +249,11 @@ onMounted(async () => {
 const login = () => {
   router.push("/");
 };
-const buyerPage = () => {
+/*const buyerPage = () => {
   router.push("/buyer-details");
 };
+*/
+
 
 const sellerRegister = async (data: any) => {
   userDetails.age = 20;
@@ -200,7 +282,7 @@ const sellerRegister = async (data: any) => {
     },
   };
   //await AuthService.uploadImage(body, headerConfig);
-
+  
   const response = await AuthService.register(userDetails);
 };
 
@@ -216,241 +298,176 @@ const checkUserExists = async (email: string) => {
         console.error(err);
         isUserAlreadyRegistered.value = false;
       });
-    console.log("TEst");
+    //console.log("TEst");
   } catch {
     console.error("Error in checking user existence");
   }
+};
+const checkIsBuyerIsSeller=async(val:any,val2:any)=>{
+  if(buyerSeller.length==0)
+  {
+    userDetails.isBuyer=false;
+    userDetails.isSeller=false;
+  }
+if(buyerSeller.length==2){
+userDetails.isSeller=true;
+userDetails.isBuyer=true;
+}
+else if(buyerSeller.length==1){
+if(buyerSeller[0]=="buyer"){
+  userDetails.isBuyer=true;
+  userDetails.isSeller=false;
+}
+if(buyerSeller[0]=="seller"){
+  userDetails.isSeller=true;
+  userDetails.isBuyer=false;
+}}
+//console.log(buyerSeller)
+//console.log(userDetails.isBuyer)
+//console.log(userDetails.isSeller)
 };
 
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
   try {
-    let response = await AuthService.getCities();
+    let response = await AuthService.getCities(val);
   //  console.log(response);
     for (let i = 0; i < response.data.length; i++) {
-      console.log(response.data[i].city)
       cities.value.push({
         label: response.data[i].city,
         value: response.data[i].city,
       });
     }
-    console.log(cities);
-  } catch (e) {
+      console.log(cityOptions)
+  }
+    catch (e) {
     console.error("Error in pulling cities");
   }
 };
+
 </script>
 <style>
 * {
   box-sizing: border-box;
   font-family: Verdana, sans-serif;
 }
-div#app div#login div#form4 {
-  background-color: lightseagreen;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
 
-div#login div#form3 {
-  background-color: #34495e;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
-
-div#app div#login div#form3 label,
-div#app div#login div#form3 input,
-div#app div#login div#form2 label,
-div#app div#login div#form2 input {
-  outline: none;
+#app, #app2 {
   width: 100%;
-}
-
-div#app div#login div#form3 label {
-  color: #95a5a6;
-  font-size: 0.8em;
-}
-div#app div#login div#form2 label {
-  color: #34495e;
-  font-size: 0.9em;
-}
-div#app div#login div#form4 label {
-  color: #34495e;
-  font-size: 0.9em;
-}
-div#app div#login div#form3 input {
-  background-color: transparent;
-  border: none;
-  color: #34495e;
-  font-size: 0.8em;
-  margin-bottom: 20px;
-}
-div#app div#login div#form2 input {
-  background-color: transparent;
-  border: none;
-  color: #ecf0f1;
-
-  font-size: 1.2em;
-  margin-bottom: 20px;
-}
-div#app div#login div#form3 ::placeholder,
-div#app div#login div#form2 ::placeholder {
-  color: #ecf0f1;
-  opacity: 1;
-}
-
-div#app div#login div#form3 button,
-div#app div#login div#form2 button {
+  height: 100%;
   background-color: #eadfdf;
-  color: #000;
-  cursor: pointer;
-  border: none;
-  padding: 10px;
-  transition: background-color 0.2s ease-in-out;
-  width: 100%;
 }
 
-div#app div#login div#form3 button:hover,
-div#app div#login div#form2 button:hover {
-  color: #ecf0f1;
-  background-color: #381e1e;
-}
-
-div#app div#login div#form2 {
-  background-color: lightseagreen;
-  border-radius: 10px;
-  color: #ecf0f1;
-  box-shadow: 0px 0px 30px 0px #666;
-  width: 50%;
-  padding: 35px;
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-
-div#app {
-  width: 100%;
-  height: 100%;
-}
-
-div#app div#login {
-  align-items: center;
-  background-color: darkcyan;
+#app2 {
   display: flex;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  align-items: center;
+  background-color: #eadfdf;
 }
 
-div#app div#login div#description {
-  background-color: #ffffff;
-  width: 280px;
+#app #login2, #app #login2 #form2 {
+  width: auto;
+  height: auto;
+  background-color: #eadfdf;
+}
+
+#app #login2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+ #app #login2 #form2 {
+  width:1000px;
   padding: 35px;
-  text-align: center;
-}
-
-div#app div#login div#description h1,
-div#app div#login div#description p {
-  margin: 0;
-}
-
-div#app div#login div#description p {
-  font-size: 0.8em;
-  color: #95a5a6;
-  margin-top: 10px;
-}
-
-div#app div#login div#form {
-  background-color: lightseagreen;
-  border-radius: 1000px;
+  border-radius: 5px;
   box-shadow: 0px 0px 30px 0px #666;
-  color: #ecf0f1;
-  width: 100%;
-  padding: 35px;
+  color: black;
+  background-color: #eadfdf;
 }
 
-div#app div#login div#form label,
-div#app div#login div#form input {
-  margin: 10x;
+#app2 #form {
+  width:260px;
+  padding: 35px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 30px 0px #666;
+  color: black;
+  justify-content: flex-end;
+  background-color: #34495e;
+}
+
+#app2 #form label {
+  color: black;
+  font-size: 0.8em;
+}
+
+#app #login2 #form2 label, #app #login2 #form2 input {
   outline: none;
   width: 100%;
+  color: #000;
 }
 
-div#app div#login div#form label {
-  color: #95a5a6;
+#app #login2 #form2 label {
+  color: black;
   font-size: 0.8em;
 }
 
-div#app div#login div#form input {
+#app #login2 #form2 input {
   background-color: transparent;
   border: none;
-  color: #ecf0f1;
+  color: transparent;
   font-size: 1em;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-div#app div#login div#form ::placeholder,
-label {
-  color: #ecf0f1;
+#app #login2 #form2 form::placeholder, #app #login2 #form2 select {
+  color: black;
   opacity: 1;
 }
 
-div#app div#login div#form button {
-  background-color: #eadfdf;
+#app #login2 #form2 button,#app2 #form button{
+  background-color: whitesmoke;
   color: #000;
   cursor: pointer;
   border: none;
-  padding: 10px;
+  padding: 15px;
   transition: background-color 0.2s ease-in-out;
-  width: 100%;
+  margin-left: 25px;
+  width: 75%;
 }
 
-div#app div#login div#form button:hover {
+#app #login2 #form2 button:hover,#app2 #form button:hover {
   color: #ecf0f1;
   background-color: #381e1e;
 }
 
-@media screen and (max-width: 100%) {
-  div#app div#login {
+@media screen and (max-width: 600px) {
+  #app #login2 {
     align-items: unset;
-    background-color: unset;
+    background-color: #eadfdf;
     display: unset;
     justify-content: unset;
   }
 
-  div#app div#login div#description {
-    margin: 0 auto;
-    max-width: 350px;
-    width: 100%;
-  }
-
-  div#app div#login div#form {
+  #app #login2 #form2 {
     border-radius: unset;
     box-shadow: unset;
     width: 100%;
+    color: black;
   }
 
-  div#app div#login div#form form {
+  #app #login2 #form2 form {
     margin: 0 auto;
-    max-width: 2px;
+    max-width: min-content;
     width: 100%;
   }
-}
+
 .parent_sect {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 
+  1fr 1fr;
+}
 }
 </style>
