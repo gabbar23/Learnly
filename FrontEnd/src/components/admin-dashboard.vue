@@ -11,30 +11,39 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in verifiedSellers" :key="item.cityName">
-        <td>{{ item.firstName }} {{ item.lastName }}</td>
-        <td>{{ item.address }}</td>
-        <td>{{ item.loginDetail?.email }}</td>
-        <td>{{ item.phone }}</td>
-        <td >
-          <div v-if="!item.editInProgress">
-          <!-- <font-awesome-icon icon="fas fa-edit" /> -->
-            <button @click = "item.editInProgress = !item.editInProgress">Show ID</button>
-          </div>
-          <div v-else class = "d-flex">
-            <button @click = "item.editInProgress = !item.editInProgress">Hide ID</button>
-            <img src="{{ item.govtIdUrl }}" />
-          </div>
-        </td>
-        <td>
-          <button class="btn btn-primary" @click="approve(item)">
-            Approve
-          </button>
-          <button class="ml-2 btn btn-danger" @click="decline(item)">
-            Decline
-          </button>
-        </td>
-      </tr>
+      <template v-if="verifiedSellers.length > 0">
+        <tr v-for="item in verifiedSellers" :key="item.cityName">
+          <td>{{ item.firstName }} {{ item.lastName }}</td>
+          <td>{{ item.address }}</td>
+          <td>{{ item.loginDetail?.email }}</td>
+          <td>{{ item.phone }}</td>
+          <td>
+            <div v-if="!item.editInProgress">
+              <button @click="item.editInProgress = !item.editInProgress">
+                Show ID
+              </button>
+            </div>
+            <div v-else class="d-flex">
+              <button @click="item.editInProgress = !item.editInProgress">
+                Hide ID
+              </button>
+              <img src="{{ item.govtIdUrl }}" />
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary" @click="approve(item)">
+              Approve
+            </button>
+            <button class="ml-2 btn btn-danger" @click="decline(item)">
+              Decline
+            </button>
+          </td>
+        </tr>
+      </template>
+      <no-content
+        v-else
+        :message="'No Sellers available to Approve'"
+      ></no-content>
     </tbody>
   </v-table>
   <div>
@@ -48,6 +57,7 @@ import type {
 } from "@/interfaces/admin";
 import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
+import NoContent from "../components/no-content.vue";
 
 const page = 2;
 const pageCount = 10;
