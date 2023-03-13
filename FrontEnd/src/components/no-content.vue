@@ -1,6 +1,6 @@
 <template>
-  <div class="card w-100">
-    <h3>{{ message }}</h3>
+  <div class="fullWidth fullHeight">
+    <h3 class="text-center msg">{{ message }}</h3>
   </div>
 </template>
 
@@ -8,8 +8,21 @@
 const props = defineProps({
   message: {
     type: String,
-    default: "Hello This is default Message",
+    default: "No Content Available.",
   },
 });
 console.log(props.message);
 </script>
+<style>
+.fullWidth {
+  width: 100%;
+}
+
+.fullHeight {
+  min-height: 50vh;
+}
+
+.msg {
+  align-items: center;
+}
+</style>
