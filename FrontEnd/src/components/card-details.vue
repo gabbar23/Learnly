@@ -28,8 +28,14 @@
           </div>
         </div>
         <div class="col-12">
-          <div class="btn btn-primary-card mb-3">
-            <span class="ps-3">Pay</span>
+          <div class="btn btn-primary-card mb-3" @click="approvePayment">
+            <span class="ps-3">Make Payment</span>
+            <span class="fas fa-arrow-right"></span>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="btn btn-danger-card mb-3" @click="cancelPayment">
+            <span class="ps-3">Cancel Payment</span>
             <span class="fas fa-arrow-right"></span>
           </div>
         </div>
@@ -37,7 +43,15 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import router from "@/router";
+
+const approvePayment = () => {};
+
+const cancelPayment = () => {
+  router.push("/home");
+};
+</script>
 <style>
 /* * {
   margin: 0;
@@ -98,6 +112,35 @@ p {
 }
 
 .btn.btn-primary-card:hover .fas.fa-arrow-right {
+  transform: translate(15px);
+  transition: transform 0.2s ease-in;
+}
+
+.btn.btn-danger-card {
+  width: 100%;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  background-image: linear-gradient(
+    to right,
+    #cf5555 0%,
+    #d97d4f 51%,
+    #d3c477 100%
+  );
+  border: none;
+  transition: 0.5s;
+  background-size: 200% auto;
+}
+
+.btn.btn-danger-card:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn.btn-danger-card:hover .fas.fa-arrow-right {
   transform: translate(15px);
   transition: transform 0.2s ease-in;
 }

@@ -4,7 +4,7 @@
     <h3>Simple Sell</h3>
     <Carousel>
       <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item">{{ slide }}</div>
+        <div class="carousel__item" @click="bindClick(slide)">{{ slide }}</div>
       </Slide>
       <template #addons>
         <Navigation />
@@ -12,19 +12,24 @@
       </template>
     </Carousel>
     <div class="mx-auto">
-      <button class="btn btn-danger">Pay</button>
+      <button class="btn btn-danger" @click = "makePayment">Pay</button>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
 import "vue3-carousel/dist/carousel.css";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-export default defineComponent({
-  components: { Navigation, Carousel, Slide, Pagination },
-});
+import router from "@/router";
+
+const bindClick = (args: any) => {
+  console.log("Hello");
+};
+
+const makePayment = ()=>{
+  // console.log();
+  router.push("/add-card");
+}
 </script>
 
 <style>

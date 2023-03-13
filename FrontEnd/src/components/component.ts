@@ -17,3 +17,4 @@ export { default as ReportIssue } from "./auction/report-issue.vue";
 export { default as PostBid } from "../components/post-bid.vue";
 export { default as NoContent } from "../components/no-content.vue";
 export { default as CardDetails } from "../components/card-details.vue";
+export { default as Loader } from "../components/loader.vue";
