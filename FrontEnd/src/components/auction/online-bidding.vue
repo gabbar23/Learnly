@@ -97,19 +97,22 @@ export default {
    // Connection to socket at server
     this.socket = io("http://localhost:3000/");
     
-
     // Listen for 'chat message' events from the server
+
     this.socket.on('connection', (message:string) => {
-      
-      this.socket?.on('bidUpdate',(data)=>{
+
+      console.log("connected");
+    });
+     
+    this.socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+    
+
+    this.socket.on('bidUpdate',(data)=>{
           this.hiestBid = data
           console.log(this.hiestBid);
       })
-
-      this.socket?.on('disconnect', () => {
-        console.log('user disconnected');
-      });
-    });
 
   },
 

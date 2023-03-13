@@ -8,7 +8,7 @@ import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
 import {bidRoutes} from "./routes/bidRoutes"
 import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
-import { Socket,Server } from "socket.io";
+// import { Socket,Server } from "socket.io";
 
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
@@ -23,6 +23,9 @@ import { ImageDetailModel } from "./models/imageDetails";
 import {UserBidding} from "./models/userBidDetailsModel";
 
 
+
+import { initSocket } from "./util/socket";
+
 declare module 'express-session' {
   interface Session{
     userId: string;
@@ -33,6 +36,9 @@ const app = express();
 
 const server: http.Server = http.createServer(app);
 
+
+// Initialize your Socket.io server
+initSocket(server);
 
 app.use(
   session({
@@ -49,35 +55,35 @@ app.use(
 
 
 
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'http://localhost:5173',
+//     methods: ['GET', 'POST']
+//   }
+// });
 
 // const io = new Server(server);
 
-io.on('connection', (socket:Socket)=>{
+// io.on('connection', (socket:Socket)=>{
   
-  console.log("user just connected!");
+//   console.log("user just connected!");
 
-  socket.on('placeBid', (data) => {
-    // Update the bid in the database
-    // ...
+//   socket.on('placeBid', (data) => {
+//     // Update the bid in the database
+//     // ...
     
-    console.log("bid pressed",data);
-    // Emit a bid update event to all connected clients
+//     console.log("bid pressed",data);
+//     // Emit a bid update event to all connected clients
     
-    socket.emit('bidUpdate', (data + 20));
-  });
+//     socket.emit('bidUpdate', (data + 20));
+//   });
 
 
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
 
-});
+// });
 
 
 //api configration
