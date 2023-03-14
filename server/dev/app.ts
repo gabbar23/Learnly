@@ -1,12 +1,14 @@
 import express from "express";
 import bodyParser from "body-parser";
+import session  from "express-session";
 import cors from "cors";
 import http from 'http';
 import session from "express-session";
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
-import {bidRoutes} from "./routes/bidRoutes"
+import { bidRoutes } from "./routes/bidRoutes";
+import { orderRoutes } from "./routes/orderRoutes";
 import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
 // import { Socket,Server } from "socket.io";
 
@@ -42,14 +44,14 @@ initSocket(server);
 
 app.use(
   session({
-    secret: 'wearegroup5', // replace with your own secret key
+    secret: "wearegroup5", // replace with your own secret key
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: false, // set to true if using HTTPS
       maxAge: 60 * 60 * 1000, // session expires after 1 day
-      httpOnly:true,
-    }
+      httpOnly: true,
+    },
   })
 );
 
@@ -85,7 +87,6 @@ app.use(
 
 // });
 
-
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -97,7 +98,7 @@ app.use(cors({
 
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
@@ -109,7 +110,8 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
-app.use("/api/bid",bidRoutes);
+app.use("/api/bid", bidRoutes);
+app.use("/api/v1/sell", orderRoutes);
 app.use("/api/auction/",auctionRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
@@ -132,27 +134,30 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
-Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
+//userBidDetailsModel
 
-//UserBidding
+Item.hasMany(userBidDetailsModel, { foreignKey: "itemId" });
+userBidDetailsModel.belongsTo(Item,{foreignKey:"itemId"})
 
-Item.hasMany(UserBidding, { foreignKey: "itemId" });
+//UserDetail.hasMany(userBidDetailsModel,{foreignKey: "user_id"});
 
-//UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
-
-Bidding.hasMany(UserBidding,{foreignKey: "bidId"});
+Bidding.hasMany(userBidDetailsModel,{foreignKey: "bidId"});
+userBidDetailsModel.belongsTo(Bidding,{foreignKey:"bidId"})
 
 Item.hasMany(ImageDetailModel,{foreignKey:"itemId"});
+ImageDetailModel.belongsTo(Item,{foreignKey:"itemId"});
 
-UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+UserDetail.hasMany(userBidDetailsModel,{foreignKey: "userId"});
+userBidDetailsModel.belongsTo(UserDetail,{foreignKey: "userId"});
 
-// Bidding.sync({ force: true }).then((_) => {
-//   console.log("UserDetails Loaded");
-// });
+
 // syncing models
-// UserBidding.sync({force:true}).then((_)=>{
+// userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
+// orderDetail.sync({ force: true }).then((res) => {
+//   console.log(res);
+// });
 sequelize
   .sync()
   .then((_) => {

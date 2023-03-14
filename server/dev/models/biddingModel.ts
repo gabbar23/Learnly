@@ -37,9 +37,11 @@ const biddingModel = sequelize.define("bidding", {
 
   cityName: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   provinceName: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
   postalCode: {
     type: DataTypes.STRING,
