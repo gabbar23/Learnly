@@ -5,7 +5,7 @@
   >
     <Slide v-for="slide in bidDetails.length" :key="slide">
       <div class="carStyle" style="background-color: black;" @click="AuctionClassifier">
-        <img src="{ imgLinks[slide-1] }" ></div>
+        <img :src="link1"/></div>
       <h1>{{imgLinks[slide-1]}}</h1>
     </Slide>
   </Carousel>
@@ -84,6 +84,7 @@ export default {
     imgLinks:["\"../assets/img/home/slider1.jpg\"","\"../assets/img/home/slider2.jpg\"","\"../assets/img/home/slider3.jpg\""],
     blindBidImageList:["\"../assets/img/home/slider4.jpg\""],
     ItemsOnSaleList:["\"../assets/img/home/slider4.jpg\""],
+    link1:"../assets/img/home/slider1.jpg",
     bidItems: bidItemsRes.data,
     bidDetails:bidDetailsRes.data,
   }),
@@ -104,16 +105,30 @@ export default {
   try {
     await AuthService.getBidDetails()
     .then((res:any) => {
-        console.warn(res);
+        //console.warn(res);
+        //console.log(AuthService.getImageDetails())
+        
         let currentBidDetails=res.data[this.currentSlide];
-        console.log(currentBidDetails.bidType)
-       if(res.data[this.currentSlide].bidType=="blind"){
-        router.push("/make-blind-auction")
+        
+        //console.log(currentBidDetails.bidType)
+       if(currentBidDetails.bidType=="blind"){
+        router.push({path: "/make-blind-auction",
+        query: { 
+            bidId: currentBidDetails.bidId,
+            startTime: currentBidDetails.startTime,
+            endTime: currentBidDetails.endTime,
+          }
+        })
        }
-       else if(res.data[this.currentSlide].bidType=="live")
+       else if(currentBidDetails.bidType=="live")
        {
-        router.push({path: "/make-bid", query: { bidId: currentBidDetails.bidId,startTime: currentBidDetails.startTime,
-          endTime: currentBidDetails.endTime,}, });
+          router.push({path: "/make-bid", 
+          query: { 
+            bidId: currentBidDetails.bidId,
+            startTime: currentBidDetails.startTime,
+            endTime: currentBidDetails.endTime,
+          },
+        });
         
        }
       })

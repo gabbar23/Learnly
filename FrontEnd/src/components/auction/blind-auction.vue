@@ -20,13 +20,13 @@
           <div class = "d-flex">
             <div class = "mr-4">Make Bid</div>
             <FormKit  type="text" />
-            <button class="btn btn-danger ml-5" :disabled = "isItemSold" >Submit Bid</button>
+            <button class="btn btn-danger ml-5" @click="printConsole()" :disabled = "isItemSold" >Submit Bid</button>
             <p>Bid Already Made.</p>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </div><h1>{{ route.query }}</h1>
 </template>
 
 <script lang="ts" setup>
@@ -34,7 +34,15 @@ import { defineComponent, ref } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-const isItemSold = ref<boolean>(true);
+import { useRoute } from "vue-router";
+const isItemSold = ref<boolean>(false);
+
+  const route = useRoute();
+  
+
+function printConsole() {
+console.log(route.query)
+}
 </script>
 
 <style>
