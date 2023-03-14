@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Item } from "../models/itemModel";
 import { Bidding } from "../models/biddingModel";
+import { ImageDetailModel } from "../models/imageDetails";
 
 // Adding items listed for bidding
 export const addBidItems = async (req: Request, res: Response) => {
@@ -16,7 +17,9 @@ export const addBidItems = async (req: Request, res: Response) => {
     address,
     cityName,
     provinceName,
-    postalCode
+    postalCode,
+    imageDetails,
+    userId
    } = req.body;
 
  // let userId = "";
@@ -26,6 +29,7 @@ export const addBidItems = async (req: Request, res: Response) => {
       itemName,
       itemDes,
       startPrice,
+      userId
       });
 
     const bidDetail = await Bidding.create({
@@ -37,7 +41,21 @@ export const addBidItems = async (req: Request, res: Response) => {
       cityName,
       provinceName,
       postalCode,
+      userId
     })
+
+     
+     // Create an array of promises to create image details
+     const imageDetailPromises = imageDetails.map((image: any) =>
+     ImageDetailModel.create({
+       imgDescription: image.imgDescription,
+       imageName: image.imageName,
+       imgUrl: image.imgUrl,
+     })
+   );
+
+   // Execute the promises to create image details
+   const imageDetailsResults = await Promise.all(imageDetailPromises);
 
     // Get the user ID
    // userId = userDetail.get().userId;
@@ -47,17 +65,14 @@ export const addBidItems = async (req: Request, res: Response) => {
       message: {
         itemDetail: itemDetail.get({ plain: true }),
         bidDetail: bidDetail.get({ plain: true }),
+       imageDetailsPlain :imageDetailsResults.map((result) =>
+       result.get({ plain: true })
+       )
       },
     });
   } 
   catch (err) {
-    // If there is an error, delete the item detail instance and send an error response
-    // Item.destroy({
-    //   where: {
-    //     userId,
-    //   },
-    // });
-
+    
     console.log(err);
     res.status(500).json({
       message: err,
@@ -102,5 +117,6 @@ export default {
   addBidItems,
   showBidDetails,
   showItemDetails,
+  
 };
 

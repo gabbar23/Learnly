@@ -23,7 +23,6 @@ const fetchImageDetails = async (_req: Request, res: Response) => {
       imageUrl: imageDetails.getDataValue('imgUrl'),
       imageDes: imageDetails.getDataValue('imgDescription'),
       imageName: imageDetails.getDataValue('imgName'),
-
    };
 
     console.log(result);

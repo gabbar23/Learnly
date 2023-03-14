@@ -4,9 +4,11 @@ import { Bidding } from "../models/biddingModel";
 //Fecth the bid details
 const fetchBidDetails = async (req: Request, res: Response) => {
     try {
-      console.log("fetch live bid details");
+      
       const bid_type = req.body.bidType;
       var details ;
+
+      //fetches the details of specific bid type
       if(bid_type != null){
        details = await Bidding.findAll({
           where: {
@@ -14,6 +16,8 @@ const fetchBidDetails = async (req: Request, res: Response) => {
           }
         });
       }
+
+      //fetches the details of all the bid type
       else{
          details = await Bidding.findAll({});
       }
