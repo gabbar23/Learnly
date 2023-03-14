@@ -42,4 +42,17 @@ export default {
   approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
     return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
+ 
+  getBidDetails(){
+  return apiClient.get("/api/bid/fetchBidDetails");
+  },
+  
+  getBidItems(){
+  return apiClient.get("/api/bid/fetchBidItems");
+  },
+  
+  getImageDetails(){
+    return apiClient.get("/api/bid/fetchImageDetails");
+  },
+
 };

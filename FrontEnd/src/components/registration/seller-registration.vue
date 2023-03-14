@@ -33,23 +33,12 @@
               validation-visibility="dirty"
             />
 
-            <FormKit
-              type="date"
-              label="Date of birth"
-              style="color: black"
-              validation="required"
-            />
-            <!-- <FormKit
-        type="text"
-        label="Name Of Offering"
-        v-model="userDetails.nameOfOffering"  
-      />
+       <FormKit type="date" 
+       label="Date of birth"  
+       style="color: black;"
+       validation="required"
+        />     
 
-      <FormKit
-        type="number"
-        label="Estimated Value"
-        v-model="userDetails.estimatedValue"
-      /> -->
 
             <FormKit
               type="text"
@@ -317,7 +306,7 @@ const sellerRegister = async (data: any) => {
 const checkUserExists = async (email: string) => {
   console.warn("User Exists", email);
   try {
-    await AuthService.checkUserExist(email)
+    await AuthService.checkUserExist(email) 
       .then((res) => {
         console.warn(res);
         isUserAlreadyRegistered.value = res.data.isUserAlreadyPresent;
