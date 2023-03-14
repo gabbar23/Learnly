@@ -52,6 +52,17 @@ let loginDetails = reactive<ILoginDetails>({
 });
 const { notify } = useNotification();
 
+if(localStorage.getItem("sessionId")){
+  //router.push('/homepage');
+}
+
+const loginError=async()=>{
+  notify({
+    title: "Fail!",
+    text: "Invalid Credentials!",
+    type: "fail",
+  });
+}
 const onSubmit = async () => {
   try {
     const response = await AuthService.checkLogin(loginDetails);

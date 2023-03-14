@@ -217,38 +217,14 @@
                     <div>Limited Edition Zara, Selected, Celio</div>
                   </v-card-text>
 
-                  <div class="text-center">
-                    <v-btn href="/"
-                      class="ma-2"
-                      outlined
-                      color="info"
-                    >
-                      Explore
-                    </v-btn>
-                  </div>
-                </v-card>
-                </v-hover>
-              </div>
-              <div class="col-12 col-md-3 col-sm-6 col-xs-6 text-center" >
-                <v-hover
-                  v-slot:default="{ hover }"
-                  open-delay="200"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                  >
-                  <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    :src="'../src/assets/img/home/deal3.jpg'"
-                  >
-                    <v-card-title>Vintage Jeans</v-card-title>
-                  </v-img>
-
-                  <v-card-text class="text--primary text-center">
-                    <div></div>
-                    <div>Limited Edition Jack & Jones, Levis</div>
-                  </v-card-text>
+  <Carousel id="gallery" :items-to-show="1" :wrap-around="false" v-model="currentSlide"
+  >
+    <Slide v-for="slide in bidDetails.length" :key="slide">
+      <div class="carStyle" style="background-color: black;" @click="AuctionClassifier">
+        <img :src="link1"/></div>
+      <h1>{{imgLinks[slide-1]}}</h1>
+    </Slide>
+  </Carousel>
 
                   <div class="text-center">
                     <v-btn href="/"
@@ -344,6 +320,78 @@
 
 <script> 
 export default {
+  name: 'Gallery',
+  components: {
+    Carousel, 
+    Slide,
+    Navigation,
+  },
+  data: (async) => ({
+    currentSlide: 0,
+    imgLinks:["\"../assets/img/home/slider1.jpg\"","\"../assets/img/home/slider2.jpg\"","\"../assets/img/home/slider3.jpg\""],
+    blindBidImageList:["\"../assets/img/home/slider4.jpg\""],
+    ItemsOnSaleList:["\"../assets/img/home/slider4.jpg\""],
+    link1:"../assets/img/home/slider1.jpg",
+    bidItems: bidItemsRes.data,
+    bidDetails:bidDetailsRes.data,
+  }),
+  methods: {
+  
+    slideTo(val: number) {
+      this.currentSlide = val
+    },
+    Logger(){
+      console.log("button clicked!")
+    },
+    async getAuctionNum(){
+     console.log("image clicked",this.currentSlide+1)
+
+    },
+
+      async AuctionClassifier(data:any) {
+  try {
+    await AuthService.getBidDetails()
+    .then((res:any) => {
+        //console.warn(res);
+        //console.log(AuthService.getImageDetails())
+        
+        let currentBidDetails=res.data[this.currentSlide];
+        
+        //console.log(currentBidDetails.bidType)
+       if(currentBidDetails.bidType=="blind"){
+        router.push({path: "/make-blind-auction",
+        query: { 
+            bidId: currentBidDetails.bidId,
+            startTime: currentBidDetails.startTime,
+            endTime: currentBidDetails.endTime,
+          }
+        })
+       }
+       else if(currentBidDetails.bidType=="live")
+       {
+          router.push({path: "/make-bid", 
+          query: { 
+            bidId: currentBidDetails.bidId,
+            startTime: currentBidDetails.startTime,
+            endTime: currentBidDetails.endTime,
+          },
+        });
+        
+       }
+      })
+      .catch((err: any) => {
+        console.error(err);
+      });
+  } catch {
+    console.error("Error in auction button exception");
+  }
+    },
+    async BuyItem(){
+      console.log("item bought")
+      router.push("/make-sell");
+
+    }
+  },
   setup() {
     const sell = () => {
       console.log("Sell");
