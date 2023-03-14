@@ -17,7 +17,7 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
-import {UserBidding} from "./models/userBidDetailsModel";
+import {userBidDetailsModel} from "./models/userBidDetails";
 
 
 declare module 'express-session' {
@@ -86,25 +86,25 @@ UserDetail.hasMany(Bidding, { foreignKey: "user_id" });
 // Bidding belongsTo User
 Bidding.belongsTo(UserDetail, { foreignKey: "user_id" });
 
-Item.hasMany(ImageDetailModel,{foreignKey:"user_id"});
+//userBidDetailsModel
 
-//UserBidding
+Item.hasMany(userBidDetailsModel, { foreignKey: "itemId" });
+userBidDetailsModel.belongsTo(Item,{foreignKey:"itemId"})
 
-Item.hasMany(UserBidding, { foreignKey: "itemId" });
+//UserDetail.hasMany(userBidDetailsModel,{foreignKey: "user_id"});
 
-//UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
-
-Bidding.hasMany(UserBidding,{foreignKey: "bidId"});
+Bidding.hasMany(userBidDetailsModel,{foreignKey: "bidId"});
+userBidDetailsModel.belongsTo(Bidding,{foreignKey:"bidId"})
 
 Item.hasMany(ImageDetailModel,{foreignKey:"itemId"});
+ImageDetailModel.belongsTo(Item,{foreignKey:"itemId"});
 
-UserDetail.hasMany(UserBidding,{foreignKey: "user_id"});
+UserDetail.hasMany(userBidDetailsModel,{foreignKey: "userId"});
+userBidDetailsModel.belongsTo(UserDetail,{foreignKey: "userId"});
 
-// Bidding.sync({ force: true }).then((_) => {
-//   console.log("UserDetails Loaded");
-// });
+
 // syncing models
-// UserBidding.sync({force:true}).then((_)=>{
+// userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
 sequelize

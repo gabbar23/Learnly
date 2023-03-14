@@ -13,6 +13,10 @@ export const addBidItems = async (req: Request, res: Response) => {
     endTime,
     bidType,
     isSold,
+    address,
+    cityName,
+    provinceName,
+    postalCode
    } = req.body;
 
  // let userId = "";
@@ -29,6 +33,10 @@ export const addBidItems = async (req: Request, res: Response) => {
       endTime,
       bidType,
       isSold,
+      address,
+      cityName,
+      provinceName,
+      postalCode,
     })
 
     // Get the user ID
