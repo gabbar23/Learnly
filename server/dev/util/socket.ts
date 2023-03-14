@@ -3,8 +3,6 @@ import { Socket,Server } from "socket.io";
 
 export function initSocket(server: any): void {
 
-
-
     const io = new Server(server, {
         cors: {
           origin: 'http://localhost:5173',
@@ -14,27 +12,21 @@ export function initSocket(server: any): void {
 
 
     io.on('connection', (socket:Socket)=>{
-
-      console.log(socket.request);
     
-        console.log("user just connected!");
+      console.log("user just connected!");
     
-        socket.on('placeBid', (data) => {
+      socket.on('placeBid', (data) => {
 
-          console.log(data.sessionId,data.bidVal);
-        // Update the bid in the database
-        // ...
+        console.log(data.sessionId,data.bidVal);
         
         console.log("bid pressed",data);
-        // Emit a bid update event to all connected clients
         
         io.emit('bidUpdate', (data + 20));
-        
     
-        });
+      });
     
     
-        socket.on('disconnect', () => {
+      socket.on('disconnect', () => {
         console.log('User disconnected');
     
         });

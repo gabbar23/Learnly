@@ -21,7 +21,7 @@
             <div>Starting At: {{startTime}}</div>
           <div>Closing At: {{endTime}}</div>
           <div>Start Price: {{startVal}}$</div>
-            <div>Current Max: {{hiestBid}}$</div>
+            <div>Current Max: {{higestBid}}$</div>
             <div class="d-flex">
               <div class="mr-4">Make Bid</div>
               <FormKit
@@ -30,8 +30,8 @@
                 :actions="false"
                 @submit="makeBid"
               >
-                <FormKit type="text" />
-                <button class="btn btn-danger ml-5" @click="sendMessage" :disabled="isBidMade">
+                <FormKit type="text" v-model="bidAmount" />
+                <button class="btn btn-danger ml-5" @click="sendMessage()" :disabled="isBidMade">
                   Submit Bid{{ minVal }}
                 </button>
                 <div v-if="isBidMade">{{ timeLeft }} sec</div>
@@ -51,10 +51,11 @@
 <script lang="ts" setup>
 
 
-import { ref, watch } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { computed, defineComponent, onMounted ,reactive, ref, watch } from "vue";
+
 
 
 import io from 'socket.io-client';
@@ -63,29 +64,50 @@ import { number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
 import {formatDistance} from 'date-fns';
 
+import Loader from "../loader.vue";
 
-export default {
+const isBidMade = ref<boolean>(false);
+const timeLeft = ref(10); // 60 seconds
+let timer: any;
+const minVal = ref<Number>(5);
+const minValidation = ref<any>({ min: 5 });
+const isLoading = ref<boolean>(false);
+const bidAmount = ref<Number>();
+
+const makeBid = () => {
+  isBidMade.value = true;
+  timer = setInterval(() => {
+    timeLeft.value--;
+    if (timeLeft.value === 0) {
+      clearInterval(timer);
+    }
+  }, 1000);
+};
+
+watch(timeLeft, (newValue, oldValue) => {
+  console.log(`Count changed from ${oldValue} to ${newValue}`);
+  if (newValue == 0) {
+    isBidMade.value = false;
+    clearInterval(timer);
+    timeLeft.value = 10;
+  }
+});
   
-  components:{ Navigation, Carousel, Slide, Pagination },
+let higestBid = ref<Number>(0);
+let startVal = ref<Number>(100);
+let myVal = ref<Number>(0);
 
-  data() {
-    return {
-      hiestBid:0,
-      startVal:0,
-      myVal:0,
-      startTime:"",
-      endTime:"",
-      timer:new Date().toLocaleString(),
-      socket: null as Socket | null,
-    };
-  },
+let startTime = ref<dateFns>();
+let endTime = ref<dateFns>();
+let socket = ref<Socket>();
+   
 
-  created() {
+onMounted(()=>{
 
     let id:number = 1
 
     auctionService.getAuctionEndTime(id).then((res)=>{
-      this.timer = res.data;
+      timer = res.data;
     }).catch((res)=>{
       console.log("time not fetched");
     });
@@ -93,61 +115,60 @@ export default {
     auctionService.getAuctionDetails(id).then((res)=> {
       
       console.log(res.data.message.startTime);
-      this.startTime = res.data.message.startTime;
-      this.endTime = res.data.message.endTime;
-      this.startVal = res.data.message.startVal;
+      startTime.value = res.data.message.startTime;
+      endTime.value = res.data.message.endTime;
+      startVal.value = res.data.message.startVal;
 
     }).catch(()=>{
       
     })
 
+});
 
-    setInterval(()=>{
-      this.timer= new Date().toLocaleString()
-    },500);
 
-    console.log("socket message init procrss.....");
+setInterval(()=>{
+  timer= new Date().toLocaleString()
+  },500);
 
-   // Connection to socket at server
-    this.socket = io("http://localhost:3000/");
+// Connection to socket at server
+socket.value = io("http://localhost:3000/");
     
-    // Listen for 'chat message' events from the server
+// Listen for 'chat message' events from the server
 
-    this.socket.on('connection', (message:string) => {
+socket.value.on('connection', (message:string) => {
 
-      console.log("connected");
-    });
+  console.log("connected");  
+
+});
      
-    this.socket.on('disconnect', () => {
-        console.log('user disconnected');
-    });
+socket.value.on('disconnect', () => {
+  console.log('user disconnected');
+});
     
 
-    this.socket.on('bidUpdate',(data,sessionId)=>{
-          this.hiestBid = data
-    
-          console.log(this.hiestBid);
-      })
+socket.value.on('bidUpdate',(data,sessionId)=>{
+  
+  higestBid.value = data  
+  console.log(higestBid.value);
 
-  },
+});
 
-  methods: {
-    sendMessage() {
-      console.log("message sent");
-      // Emit a 'chat message' event to the server
-      const seesionId = localStorage.getItem("sessionId");
-      const bidVal = 100;
-      this.socket!.emit('placeBid',{seesionId:seesionId,bidVal:bidVal});
+  
+const sendMessage = () => {
+  
+  console.log("message sent");
+  // Emit a 'chat message' event to the server
+  const seesionId = localStorage.getItem("sessionId");
+  const bidVal = 100;
+  socket.value!.emit('placeBid',{seesionId:seesionId,bidVal:bidAmount.value});
+}
 
-    },
+const formatTime = (time:any) =>  {
 
-    formatTime(time:any) {
-      const minutes = Math.floor(time / 60);
-      const seconds = time % 60;
-      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    },
-  }
-};
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
 </script>
 
