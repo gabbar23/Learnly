@@ -1,12 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
-import session from "express-session";
+
 import cors from "cors";
+import http from 'http';
+import session from "express-session";
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
 import { bidRoutes } from "./routes/bidRoutes";
 import { orderRoutes } from "./routes/orderRoutes";
+import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
+// import { Socket,Server } from "socket.io";
+
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -17,16 +22,26 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
-import {userBidDetailsModel} from "./models/userBidDetails";
+// import {UserBidding} from "./models/userBidDetailsModel";
+import { userBidDetailsModel } from "./models/userBidDetails";
 
 
-declare module "express-session" {
-  interface Session {
+
+import { initSocket } from "./util/socket";
+
+declare module 'express-session' {
+  interface Session{
     userId: string;
   }
 }
 
 const app = express();
+
+const server: http.Server = http.createServer(app);
+
+
+// Initialize your Socket.io server
+initSocket(server);
 
 app.use(
   session({
@@ -41,19 +56,50 @@ app.use(
   })
 );
 
+
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'http://localhost:5173',
+//     methods: ['GET', 'POST']
+//   }
+// });
+
+// const io = new Server(server);
+
+// io.on('connection', (socket:Socket)=>{
+  
+//   console.log("user just connected!");
+
+//   socket.on('placeBid', (data) => {
+//     // Update the bid in the database
+//     // ...
+    
+//     console.log("bid pressed",data);
+//     // Emit a bid update event to all connected clients
+    
+//     socket.emit('bidUpdate', (data + 20));
+//   });
+
+
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+
+// });
+
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(
-  cors({
-    origin: "http://127.0.0.1:5173",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
@@ -67,6 +113,7 @@ app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
 app.use("/api/bid", bidRoutes);
 app.use("/api/v1/sell", orderRoutes);
+app.use("/api/auction/",auctionRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -121,4 +168,4 @@ sequelize
     console.log(error);
   });
 
-app.listen(3000);
+server.listen(3000);

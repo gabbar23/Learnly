@@ -205,6 +205,8 @@ import {
   ref,
   watch,
 } from "vue";
+import { useNotification } from "@kyvg/vue3-notification";
+
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
 let cityOptions = computed(() => {
@@ -238,6 +240,7 @@ let userDetails = reactive<IGetUserDetails>({
   isVerified: true,
   gender: "male",
 });
+const { notify } = useNotification();
 
 let buyerSeller = ["", ""];
 const isUserAlreadyRegistered = ref<boolean>(false);
@@ -245,6 +248,7 @@ onMounted(async () => {
   try {
     let response = await AuthService.getStates();
     states.value = [];
+    console.log(states);
     for (let i = 0; i < response.data.length; i++) {
       console.warn(response.data[i].province_name);
       states.value.push({
@@ -275,14 +279,6 @@ const sellerRegister = async (data: any) => {
     body.append("image", fileItem.file);
   });
 
-  for (const value of body.values()) {
-    console.error(value);
-  }
-
-  for (var key of body.entries()) {
-    console.log(key[0] + ", " + key[1]);
-  }
-
   userDetails.photoDetail = body;
   console.warn(body);
   console.warn(userDetails.photoDetail);
@@ -291,9 +287,22 @@ const sellerRegister = async (data: any) => {
       "content-type": "multipart/form-data",
     },
   };
-  //await AuthService.uploadImage(body, headerConfig);
 
-  const response = await AuthService.register(userDetails);
+  try {
+    await AuthService.uploadImage(body, headerConfig);
+    await AuthService.register(userDetails);
+    notify({
+      title: "Success!",
+      text: "User Logged In Successfully! Wait for Admins approval",
+      type: "success",
+    });
+  } catch (e) {
+    notify({
+      title: "Failure!",
+      text: "Registration Failed! Please Contact Help Desk.",
+      type: "error",
+    });
+  }
 };
 
 const checkUserExists = async (email: string) => {
