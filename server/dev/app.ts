@@ -1,12 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
-import session  from "express-session";
+import session from "express-session";
 import cors from "cors";
-
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
-import {bidRoutes} from "./routes/bidRoutes"
+import { bidRoutes } from "./routes/bidRoutes";
+import { orderRoutes } from "./routes/orderRoutes";
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -20,8 +20,8 @@ import { ImageDetailModel } from "./models/imageDetails";
 import {userBidDetailsModel} from "./models/userBidDetails";
 
 
-declare module 'express-session' {
-  interface Session{
+declare module "express-session" {
+  interface Session {
     userId: string;
   }
 }
@@ -30,29 +30,30 @@ const app = express();
 
 app.use(
   session({
-    secret: 'wearegroup5', // replace with your own secret key
+    secret: "wearegroup5", // replace with your own secret key
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: false, // set to true if using HTTPS
       maxAge: 60 * 60 * 1000, // session expires after 1 day
-      httpOnly:true,
-    }
+      httpOnly: true,
+    },
   })
 );
-
 
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
+  })
+);
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
@@ -64,7 +65,8 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
-app.use("/api/bid",bidRoutes);
+app.use("/api/bid", bidRoutes);
+app.use("/api/v1/sell", orderRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -107,6 +109,9 @@ userBidDetailsModel.belongsTo(UserDetail,{foreignKey: "userId"});
 // userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
+// orderDetail.sync({ force: true }).then((res) => {
+//   console.log(res);
+// });
 sequelize
   .sync()
   .then((_) => {
