@@ -57,6 +57,10 @@ export default {
   },
 
   createSimpleSellOrder(orderDetails: any) {
-    return apiClient.post("api/v1/sell/saveOrder",orderDetails);
+    return apiClient.post("api/v1/sell/saveOrder", orderDetails);
+  },
+
+  getBuyerOrderDetails(buyerId: any) {
+    return apiClient.get("api/v1/sell/getOrder?buyerId=" + buyerId);
   },
 };
