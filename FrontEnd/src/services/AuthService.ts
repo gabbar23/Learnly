@@ -15,8 +15,8 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  getCities(province:any) {
-    console.log(province)
+  getCities(province: any) {
+    console.log(province);
     return apiClient.get("api/fetch/fetchCity?province=" + province);
   },
 
@@ -52,7 +52,11 @@ export default {
     return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
 
-  postBidDetails(bidDetails: IPostBidDetails){
+  postBidDetails(bidDetails: IPostBidDetails) {
     return apiClient.post("api/bid/addBidDetails", bidDetails);
-  }
+  },
+
+  createSimpleSellOrder(orderDetails: any) {
+    return apiClient.post("api/v1/sell/saveOrder",orderDetails);
+  },
 };

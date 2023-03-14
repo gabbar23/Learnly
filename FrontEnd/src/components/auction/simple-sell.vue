@@ -12,7 +12,7 @@
       </template>
     </Carousel>
     <div class="mx-auto">
-      <button class="btn btn-danger" @click = "makePayment">Pay</button>
+      <button class="btn btn-danger" @click="makePayment">Pay</button>
     </div>
   </div>
 </template>
@@ -26,10 +26,17 @@ const bindClick = (args: any) => {
   console.log("Hello");
 };
 
-const makePayment = ()=>{
+const makePayment = () => {
   // console.log();
-  router.push("/add-card");
-}
+  router.push({
+    path: "/add-card",
+    query: {
+      sellerId: "123",
+      itemId: "456",
+      buyerId: "789",
+    },
+  });
+};
 </script>
 
 <style>

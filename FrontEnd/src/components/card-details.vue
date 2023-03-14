@@ -45,10 +45,37 @@
 </template>
 <script lang="ts" setup>
 import router from "@/router";
+import AuthService from "@/services/AuthService";
+import { useNotification } from "@kyvg/vue3-notification";
+import { useRoute } from "vue-router";
 
-const approvePayment = () => {};
+const route = useRoute();
+const { notify } = useNotification();
+
+const approvePayment = async () => {
+  try {
+    const requestPayload = Object.assign({}, { ...route.query });
+    await AuthService.createSimpleSellOrder(requestPayload);
+    notify({
+      title: "Successfull!",
+      text: "Your Order has been placed Successfully!",
+      type: "success",
+    });
+  } catch (e) {
+    notify({
+      title: "Failure!",
+      text: "Opps Something went wrong!",
+      type: "danger",
+    });
+  }
+};
 
 const cancelPayment = () => {
+  notify({
+    title: "Failure!",
+    text: "Payment Cancelled Redirecting!",
+    type: "danger",
+  });
   router.push("/home");
 };
 </script>
