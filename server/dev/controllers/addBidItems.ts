@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Item } from "../models/itemModel";
-import { Bidding } from "../models/biddingModel";
-import { ImageDetailModel } from "../models/imageDetails";
+import { Auction } from "../models/aunctionModel";
 
 // Adding items listed for bidding
 export const addBidItems = async (req: Request, res: Response) => {
@@ -29,15 +28,16 @@ export const addBidItems = async (req: Request, res: Response) => {
     const itemDetail = await Item.create({
       itemName,
       itemDes,
+      isSold,
       startPrice,
       userId
       });
 
-    const bidDetail = await Bidding.create({
+    const bidDetail = await Auction.create({
       startTime,
       endTime,
       bidType,
-      isSold,
+
       address,
       cityName,
       provinceName,
@@ -84,11 +84,7 @@ const showItemDetails = (req: Request, res: Response) => {
 
   // Find all user details and send response
   Item.findAll({
-    attributes: [
-      "itemName",
-      "itemDes",
-      "startPrice",
-      ],
+    attributes: ["itemName", "itemDes", "startPrice"],
   }).then((result) => {
     res.send(result);
   });
@@ -99,13 +95,8 @@ const showBidDetails = (req: Request, res: Response) => {
   console.log(req);
 
   // Find all user details and send response
-  Bidding.findAll({
-    attributes: [
-      "startTime",
-      "endTime",
-      "bidType",
-      "isSold",
-    ],
+  Auction.findAll({
+    attributes: ["startTime", "endTime", "bidType", "isSold"],
   }).then((result) => {
     res.send(result);
   });
@@ -117,4 +108,3 @@ export default {
   showItemDetails,
   
 };
-

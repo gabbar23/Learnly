@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Bidding } from "../models/biddingModel";
+import { Auction } from "../models/aunctionModel";
 
 //Fecth the bid details
 const fetchBidDetails = async (req: Request, res: Response) => {
@@ -22,13 +22,13 @@ const fetchBidDetails = async (req: Request, res: Response) => {
          details = await Bidding.findAll({});
       }
     res.status(200).json(details);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Server error" });
-    }
-  };
-  
-export default  {
-    fetchBidDetails,
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export default {
+  fetchBidDetails,
 };
 //# sourceMappingURL=fetchBidDetails.js.map

@@ -3,16 +3,20 @@ import { sequelize } from "../util/database";
 import { QueryTypes } from "sequelize";
 
 import { orderDetail } from "../models/orderDetailsModel";
+import { Item } from "../models/itemModel";
 
 export const addOrder = async (req: Request, res: Response) => {
-  const { buyerId, sellerId, itemId } = req.body;
+  const { buyerId, sellerId, itemId, isSold } = req.body;
   try {
     const order = await orderDetail.create({
       buyerId: buyerId,
       sellerId: sellerId,
       itemId: itemId,
     });
-
+    Item.update(
+      { isSold: isSold }, // updated values
+      { where: { itemId: itemId } } // condition
+    );
     res.status(201).json({
       message: {
         order: order.get({ plain: true }),
@@ -31,7 +35,7 @@ export const getOrder = async (req: Request, res: Response) => {
   try {
     // Fetch all order details and include associated items
     const results = await sequelize.query(
-      `SELECT orderId,buyerId,orderDetails.itemId,items.itemName,items.startPrice,items.itemDes
+      `SELECT orderId,buyerId,orderDetails.itemId,items.itemName,items.startPrice,items.itemDes,items.isSold
       FROM orderDetails
       JOIN items ON orderDetails.itemId = items.itemId
       WHERE orderDetails.buyerId = buyerId;`,
