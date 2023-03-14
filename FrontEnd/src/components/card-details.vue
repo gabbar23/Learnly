@@ -45,12 +45,14 @@
 </template>
 <script lang="ts" setup>
 import router from "@/router";
+import auctionService from "@/services/auctionService";
 import AuthService from "@/services/AuthService";
 import { useNotification } from "@kyvg/vue3-notification";
+import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 
-const route = useRoute();
 const { notify } = useNotification();
+const route = useRoute();
 
 const approvePayment = async () => {
   try {

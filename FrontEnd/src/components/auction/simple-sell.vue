@@ -21,6 +21,20 @@
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import router from "@/router";
+import { onMounted, ref } from "vue";
+import auctionService from "@/services/auctionService";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const sellItemDetail = ref<any>({});
+
+onMounted(async () => {
+  const { itemId } = route.query;
+  console.log(itemId);
+  if (itemId) {
+    sellItemDetail.value = await auctionService.getItemDetails(itemId);
+  }
+});
 
 const bindClick = (args: any) => {
   console.log("Hello");
