@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import session  from "express-session";
+
 import cors from "cors";
 import http from 'http';
 import session from "express-session";
@@ -22,7 +22,8 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
-import {UserBidding} from "./models/userBidDetailsModel";
+// import {UserBidding} from "./models/userBidDetailsModel";
+import { userBidDetailsModel } from "./models/userBidDetails";
 
 
 
@@ -98,7 +99,7 @@ app.use(cors({
 
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
