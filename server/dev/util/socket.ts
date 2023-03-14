@@ -18,10 +18,14 @@ export function initSocket(server: any): void {
       socket.on('placeBid', (data) => {
 
         console.log(data.sessionId,data.bidVal);
+
+        const info = {
+          highestBid:data.bidVal,
+          sessionId:data.sessionId
+        }
         
-        console.log("bid pressed",data);
         
-        io.emit('bidUpdate', (data + 20));
+        io.emit('bidUpdate', info);
     
       });
     

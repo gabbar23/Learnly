@@ -8,15 +8,12 @@ import apiClient from "../axios";
     },
 
     getAuctionDetails(auction:Number){
-      return apiClient.post("api/auction/auctionDetails",{auction});
+      return apiClient.post("api/auction/auctionDetails",{bidId:auction});
     },
 
-    getItemDetails(){
-      return apiClient.get("api/bid/fetchBidDetails");
+    getItemDetails(auction:Number){
+      return apiClient.post("api/auction/auctionItemDetails",{itemId:auction});
     },
 
-    getBidItem(){
-      return apiClient.get("api/bid/fetchBidItems");
-    }
   };
   

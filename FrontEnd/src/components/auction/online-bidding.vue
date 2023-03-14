@@ -17,11 +17,11 @@
       <div>
         <div class="row">
           <div class="details">
-            <div>Description</div>
+            <div>Description:{{description}}</div>
             <div>Starting At: {{startTime}}</div>
           <div>Closing At: {{endTime}}</div>
           <div>Start Price: {{startVal}}$</div>
-            <div>Current Max: {{higestBid}}$</div>
+            <div>Current Max: {{highestBid}}$</div>
             <div class="d-flex">
               <div class="mr-4">Make Bid</div>
               <FormKit
@@ -93,34 +93,42 @@ watch(timeLeft, (newValue, oldValue) => {
   }
 });
   
-let higestBid = ref<Number>(0);
+let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
 let myVal = ref<Number>(0);
 
 let startTime = ref<dateFns>();
 let endTime = ref<dateFns>();
 let socket = ref<Socket>();
-   
+const description = ref<String>();
 
 onMounted(()=>{
 
     let id:number = 1
 
-    auctionService.getAuctionEndTime(id).then((res)=>{
-      timer = res.data;
-    }).catch((res)=>{
-      console.log("time not fetched");
-    });
+    // auctionService.getAuctionEndTime(id).then((res)=>{
+    //   timer = res.data;
+    // }).catch((res)=>{
+    //   console.log("time not fetched");
+    // });
 
     auctionService.getAuctionDetails(id).then((res)=> {
       
-      console.log(res.data.message.startTime);
-      startTime.value = res.data.message.startTime;
-      endTime.value = res.data.message.endTime;
-      startVal.value = res.data.message.startVal;
+      console.log(res.data);
+      startTime.value = res.data.startTime;
+      endTime.value = res.data.endTime;
+      startVal.value = 200;
 
     }).catch(()=>{
-      
+      console.log("cant load auction details");
+    })
+
+   
+    auctionService.getItemDetails(id).then((res)=> {
+      description.value = res.data.itemDes;    
+
+    }).catch(()=>{
+     console.log("cant fetch item details"); 
     })
 
 });
@@ -146,10 +154,9 @@ socket.value.on('disconnect', () => {
 });
     
 
-socket.value.on('bidUpdate',(data,sessionId)=>{
-  
-  higestBid.value = data  
-  console.log(higestBid.value);
+socket.value.on('bidUpdate',(info)=>{
+  console.log(info);
+  highestBid.value = info.highestBid;
 
 });
 

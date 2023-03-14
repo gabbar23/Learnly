@@ -24,28 +24,15 @@ const getAuctionDetails = async (req : Request, res: Response) => {
     await Bidding.findOne({
 
       where: {
-        bidId: req.query.bidId,
+        bidId: req.body.bidId,
       },
     
     }).then((result)=>{
       res.status(200).json(result);
     });
-  } 
-  catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
-  }  
-  
-  
-  console.log("fectching details");
-
-    res.status(200).json({
-        message: {
-          startTime:new Date().toLocaleString(),
-          endTime:new Date().toLocaleString(),
-          startVal:100,
-        },
-      });
+  }catch{
+    console.log("getAuctionDetails Failed");
+  }
     
 }
 
@@ -56,7 +43,7 @@ const getAuctionItemDetails = async (req: Request, res: Response) =>{
     await Item.findOne({
 
       where: {
-        itemId: req.query.itemId,
+        itemId: req.body.itemId,
       },
     
     }).then((result)=>{
