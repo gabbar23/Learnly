@@ -32,15 +32,7 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails) {
-    return apiClient
-      .post("api/v1/register/checkLoginCredentials", loginDetails)
-      .then((res) => {
-        localStorage.setItem("sessionId", res.data.sessionId);
-        console.log(res.data.sessionId);
-      })
-      .catch(() => {
-        router.push("/login");
-      });
+    return apiClient.post("api/v1/register/checkLoginCredentials", loginDetails);
   },
 
   verifiedSellers() {
