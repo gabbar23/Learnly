@@ -44,22 +44,28 @@
 <script lang="ts" setup>
 import AuthService from "@/services/AuthService";
 import { reactive } from "vue";
+import { useNotification } from "@kyvg/vue3-notification";
 
 let loginDetails = reactive<ILoginDetails>({
   email: "",
   password: "",
 });
-
-if(localStorage.getItem("sessionId")){
-  router.push('/homepage');
-}
+const { notify } = useNotification();
 
 const onSubmit = async () => {
   try {
-    await AuthService.checkLogin(loginDetails);
-    router.push("/home");
+    const response = await AuthService.checkLogin(loginDetails);
+    const userDetails = JSON.stringify(response.data.message);
+    console.log(userDetails);
+    localStorage.setItem("userDetails", userDetails);
+    router.push("/home"); // This needs to be updated
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");
+    notify({
+      title: "Failure!",
+      text: "Invalid Credentials",
+      type: "error",
+    });
   }
 };
 </script>
@@ -84,7 +90,7 @@ div#app {
 
 div#app div#login {
   align-items: center;
-  background-color: darkcyan;
+  background-color: #eadfdf;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -92,10 +98,11 @@ div#app div#login {
 }
 
 div#app div#login div#description {
-  background-color: #ffffff;
+  background-color: whitesmoke;
   width: 280px;
   padding: 35px;
   text-align: center;
+  align-items: center;
 }
 
 div#app div#login div#description h1,
@@ -143,7 +150,7 @@ div#app div#login div#form ::placeholder {
 }
 
 div#app div#login div#form button {
-  background-color: #eadfdf;
+  background-color: #ecf0f1;
   color: #000;
   cursor: pointer;
   border: none;
@@ -188,7 +195,7 @@ div#app div#login div#form button:hover {
 import router from "@/router";
 import { FormKit } from "@formkit/vue";
 import { defineComponent } from "vue";
-import type { ILoginDetails } from "@/interfaces/bid-for-good";
+import type { ILoggedInUserDetails, ILoginDetails } from "@/interfaces/bid-for-good";
 export default defineComponent({
   methods: {
     route() {

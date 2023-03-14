@@ -1,3 +1,4 @@
+import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,
@@ -13,8 +14,9 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  getCities() {
-    return apiClient.get("api/fetch/fetchCity");
+  getCities(province:any) {
+    console.log(province)
+    return apiClient.get("api/fetch/fetchCity?province=" + province);
   },
 
   checkUserExist(email: string) {
@@ -30,14 +32,14 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails) {
-    return apiClient
-      .post("api/v1/register/checkLoginCredentials", loginDetails)
-      .then((res) => {
-        localStorage.setItem("sessionId", res.data.sessionId);
-        console.log(res.data.sessionId);
-      })
-      .catch(() => {
-        router.push("/login");
-      });
+    return apiClient.post("api/v1/register/checkLoginCredentials", loginDetails);
+  },
+
+  verifiedSellers() {
+    return apiClient.get("api/v1/register/verifiedSellers");
+  },
+
+  approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
+    return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
 };

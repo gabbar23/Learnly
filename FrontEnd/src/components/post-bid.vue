@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
- 
   <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
     <section class="container parent_sect">
       <FormKit
@@ -95,7 +94,6 @@
       />
     </section>
   </FormKit>
-
 </template>
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
@@ -106,10 +104,13 @@ import type {
 } from "@/interfaces/seller-registration";
 import AuthService from "@/services/AuthService";
 import { onMounted, reactive, ref } from "vue";
+import { useNotification } from "@kyvg/vue3-notification";
+
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
+const { notify } = useNotification();
 let sellerDetails = reactive<IGetSellerBidDetails>({
   nameOfOffering: "",
   startDate: "",
@@ -133,7 +134,8 @@ const bidTypeOptions: ISelectResponse<BidTypeEnum>[] = [
   {
     label: BidDescriptionEnum[BidTypeEnum.normalBidding],
     value: BidTypeEnum.normalBidding,
-  },{
+  },
+  {
     label: BidDescriptionEnum[BidTypeEnum.simpleSell],
     value: BidTypeEnum.simpleSell,
   },
@@ -182,9 +184,14 @@ const uploadImages = async (data: any) => {
 };
 
 const sellerRegister = async () => {
-  console.warn(allImages.value);
-  sellerDetails.imageDetails = allImages.value;
+  // console.warn(allImages.value);
+  // sellerDetails.imageDetails = allImages.value;
   console.warn(sellerDetails);
+  notify({
+    title: "Successfull!",
+    text: "Your Bid has been registered Successfully!",
+    type: "success",
+  });
 };
 
 const triggerChange = async (val: string) => {
@@ -210,5 +217,4 @@ const triggerChange = async (val: string) => {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
-
 </style>

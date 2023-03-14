@@ -1,12 +1,17 @@
 import express from "express";
 import bodyParser from "body-parser";
-import session  from "express-session";
-import cors from "cors";
 
+import cors from "cors";
+import http from 'http';
+import session from "express-session";
 
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
-import {bidRoutes} from "./routes/bidRoutes"
+import { bidRoutes } from "./routes/bidRoutes";
+import { orderRoutes } from "./routes/orderRoutes";
+import {auctionRoutes} from "./routes/auctionRoutes/auctionRoutes"
+// import { Socket,Server } from "socket.io";
+
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -17,8 +22,12 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
-import {userBidDetailsModel} from "./models/userBidDetails";
+// import {UserBidding} from "./models/userBidDetailsModel";
+import { userBidDetailsModel } from "./models/userBidDetails";
 
+
+
+import { initSocket } from "./util/socket";
 
 declare module 'express-session' {
   interface Session{
@@ -28,19 +37,56 @@ declare module 'express-session' {
 
 const app = express();
 
+const server: http.Server = http.createServer(app);
+
+
+// Initialize your Socket.io server
+initSocket(server);
+
 app.use(
   session({
-    secret: 'wearegroup5', // replace with your own secret key
+    secret: "wearegroup5", // replace with your own secret key
     resave: false,
     saveUninitialized: false,
     cookie: {
       secure: false, // set to true if using HTTPS
       maxAge: 60 * 60 * 1000, // session expires after 1 day
-      httpOnly:true,
-    }
+      httpOnly: true,
+    },
   })
 );
 
+
+
+// const io = new Server(server, {
+//   cors: {
+//     origin: 'http://localhost:5173',
+//     methods: ['GET', 'POST']
+//   }
+// });
+
+// const io = new Server(server);
+
+// io.on('connection', (socket:Socket)=>{
+  
+//   console.log("user just connected!");
+
+//   socket.on('placeBid', (data) => {
+//     // Update the bid in the database
+//     // ...
+    
+//     console.log("bid pressed",data);
+//     // Emit a bid update event to all connected clients
+    
+//     socket.emit('bidUpdate', (data + 20));
+//   });
+
+
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+
+// });
 
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,6 +96,7 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+
 
 app.use((_, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
@@ -64,7 +111,9 @@ app.use((_, res, next) => {
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
-app.use("/api/bid",bidRoutes);
+app.use("/api/bid", bidRoutes);
+app.use("/api/v1/sell", orderRoutes);
+app.use("/api/auction/",auctionRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -107,6 +156,9 @@ userBidDetailsModel.belongsTo(UserDetail,{foreignKey: "userId"});
 // userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
+// orderDetail.sync({ force: true }).then((res) => {
+//   console.log(res);
+// });
 sequelize
   .sync()
   .then((_) => {
@@ -116,4 +168,4 @@ sequelize
     console.log(error);
   });
 
-app.listen(3000);
+server.listen(3000);

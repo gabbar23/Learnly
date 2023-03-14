@@ -1,30 +1,27 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../util/database";
 
-const ItemModel = sequelize.define("item", {
-  itemId: {
+const orderDetailsModel = sequelize.define("orderDetails", {
+  orderId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-  },
-  itemName: {
-    type: DataTypes.STRING,
     allowNull: false,
   },
-  itemDes: {
-    type: DataTypes.TEXT,
+  buyerId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  startPrice: {
-    type: DataTypes.FLOAT,
+  sellerId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  itemId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   createdAt: {
     type: DataTypes.DATE,
   },
-  updatedAt: {
-    type: DataTypes.DATE,
-  },
 });
-
-export const Item = ItemModel;
+export const orderDetail = orderDetailsModel;

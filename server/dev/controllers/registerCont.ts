@@ -158,8 +158,8 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
         isVerified: loginDetails.isVerified,
         isSeller: userDetails.isSeller,
         isBuyer: userDetails.isBuyer,
+        sessionId:req.session.id,
       },
-      sessionId:req.session.id,
     });
   } catch (error) {
     console.error("Error checking login credentials:", error);
