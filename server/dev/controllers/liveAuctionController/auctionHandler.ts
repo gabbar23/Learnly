@@ -2,7 +2,8 @@ import { Request,Response } from "express";
 
 
 // import { sequelize } from "../util/database";
-// import {Item} from "../../models/itemModel";
+import {Bidding} from "../../models/biddingModel";
+import {Item} from "../../models/itemModel"
 // import { Socket,Server } from "socket.io";
 
 
@@ -16,9 +17,27 @@ const showCurrentAuctions = (req: Request,res:Response )=>{
     console.log("fetch Auction list",res,req);
 }
 
-const getAuctionDetails = (_req : Request, res: Response) => {
+const getAuctionDetails = async (req : Request, res: Response) => {
     
-    console.log("fectching details");
+  try {
+
+    await Bidding.findOne({
+
+      where: {
+        bidId: req.query.bidId,
+      },
+    
+    }).then((result)=>{
+      res.status(200).json(result);
+    });
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }  
+  
+  
+  console.log("fectching details");
 
     res.status(200).json({
         message: {
@@ -28,6 +47,27 @@ const getAuctionDetails = (_req : Request, res: Response) => {
         },
       });
     
+}
+
+const getAuctionItemDetails = async (req: Request, res: Response) =>{
+
+  try {
+
+    await Item.findOne({
+
+      where: {
+        itemId: req.query.itemId,
+      },
+    
+    }).then((result)=>{
+      res.status(200).json(result);
+    });
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }  
+
 }
 
 
@@ -52,6 +92,7 @@ export default{
     makeBid,
     showCurrentAuctions,
     getAuctionDetails,
+    getAuctionItemDetails,
     endTime,
     validateAmount,
     
