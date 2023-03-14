@@ -147,7 +147,7 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-  req.session.userId = email;
+  req.session.userId = loginDetails.user_id;
 
   console.log(req.session.userId);
     

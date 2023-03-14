@@ -145,8 +145,8 @@ onMounted(async () => {
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {
       states.value.push({
-        label: response.data[i].province,
-        value: response.data[i].province,
+        label: response.data[i].province_name,
+        value: response.data[i].province_name,
       });
     }
     console.warn(states.value);

@@ -19,9 +19,10 @@ export const addBidItems = async (req: Request, res: Response) => {
     provinceName,
     postalCode,
     imageDetails,
-    userId
+    //userId
    } = req.body;
-
+  
+  const userId = req.session.userId;
  // let userId = "";
   try {
     // Create item instance
@@ -57,9 +58,6 @@ export const addBidItems = async (req: Request, res: Response) => {
    // Execute the promises to create image details
    const imageDetailsResults = await Promise.all(imageDetailPromises);
 
-    // Get the user ID
-   // userId = userDetail.get().userId;
-  
    // Send response with item and bid details
     res.status(201).json({
       message: {
