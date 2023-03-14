@@ -89,7 +89,7 @@ const router = createRouter({
     },
     {
       path: "/add-card",
-      name: "Post Bid",
+      name: "Add Card",
       component: () => import("../components/card-details.vue"),
     },
   ],

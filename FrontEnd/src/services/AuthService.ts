@@ -1,4 +1,5 @@
 import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
+import type { IPostBidDetails } from "@/interfaces/auction";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,
@@ -50,4 +51,8 @@ export default {
   approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
     return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
+
+  postBidDetails(bidDetails: IPostBidDetails){
+    return apiClient.post("api/bid/addBidDetails", bidDetails);
+  }
 };

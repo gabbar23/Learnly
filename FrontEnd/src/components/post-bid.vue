@@ -5,13 +5,13 @@
       <FormKit
         type="text"
         label="Name Of Offering"
-        v-model="sellerDetails.nameOfOffering"
+        v-model="sellerDetails.itemName"
       />
 
       <FormKit
         type="number"
         label="Estimated Value"
-        v-model="sellerDetails.estimatedValue"
+        v-model="sellerDetails.startPrice"
       />
 
       <FormKit
@@ -45,8 +45,8 @@
         label="State"
         placeholder="Select a State"
         :options="states"
-        v-model="sellerDetails.province"
-        @change="triggerChange(sellerDetails.province)"
+        v-model="sellerDetails.provinceName"
+        @change="triggerChange(sellerDetails.provinceName)"
       >
       </FormKit>
 
@@ -55,7 +55,7 @@
         label="City"
         placeholder="Select City"
         :options="cities"
-        v-model="sellerDetails.city"
+        v-model="sellerDetails.cityName"
       />
 
       <FormKit
@@ -90,7 +90,7 @@
       <FormKit
         type="textarea"
         label="Description"
-        v-model="sellerDetails.description"
+        v-model="sellerDetails.itemDes"
       />
     </section>
   </FormKit>
@@ -111,33 +111,35 @@ const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
 const { notify } = useNotification();
+
 let sellerDetails = reactive<IGetSellerBidDetails>({
-  nameOfOffering: "",
-  startDate: "",
+  itemName: "",
   startTime: "",
-  endDate: "",
   endTime: "",
-  estimatedValue: "",
-  province: "",
-  city: "",
+  startPrice: "",
+  provinceName: "",
+  cityName: "",
   postalCode: "",
+  isSold: 0,
   address: "",
-  description: "",
+  itemDes: "",
   imageDetails: [],
-  bidType: BidTypeEnum.liveBidding,
+  bidType: "",
+  startDate: "",
+  endDate: "",
 });
-const bidTypeOptions: ISelectResponse<BidTypeEnum>[] = [
+const bidTypeOptions: ISelectResponse<string>[] = [
   {
     label: BidDescriptionEnum[BidTypeEnum.liveBidding],
-    value: BidTypeEnum.liveBidding,
+    value: "live",
   },
   {
     label: BidDescriptionEnum[BidTypeEnum.normalBidding],
-    value: BidTypeEnum.normalBidding,
+    value: "blind",
   },
   {
     label: BidDescriptionEnum[BidTypeEnum.simpleSell],
-    value: BidTypeEnum.simpleSell,
+    value: "simple",
   },
 ];
 
@@ -186,19 +188,28 @@ const uploadImages = async (data: any) => {
 const sellerRegister = async () => {
   // console.warn(allImages.value);
   // sellerDetails.imageDetails = allImages.value;
-  console.warn(sellerDetails);
-  notify({
-    title: "Successfull!",
-    text: "Your Bid has been registered Successfully!",
-    type: "success",
-  });
+  try{
+    await AuthService.postBidDetails(sellerDetails);
+    console.warn(sellerDetails);
+    notify({
+      title: "Successfull!",
+      text: "Your Bid has been registered Successfully!",
+      type: "success",
+    });
+  }catch(e){
+    notify({
+      title: "Failure!",
+      text: "Opps Something went wrong!",
+      type: "danger",
+    });
+  }
 };
 
 const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
   try {
-    let response = await AuthService.getCities();
+    let response = await AuthService.getCities(val);
     console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
