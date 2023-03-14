@@ -6,6 +6,7 @@ import cors from "cors";
 import { registerRoutes } from "./routes/registerRoutes";
 import { fetch } from "./routes/formRoutes";
 import { bidRoutes } from "./routes/bidRoutes";
+import { orderRoutes } from "./routes/orderRoutes";
 // import { sellerModel } from "./models/sellerModel";
 // import { StatesCity } from "./models/citiesState";
 
@@ -17,6 +18,7 @@ import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
 import { UserBidding } from "./models/userBidDetailsModel";
+// import { orderDetail } from "./models/orderDetailsModel";
 
 declare module "express-session" {
   interface Session {
@@ -64,6 +66,7 @@ app.use((_, res, next) => {
 app.use("/api/v1/register", registerRoutes);
 app.use("/api/fetch", fetch);
 app.use("/api/bid", bidRoutes);
+app.use("/api/v1/sell", orderRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -106,6 +109,9 @@ UserDetail.hasMany(UserBidding, { foreignKey: "user_id" });
 // UserBidding.sync({force:true}).then((_)=>{
 //   console.log("Models Loaded");
 // })
+// orderDetail.sync({ force: true }).then((res) => {
+//   console.log(res);
+// });
 sequelize
   .sync()
   .then((_) => {
