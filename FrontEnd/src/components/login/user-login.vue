@@ -84,7 +84,7 @@ div#app {
 
 div#app div#login {
   align-items: center;
-  background-color: darkcyan;
+  background-color: #eadfdf;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -92,10 +92,11 @@ div#app div#login {
 }
 
 div#app div#login div#description {
-  background-color: #ffffff;
+  background-color: whitesmoke;
   width: 280px;
   padding: 35px;
   text-align: center;
+  align-items: center;
 }
 
 div#app div#login div#description h1,
@@ -143,7 +144,7 @@ div#app div#login div#form ::placeholder {
 }
 
 div#app div#login div#form button {
-  background-color: #eadfdf;
+  background-color: #ecf0f1;
   color: #000;
   cursor: pointer;
   border: none;

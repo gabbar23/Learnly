@@ -20,7 +20,8 @@
           <div class = "d-flex">
             <div class = "mr-4">Make Bid</div>
             <FormKit  type="text" />
-            <button class="btn btn-danger ml-5">Submit Bid</button>
+            <button class="btn btn-danger ml-5" :disabled = "isItemSold" >Submit Bid</button>
+            <p>Bid Already Made.</p>
           </div>
         </div>
       </div>
@@ -28,14 +29,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
+import { defineComponent, ref } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-export default defineComponent({
-  components: { Navigation, Carousel, Slide, Pagination },
-});
+const isItemSold = ref<boolean>(true);
 </script>
 
 <style>

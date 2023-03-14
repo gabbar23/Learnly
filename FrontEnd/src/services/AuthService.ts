@@ -1,3 +1,4 @@
+import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,
@@ -13,8 +14,9 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  getCities() {
-    return apiClient.get("api/fetch/fetchCity");
+  getCities(province:any) {
+    console.log(province)
+    return apiClient.get("api/fetch/fetchCity?province=" + province);
   },
 
   checkUserExist(email: string) {
@@ -39,5 +41,13 @@ export default {
       .catch(() => {
         router.push("/login");
       });
+  },
+
+  verifiedSellers() {
+    return apiClient.get("api/v1/register/verifiedSellers");
+  },
+
+  approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
+    return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
 };
