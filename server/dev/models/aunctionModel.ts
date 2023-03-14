@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../util/database";
 
-const biddingModel = sequelize.define("bidding", {
-  bidId: {
+const auctionModel = sequelize.define("auction", {
+  auctionId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
@@ -16,12 +16,8 @@ const biddingModel = sequelize.define("bidding", {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  isSold: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  bidType: {
-    type: DataTypes.ENUM("live", "blind","simple"),
+  auctionType: {
+    type: DataTypes.ENUM("live", "blind", "simple"),
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -47,6 +43,5 @@ const biddingModel = sequelize.define("bidding", {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  
 });
-export const Bidding = biddingModel;
+export const Auction = auctionModel;
