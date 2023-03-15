@@ -35,22 +35,11 @@ export const getOrder = async (_: Request, res: Response) => {
   try {
     // Fetch all order details and include associated items
     const results = await sequelize.query(
-      // `SELECT orderId,buyerId,orderDetails.itemId,items.itemName,items.startPrice,items.itemDes,items.isSold
-      // FROM orderDetails
-      // JOIN items ON orderDetails.itemId = items.itemId
-      // WHERE orderDetails.buyerId = buyerId;`
-      
-      `SELECT auctions.*, itemDetails.*
-      FROM auctions
-      INNER JOIN (
-        SELECT items.itemId AS itemItemId, items.auctionId, items.itemName, imageDetails.imgUrl, imageDetails.imgName
-        FROM items
-        INNER JOIN imageDetails
-        ON items.itemId = imageDetails.itemId
-      ) AS itemDetails
-      ON auctions.auctionId = itemDetails.auctionId
-      ;
-      `,
+      `SELECT orderId,buyerId,orderDetails.itemId,items.itemName,items.startPrice,items.itemDes,items.isSold
+      FROM orderDetails
+      JOIN items ON orderDetails.itemId = items.itemId
+      WHERE orderDetails.buyerId = buyerId;`
+      ,
       {
         // replacements: { buyerId: buyerId },
         type: QueryTypes.SELECT,
