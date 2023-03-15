@@ -15,5 +15,8 @@ import apiClient from "../axios";
       return apiClient.post("api/auction/auctionItemDetails",{itemId:auction});
     },
 
+    getImages(auction:Number){
+      return apiClient.post("api/auction//auctionImages",{itemId:auction});
+    }
   };
   
