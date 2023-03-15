@@ -19,43 +19,53 @@ export const addBidItems = async (req: Request, res: Response) => {
     provinceName,
     postalCode,
     imageDetails,
+    user_id
     //userId
    } = req.body;
   
-  const userId = req.session.userId;
- // let userId = "";
   try {
+
+  //Create a instance of auction
+  const auctionDetail = await Auction.create({
+    startTime,
+    endTime,
+    auctionType,
+    address,
+    cityName,
+    provinceName,
+    postalCode,
+    user_id
+  }, {
+    returning: ['auctionId'] // To return the inserted itemId
+  })
+  //Storing auction id returned after creating auction details
+  const auctionId = auctionDetail.getDataValue('auctionId'); 
+   
     // Create item instance
     const itemDetail = await Item.create({
       itemName,
       itemDes,
       isSold,
+      user_id,
       startPrice,
-      userId
+      auctionId
+      }, {
+        returning: ['itemId'] // To return the inserted item_id
       });
-
-    const auctionDetail = await Auction.create({
-      startTime,
-      endTime,
-      auctionType,
-
-      address,
-      cityName,
-      provinceName,
-      postalCode,
-      userId
-    })
-
-     
-     // Create an array of promises to create image details
+      
+       //Storing item id returned after creating item details
+      const itemId = itemDetail.getDataValue('itemId'); // Access the returned item_id value
+      
+      // Create an array of promises to create image details
      const imageDetailPromises = imageDetails.map((image: any) =>
-     ImageDetailModel.create({
-       imgDescription: image.imgDescription,
-       imageName: image.imageName,
-       imgUrl: image.imgUrl,
-     })
-   );
-
+      ImageDetailModel.create({
+        imgDescription: image.imgDescription,
+        imgName: image.imgName,
+        imgUrl: image.imgUrl,
+        itemId : itemId
+      })
+  );
+     
    // Execute the promises to create image details
    const imageDetailsResults = await Promise.all(imageDetailPromises);
 
@@ -66,7 +76,7 @@ export const addBidItems = async (req: Request, res: Response) => {
         auctionDetail: auctionDetail.get({ plain: true }),
        imageDetailsPlain :imageDetailsResults.map((result) =>
        result.get({ plain: true })
-       )
+      )
       },
     });
   } 
@@ -91,8 +101,8 @@ const showItemDetails = (req: Request, res: Response) => {
   });
 };
 
-//Show Bid Details
-const showauctionDetails = (req: Request, res: Response) => {
+//show Bid Details
+const showAuctionDetails = (req: Request, res: Response) => {
   console.log(req);
 
   // Find all user details and send response
@@ -105,7 +115,7 @@ const showauctionDetails = (req: Request, res: Response) => {
 
 export default {
   addBidItems,
-  showauctionDetails,
+  showAuctionDetails,
   showItemDetails,
   
 };

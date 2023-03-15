@@ -123,8 +123,7 @@ LoginDetail.belongsTo(UserDetail, { foreignKey: "user_id" });
 UserDetail.hasMany(Item, { foreignKey: "user_id" });
 
 // Item belongsTo User
-Item.belongsTo(UserDetail, { foreignKey: "userId" });
-UserDetail.hasMany(Item , {foreignKey: "userId"});
+Item.belongsTo(UserDetail, { foreignKey: "user_id" });
 
 // User hasMany Auctions
 UserDetail.hasMany(Auction, { foreignKey: "user_id" });
@@ -137,13 +136,13 @@ Auction.belongsTo(UserDetail, { foreignKey: "user_id" });
 Item.hasMany(userBidDetailsModel, { foreignKey: "itemId" });
 userBidDetailsModel.belongsTo(Item, { foreignKey: "itemId" });
 
-Item.hasMany(Auction, { foreignKey: "auctionId" });
-Auction.belongsTo(Item, { foreignKey: "auctionId" });
-
 //UserDetail.hasMany(userBidDetailsModel,{foreignKey: "user_id"});
 
-Auction.hasMany(userBidDetailsModel, { foreignKey: "bidId" });
-userBidDetailsModel.belongsTo(Auction, { foreignKey: "bidId" });
+Auction.hasMany(Item, { foreignKey: "auctionId" });
+Item.belongsTo(Auction, { foreignKey: "auctionId" });
+
+Auction.hasMany(userBidDetailsModel, { foreignKey: "auctionId" });
+userBidDetailsModel.belongsTo(Auction, { foreignKey: "auctionId" });
 
 Item.hasMany(ImageDetailModel, { foreignKey: "itemId" });
 ImageDetailModel.belongsTo(Item, { foreignKey: "itemId" });
@@ -155,11 +154,11 @@ userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 // userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
-// orderDetail.sync({ force: true }).then((res) => {
-//   console.log(res);
+// Auction.sync({ force: true }).then((_:any) => {
+//   console.log("true");
 // });
-// Item.sync({ force: true }).then((res) => {
-//   console.log(res);
+// Item.sync({ force: true }).then((_:any) => {
+//   console.log("true");
 // });
 
 sequelize
