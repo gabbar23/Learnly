@@ -60,9 +60,10 @@ export interface IGetSellerBidDetails {
   isSold: Number;
   startDate:Date|string;
   endDate: Date|string;
+  userId: Number | null;
 }
 
 export interface IBidImageDetails {
-  imageName: string;
-  imageUrl: string;
+  imgName: string;
+  imgUrl: string;
 }

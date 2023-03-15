@@ -56,7 +56,6 @@
         placeholder="Select City"
         v-model="sellerDetails.cityName"
         :options="cityOptions"
-        validation="required"
       >
       </FormKit>
 
@@ -190,8 +189,8 @@ const uploadImages = async (data: any) => {
     const image = await AuthService.uploadImage(body, headerConfig);
     console.warn(image);
     const imageDetails: IBidImageDetails = {
-      imageUrl: image.data.url,
-      imageName: image.data.originalname,
+      imgUrl: image.data.url,
+      imgName: image.data.originalname,
     };
     allImages.value.push(imageDetails);
   });
@@ -199,8 +198,19 @@ const uploadImages = async (data: any) => {
 };
 
 const sellerRegister = async () => {
-  // console.warn(allImages.value);
-  // sellerDetails.imageDetails = allImages.value;
+  sellerDetails.imageDetails = allImages.value;
+  const details = localStorage.getItem("userDetails");
+  const { userId } = JSON.parse(details);
+  if (userId) {
+    sellerDetails.userId = userId;
+  }else{
+    notify({
+      title: "Failure!",
+      text: "Unable to pull user details!",
+      type: "danger",
+    });
+    return;
+  }
   try {
     await AuthService.postBidDetails(sellerDetails);
     console.warn(sellerDetails);
