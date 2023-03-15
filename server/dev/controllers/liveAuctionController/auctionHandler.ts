@@ -18,9 +18,10 @@ const getAuctionDetails = async (req: Request, res: Response) => {
   try {
     await Auction.findOne({
       where: {
-        bidId: req.body.bidId,
+        auctionId: req.body.bidId,
       },
     }).then((result) => {
+      console.log(result);
       res.status(200).json(result);
     });
   } catch {
@@ -34,6 +35,9 @@ const getAuctionItemDetails = async (req: Request, res: Response) => {
       where: {
         itemId: req.body.itemId,
       },
+      include:[{
+        model:ImageDetailModel
+      }]
     }).then((result) => {
       res.status(200).json(result);
     });
@@ -51,7 +55,7 @@ const getImages =async (req:Request, res: Response) => {
       }
     })
     .then((result)=>{
-      console.log(result)
+      // console.log(result)
       res.status(200).json(result);
     })
     .catch((result)=>{
@@ -83,3 +87,23 @@ export default {
   endTime,
   validateAmount,
 };
+
+
+
+//dont remove the code
+
+// await Auction.findAll({
+//   where: {
+//     auctionId: req.body.bidId,
+//   },
+//   include:[{
+//     model:Item,
+//     where: {
+//       itemId: req.body.itemId,
+//     },
+//     include:[{
+//       model:ImageDetailModel,
+      
+//     }],
+  
+//   }],
