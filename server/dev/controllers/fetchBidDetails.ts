@@ -12,7 +12,7 @@ const fetchBidDetails = async (req: Request, res: Response) => {
       if(bid_type != null){
        details = await Auction.findAll({
           where: {
-              bidType:bid_type
+              auctionType:bid_type
           }
         });
       }

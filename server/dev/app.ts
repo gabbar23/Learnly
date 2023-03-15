@@ -123,7 +123,7 @@ UserDetail.hasMany(Item, { foreignKey: "user_id" });
 
 // Item belongsTo User
 Item.belongsTo(UserDetail, { foreignKey: "userId" });
-//UserDetail.hasMany(Item, { foreignKey: "userId" });
+UserDetail.hasMany(Item , {foreignKey: "userId"});
 
 // User hasMany Auctions
 UserDetail.hasMany(Auction, { foreignKey: "user_id" });
@@ -148,10 +148,10 @@ UserDetail.hasMany(userBidDetailsModel, { foreignKey: "userId" });
 userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 
 // syncing models
-// Item.sync({force:true}).then((_:any)=>{
-//   console.log("Item Models Loaded");
+// userBidDetailsModel.sync({force:true}).then((_:any)=>{
+//   console.log("Models Loaded");
 // })
-// UserDetail.sync({ force: true }).then((res) => {
+// orderDetail.sync({ force: true }).then((res) => {
 //   console.log(res);
 // });
 // Auction.sync({ force: true }).then((res) => {
