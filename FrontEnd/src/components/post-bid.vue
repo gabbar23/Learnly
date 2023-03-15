@@ -54,9 +54,11 @@
         type="select"
         label="City"
         placeholder="Select City"
-        :options="cities"
         v-model="sellerDetails.cityName"
-      />
+        :options="cityOptions"
+        validation="required"
+      >
+      </FormKit>
 
       <FormKit
         type="text"
@@ -103,7 +105,7 @@ import type {
   ISelectResponse,
 } from "@/interfaces/seller-registration";
 import AuthService from "@/services/AuthService";
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
 
 const states = ref<ISelectResponse<string>[]>([]);
@@ -111,6 +113,15 @@ const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
 const { notify } = useNotification();
+
+let cityOptions = computed(() => {
+  return cities.value.map((city) => {
+    return {
+      label: city.label,
+      value: city.value,
+    };
+  });
+});
 
 let sellerDetails = reactive<IGetSellerBidDetails>({
   itemName: "",
@@ -127,7 +138,9 @@ let sellerDetails = reactive<IGetSellerBidDetails>({
   bidType: "",
   startDate: "",
   endDate: "",
+  userId: null,
 });
+
 const bidTypeOptions: ISelectResponse<string>[] = [
   {
     label: BidDescriptionEnum[BidTypeEnum.liveBidding],
@@ -149,8 +162,8 @@ onMounted(async () => {
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {
       states.value.push({
-        label: response.data[i].province,
-        value: response.data[i].province,
+        label: response.data[i].province_name,
+        value: response.data[i].province_name,
       });
     }
     console.warn(states.value);
@@ -188,7 +201,7 @@ const uploadImages = async (data: any) => {
 const sellerRegister = async () => {
   // console.warn(allImages.value);
   // sellerDetails.imageDetails = allImages.value;
-  try{
+  try {
     await AuthService.postBidDetails(sellerDetails);
     console.warn(sellerDetails);
     notify({
@@ -196,7 +209,7 @@ const sellerRegister = async () => {
       text: "Your Bid has been registered Successfully!",
       type: "success",
     });
-  }catch(e){
+  } catch (e) {
     notify({
       title: "Failure!",
       text: "Opps Something went wrong!",
@@ -213,8 +226,8 @@ const triggerChange = async (val: string) => {
     console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
-        label: response.data[i].cities,
-        value: response.data[i].cities,
+        label: response.data[i].city,
+        value: response.data[i].city,
       });
     }
     console.warn(cities.value);
