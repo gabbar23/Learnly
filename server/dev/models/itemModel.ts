@@ -19,6 +19,14 @@ const ItemModel = sequelize.define("item", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
+  isSold: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   createdAt: {
     type: DataTypes.DATE,
   },
