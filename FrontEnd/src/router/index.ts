@@ -79,7 +79,7 @@ const router = createRouter({
     },
     {
       path: "/reg-seller",
-      name: "Seller Registration",
+      name: "User Registration",
       component: () =>
         import("../components/registration/seller-registration.vue"),
     },
@@ -98,7 +98,6 @@ const router = createRouter({
       name: "congratulations",
       component: () => import("../components/misc pages/congratulations.vue"),
     },
-
   ],
 });
 
@@ -106,7 +105,7 @@ router.beforeEach((to, from, next) => {
   const userDetailsObject = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
-  if (to.name !== 'Login' && !isLoggedIn) {
+  if ((to.name !== "Login" && to.name !== "User Registration") && !isLoggedIn) {
     next({ name: "Login" });
   } else {
     next();
