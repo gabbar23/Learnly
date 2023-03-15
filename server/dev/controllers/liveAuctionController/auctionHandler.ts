@@ -47,7 +47,7 @@ const getImages =async (req:Request, res: Response) => {
   
     await ImageDetailModel.findAll({
       where:{
-        itemId: req.body.itemId;
+        itemId: req.body.itemId,
       }
     })
     .then((result)=>{
