@@ -4,6 +4,7 @@ import {
   OrderDetails,
   ReportIssue,
 } from "@/components/component";
+import type { ILoggedInUserDetails } from "@/interfaces/bid-for-good";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -14,7 +15,7 @@ const router = createRouter({
       name: "Login",
       component: () => import("../components/login/user-login.vue"),
     },
-/*    {
+    /*    {
       path: "/buyer-details",
       name: "buyer details",
       component: () => import("../components/registration/buyer-details.vue"), 
@@ -25,7 +26,7 @@ const router = createRouter({
       component: () =>
         import("../components/registration/buyer-registration.vue"),
       children: [
-       /* { path: "", name: "Buyer Details", component: BuyerDetails }, */
+        /* { path: "", name: "Buyer Details", component: BuyerDetails }, */
         { path: "/donations", component: DonationDetails },
         { path: "/buyer/orders", component: OrderDetails },
         { path: "/buyer/report-issue", component: ReportIssue },
@@ -99,6 +100,17 @@ const router = createRouter({
     },
 
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const userDetailsObject = localStorage.getItem("userDetails");
+  const userDetail = JSON.parse(userDetailsObject);
+  const isLoggedIn = !!(userDetail && userDetail.sessionId);
+  if (to.name !== 'Login' && !isLoggedIn) {
+    next({ name: "Login" });
+  } else {
+    next();
+  }
 });
 
 export default router;

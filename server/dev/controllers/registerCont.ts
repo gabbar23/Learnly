@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { hashPassword, checkPassword } from "../util/passwordHashing";
 import { UserDetail } from "../models/userDetailModel";
 import { LoginDetail } from "../models/loginDetailModel";
-
+import { sendEmail } from "../util/emailSender";
+import { WELCOMEMESSAGE } from "../util/constants";
 // Registers a new user
 export const registerUser = async (req: Request, res: Response) => {
   // Extract data from request body
@@ -53,7 +54,9 @@ export const registerUser = async (req: Request, res: Response) => {
       isVerified: "false",
       password: hashedPassword,
     });
-
+    sendEmail(WELCOMEMESSAGE, email).then((res) => {
+      console.log(res);
+    });
     // Send response with user and login details
     res.status(201).json({
       message: {
@@ -144,6 +147,10 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
+  req.session.userId = email;
+
+  console.log(req.session.userId);
+    
     res.status(200).json({
       message: {
         userId: loginDetails.user_id,
@@ -151,6 +158,7 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
         isVerified: loginDetails.isVerified,
         isSeller: userDetails.isSeller,
         isBuyer: userDetails.isBuyer,
+        sessionId:req.session.id,
       },
     });
   } catch (error) {

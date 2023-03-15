@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { cityProvince } from "../models/citiesState";
 import { sequelize } from "../util/database";
-// import { sequelize } from "../util/database";
 
 console.log("req recevied for fetching city");
 
