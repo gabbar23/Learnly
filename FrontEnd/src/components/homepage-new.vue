@@ -6,7 +6,8 @@
       <Slide v-if="bidDetails.length!=0" v-for="slide in bidDetails.length" :key="slide">
         <div class="carStyle" style="background-color: black;" @click="AuctionClassifier">
           <img :src="link1" v-if="slide>0"/></div>
-        <h1 v-if="slide>0">{{imgLinks[slide-1]}}</h1>
+        <br/>
+       <!-- <h2>{{ bidDetails.length }} , {{ bidDetails }} , {{ slide }}</h2> -->
       </Slide>
     </Carousel>
     <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no live auctions available right now. </h1></div>
@@ -19,8 +20,8 @@
       ref="carousel"
     >
       <Slide v-for="slide in bidDetails.length" :key="slide">
-        <div class="carousel__item" @click="slideTo(slide - 1)"> Bid ID: {{ bidDetails[slide -1].bidId }} 
-          <br/>Bid Type: {{ bidDetails[slide -1].bidType }}</div>
+        <div class="carousel__item" @click="slideTo(slide - 1)"> Bid ID: {{ bidDetails[slide -1].auctionId }} 
+          <br/>Bid Type: {{ bidDetails[slide -1].auctionType }}</div>
       </Slide>
     </Carousel>
     
@@ -49,8 +50,8 @@
   
   let auctionDetails =reactive<IGetAuctionDetails>({
   address: '',
-  bidId: 0,
-  bidType: '',
+  auctionID: 0,
+  auctionType: '',
   cityName: '',
   createdAt: '',
   endTime: '',
@@ -99,6 +100,7 @@
         console.log(bidDetailsRes)
         console.log(bidItemsRes)
         console.log("button clicked!")
+        
       },
       async getAuctionNum(){
        console.log("image clicked",this.currentSlide+1)
@@ -114,21 +116,21 @@
           
           let currentBidDetails=res.data[this.currentSlide];
           
-          //console.log(currentBidDetails.bidType)
-         if(currentBidDetails.bidType=="blind"){
+          console.log(currentBidDetails.auctionType)
+         if(currentBidDetails.auctionType=="blind"){
           router.push({path: "/make-blind-auction",
           query: { 
-              bidId: currentBidDetails.bidId,
+              auctionID: currentBidDetails.auctionID,
               startTime: currentBidDetails.startTime,
               endTime: currentBidDetails.endTime,
             }
           })
          }
-         else if(currentBidDetails.bidType=="live")
+         else if(currentBidDetails.auctionType=="live")
          {
             router.push({path: "/make-bid", 
             query: { 
-              bidId: currentBidDetails.bidId,
+              auctionID: currentBidDetails.auctionID,
               startTime: currentBidDetails.startTime,
               endTime: currentBidDetails.endTime,
             },

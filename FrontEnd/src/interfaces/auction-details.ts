@@ -9,8 +9,8 @@ export interface IGetAuctionItemsDetails {
   }
   export interface IGetAuctionDetails {
     address: string;
-    bidId: number;
-    bidType: string;
+    auctionID: number;
+    auctionType: string;
     cityName: string;
     createdAt: Date|string;
     endTime: Date|string;

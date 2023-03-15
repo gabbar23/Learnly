@@ -5,6 +5,7 @@
         <FormKit
           type="form"
           @submit="sellerRegister"
+          @submit-invalid="InvalidSignup"
           enctype="multipart/form-data"
         >
           <section class="container parent_sect">
@@ -71,14 +72,13 @@
             <FormKit
               type="text"
               label="Postal Zip Code"
-              help="format: a1b-c2d | a1bc2d | a1b c2d"
+              help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
               :validation="[
                 ['required'],
                 [
                   'matches',
-                  /^\w\d\w \w\d\w$/,
-                  /^\w\d\w-\w\d\w$/,
-                  /^\w\d\w\w\d\w$/,
+
+                  /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i
                 ],
               ]"
               v-model="userDetails.postalCode"
@@ -195,6 +195,7 @@ import {
   watch,
 } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import { RouterLink } from "vue-router";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -251,6 +252,14 @@ onMounted(async () => {
     console.error("Error in fetching states", e);
   }
 });
+const InvalidSignup=()=>{
+  notify({
+      title: "Failure!",
+      text: "Registration Failed! Please Contact Help Desk.",
+      type: "error",
+    });
+};
+
 const login = () => {
   router.push("/");
 };
@@ -287,13 +296,14 @@ const sellerRegister = async (data: any) => {
   };
 
   try {
-    await AuthService.uploadImage(body, headerConfig);
-    await AuthService.register(userDetails);
+   // await AuthService.uploadImage(body, headerConfig);
+    let userRes=await AuthService.register(userDetails);
     notify({
       title: "Success!",
       text: "User Logged In Successfully! Wait for Admins approval",
       type: "success",
     });
+    router.push("/");
   } catch (e) {
     notify({
       title: "Failure!",
@@ -302,6 +312,7 @@ const sellerRegister = async (data: any) => {
     });
   }
 };
+
 
 const checkUserExists = async (email: string) => {
   console.warn("User Exists", email);

@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-  </div><h1>{{ route.query }}</h1>
+  </div><!-- <h1>{{ route.query }}</h1> -->
 </template>
 
 <script lang="ts" setup>
