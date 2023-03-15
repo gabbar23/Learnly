@@ -104,7 +104,7 @@ const description = ref<String>();
 
 onMounted(()=>{
 
-    let id:number = 3
+    let id:number = 1
 
     // auctionService.getAuctionEndTime(id).then((res)=>{
     //   timer = res.data;
@@ -112,11 +112,12 @@ onMounted(()=>{
     //   console.log("time not fetched");
     // });
 
-    const images = auctionService.getImages(id).then((res)=> {
-      return res;
-    }).catch(()=>{
-      console.log("cant load auction details");
-    })
+    // const images = auctionService.getImages(id).then((res)=> {
+    //   console.log(res);
+    //   return res;
+    // }).catch(()=>{
+    //   console.log("cant load auction details");
+    // })
 
 
     auctionService.getAuctionDetails(id).then((res)=> {
@@ -133,7 +134,7 @@ onMounted(()=>{
    
     auctionService.getItemDetails(id).then((res)=> {
       description.value = res.data.itemDes;    
-
+      console.log(res);
     }).catch(()=>{
      console.log("cant fetch item details"); 
     })

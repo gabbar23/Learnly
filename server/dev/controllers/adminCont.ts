@@ -47,9 +47,7 @@ const getVerfiedSellers = async (req: Request, res: Response) => {
 };
 const markAsVerifiedSeller = async (req: Request, res: Response) => {
   try {
-    const userId = req.body.userId;
-    const isVerified = req.body.isVerified;
-    // console.log(userId);
+    const {userId, isVerified} = req.body?.query;
 
     const updateLoginDetail = await LoginDetail.findOne({
       where: {

@@ -58,13 +58,18 @@ import type {
 import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
 import NoContent from "../components/no-content.vue";
+import { useNotification } from "@kyvg/vue3-notification";
 
 const page = 2;
 const pageCount = 10;
 const verifiedSellers = ref<IVerfiedSeller[]>([]);
+const { notify } = useNotification();
+const isLoading = ref<boolean>(false);
 
-onMounted(async () => {
+const getRegisteredSellers = async()=>{
   try {
+    verifiedSellers.value = [];
+    isLoading.value = true;
     const response = await AuthService.verifiedSellers();
     verifiedSellers.value = response.data;
     verifiedSellers.value.map((seller) => {
@@ -73,17 +78,46 @@ onMounted(async () => {
       };
     });
   } catch (e) {
-    console.error("Error in fetching states", e);
+    notify({
+      title: "Failure!",
+      text: "Fetching Registered Seller Operations Failed!",
+      type: "error",
+    });
+  }finally{
+    isLoading.value = false;
   }
+}
+
+onMounted(async () => {
+  getRegisteredSellers();
 });
 
-const approve = async (seller: IVerfiedSeller) => {
+const approveOrDecline = async (payload: IApproveOrDeclineReqPayload) => {
+  try {
+    await AuthService.approveOrDeclineSeller(payload);
+    notify({
+      title: "Successfull!",
+      text: "Operation Success full!",
+      type: "success",
+    });
+  } catch (e) {
+    notify({
+      title: "Failure!",
+      text: "Operation Failed!",
+      type: "error",
+    });
+    console.error("Error in verifying seller");
+  }
+};
+
+const approve = async(seller: IVerfiedSeller) => {
   console.warn(seller);
   const reqPayload: IApproveOrDeclineReqPayload = {
     userId: seller.userId,
     isVerified: true,
   };
-  await AuthService.approveOrDeclineSeller(reqPayload);
+  await approveOrDecline(reqPayload);
+  await getRegisteredSellers();
 };
 
 const decline = async (seller: IVerfiedSeller) => {
@@ -92,7 +126,8 @@ const decline = async (seller: IVerfiedSeller) => {
     userId: seller.userId,
     isVerified: false,
   };
-  await AuthService.approveOrDeclineSeller(reqPayload);
+  await approveOrDecline(reqPayload);
+  await getRegisteredSellers();
 };
 </script>
 <style>
