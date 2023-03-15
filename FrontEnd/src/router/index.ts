@@ -100,8 +100,8 @@ router.beforeEach((to, from, next) => {
   const userDetailsObject = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
-  if (!isLoggedIn) {
-    next({ name: "/" }); // redirect to login page
+  if (to.name !== 'Login' && !isLoggedIn) {
+    next({ name: "Login" });
   } else {
     next();
   }
