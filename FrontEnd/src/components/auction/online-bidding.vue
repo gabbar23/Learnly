@@ -118,6 +118,24 @@ onMounted(() => {
   //   console.log("time not fetched");
   // });
 
+  // auctionService
+  //   .getAuctionDetails(id)
+  //   .then((res) => {
+  // auctionService.getAuctionEndTime(id).then((res)=>{
+  //   timer = res.data;
+  // }).catch((res)=>{
+  //   console.log("time not fetched");
+  // });
+
+  const images = auctionService
+    .getImages(id)
+    .then((res) => {
+      return res;
+    })
+    .catch(() => {
+      console.log("cant load auction details");
+    });
+
   auctionService
     .getAuctionDetails(id)
     .then((res) => {
