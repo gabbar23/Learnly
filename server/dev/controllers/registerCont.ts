@@ -149,8 +149,8 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
 
   req.session.userId = loginDetails.user_id;
 
-  console.log(req.session.userId);
-    
+    console.log(req.session.userId);
+
     res.status(200).json({
       message: {
         userId: loginDetails.user_id,
@@ -158,7 +158,7 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
         isVerified: loginDetails.isVerified,
         isSeller: userDetails.isSeller,
         isBuyer: userDetails.isBuyer,
-        sessionId:req.session.id,
+        sessionId: req.session.id,
       },
     });
   } catch (error) {
@@ -167,9 +167,27 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
   }
 };
 
+const logoutUser = async (req: Request, res: Response) => {
+  const { sessionId } = req.body;
+  if (sessionId === req.session.id) {
+    console.log(`Destroying session ${sessionId}`);
+    req.session.destroy((err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ message: "Failed to destroy session" });
+      } else {
+        res.status(200).json({ message: "Session destroyed" });
+      }
+    });
+  } else {
+    res.status(400).json({ message: "Invalid session ID" });
+  }
+};
+
 export default {
   registerUser,
   showUser,
   checkUserExists,
   checkLoginCredentials,
+  logoutUser,
 };

@@ -22,6 +22,7 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
+
 // import {UserBidding} from "./models/userBidDetailsModel";
 import { userBidDetailsModel } from "./models/userBidDetails";
 
@@ -136,6 +137,9 @@ Auction.belongsTo(UserDetail, { foreignKey: "user_id" });
 Item.hasMany(userBidDetailsModel, { foreignKey: "itemId" });
 userBidDetailsModel.belongsTo(Item, { foreignKey: "itemId" });
 
+Item.hasMany(Auction, { foreignKey: "auctionId" });
+Auction.belongsTo(Item, { foreignKey: "auctionId" });
+
 //UserDetail.hasMany(userBidDetailsModel,{foreignKey: "user_id"});
 
 Auction.hasMany(userBidDetailsModel, { foreignKey: "bidId" });
@@ -154,9 +158,10 @@ userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 // orderDetail.sync({ force: true }).then((res) => {
 //   console.log(res);
 // });
-// Auction.sync({ force: true }).then((res) => {
+// Item.sync({ force: true }).then((res) => {
 //   console.log(res);
 // });
+
 sequelize
   .sync()
   .then((_) => {

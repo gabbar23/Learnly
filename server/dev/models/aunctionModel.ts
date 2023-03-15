@@ -43,5 +43,9 @@ const auctionModel = sequelize.define("auction", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 });
 export const Auction = auctionModel;
