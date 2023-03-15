@@ -22,6 +22,7 @@ import { LoginDetail } from "./models/loginDetailModel";
 import { Item } from "./models/itemModel";
 import { sequelize } from "./util/database";
 import { ImageDetailModel } from "./models/imageDetails";
+
 // import {UserBidding} from "./models/userBidDetailsModel";
 import { userBidDetailsModel } from "./models/userBidDetails";
 
@@ -153,9 +154,10 @@ userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 // orderDetail.sync({ force: true }).then((res) => {
 //   console.log(res);
 // });
-// Auction.sync({ force: true }).then((res) => {
+// Item.sync({ force: true }).then((res) => {
 //   console.log(res);
 // });
+
 sequelize
   .sync()
   .then((_) => {
