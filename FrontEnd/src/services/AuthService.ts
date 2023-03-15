@@ -1,4 +1,3 @@
-import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,

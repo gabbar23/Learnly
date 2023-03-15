@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Item } from "../models/itemModel";
 import { Auction } from "../models/aunctionModel";
+import { ImageDetailModel } from "../models/imageDetails";
 
 // Adding items listed for bidding
 export const addBidItems = async (req: Request, res: Response) => {
