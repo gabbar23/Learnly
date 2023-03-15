@@ -269,13 +269,13 @@ const sellerRegister = async (data: any) => {
     body.append("image", fileItem.file);
   });
 
-  for (const value of body.values()) {
+/*  for (const value of body.values()) {
     console.error(value);
   }
 
   for (var key of body.entries()) {
     console.log(key[0] + ", " + key[1]);
-  }
+  } */
 
   userDetails.photoDetail = body;
   console.warn(body);

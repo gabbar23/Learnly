@@ -9,9 +9,9 @@
         <h1 v-if="slide>0">{{imgLinks[slide-1]}}</h1>
       </Slide>
     </Carousel>
-    <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no auctions available right now. </h1></div>
+    <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no live auctions available right now. </h1></div>
   
-    <Carousel
+    <Carousel 
       id="thumbnails"
       :items-to-show="4"
       :wrap-around="true"
@@ -25,17 +25,17 @@
     </Carousel>
     
   <Carousel :items-to-show="2" item v-if="blindBidImageList.length>0">
-    <Slide v-for="slide in blindBidImageList.length" :key="slide">
+    <Slide v-for="slide in blindBidImageList.length" :key="slide" @click="Logger">
         <div class="carousel__item" @click="slideTo(slide - 1)">Blind Bid image {{ slide }}</div>
       </Slide>
   </Carousel>
-  <div v-else>Oops, no blind bid is available right now.</div>
-  <Carousel :items-to-show="3">
+  <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no blind auctions available right now. </h1></div>
+  <Carousel :items-to-show="3" v-if="bidItems.length>0">
     <Slide v-for="slide in ItemsOnSaleList.length" :key="slide">
         <div class="carousel__item" @click="BuyItem">Item on Sale image {{ slide }}</div>
       </Slide>
   </Carousel>
-  
+  <div v-else><h1 style="text-align: center; color: red;"> All items are sold out! </h1></div>
     </body>
   </template>
   
@@ -96,6 +96,8 @@
         this.currentSlide = val
       },
       Logger(){
+        console.log(bidDetailsRes)
+        console.log(bidItemsRes)
         console.log("button clicked!")
       },
       async getAuctionNum(){
