@@ -56,6 +56,8 @@ export const addBidItems = async (req: Request, res: Response) => {
        //Storing item id returned after creating item details
       const itemId = itemDetail.getDataValue('itemId'); // Access the returned item_id value
       
+      const userIds = localStorage.getItem("userId");
+      console.log(userIds);
       // Create an array of promises to create image details
      const imageDetailPromises = imageDetails.map((image: any) =>
       ImageDetailModel.create({
