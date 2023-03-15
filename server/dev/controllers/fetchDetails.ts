@@ -1,196 +1,68 @@
-// // // import { Request, Response } from "express";
-// // // import { ImageDetailModel } from "../models/imageDetails";
-// // // import { Auction } from "../models/aunctionModel";
-// // // import { Item } from "../models/itemModel";
-
-// // // const fetchDetails = async (req: Request, res: Response) => {
-// // //     try {
-// // //       const auctionType = req.body.auctionType;
-  
-// // //       const [auctionDetail] = await Promise.all([
-
-// // //         //Fetches the details of specific auction type
-// // //         auctionType != null ?
-// // //           Auction.findAll({
-// // //             where: {
-// // //                 auctionType: auctionType
-// // //             }
-// // //           }) :
-// // //           // fetches the details of all the bid type
-// // //           Auction.findAll({})
-// // //         ])
-
-// // //       const [auctionItems] = await Promise.all([
-// // //           auctionDetail != null?
-// // //           Item.findAll({
-// // //             include: [{
-// // //               model: Auction,
-// // //               attributes: ['auctionlId'] 
-// // //             }],
-// // //             order: [
-// // //               ['itemName', 'ASC']
-// // //             ]
-// // //           }):null
-// // //         ]);
-
-// // //       const [imageDetails] = await Promise.all([
-// // //         auctionItems != null?
-// // //           ImageDetailModel.findAll({
-// // //             include: [{
-// // //                 model: Item,
-// // //                 attributes: ['itemId'] 
-// // //               }]
-// // //         })
-// // //         : null
-// // //       ]);
-  
-// // //       if (!imageDetails) {
-// // //         return res.status(404).json({ message: "Image details not found." });
-// // //       }
-// // //       // && auctionItems!= null && auctionDetail != null?
-// // //       // const result = {
-// // //       //   imgId: imageDetails.getDataValue('imgId'),
-// // //       //   itemId: imageDetails.getDataValue('itemId'),
-// // //       //   imageUrl: imageDetails.getDataValue('imgUrl'),
-// // //       //   imageDes: imageDetails.getDataValue('imgDescription'),
-// // //       //   imageName: imageDetails.getDataValue('imgName'),
-// // //       //   auctionItems: auctionItems,
-// // //       //   auctionDetail: auctionDetail
-// // //       // };
-  
-// // //       //return res.status(200).json(result);
-// // //     } catch (error) {
-// // //       console.error(error);
-// // //       return res.status(500).json({ message: "Internal server error." });
-// // //     }
-// // //   };
-  
-// // //   export default {
-// // //     fetchDetails
-// // //   };
-
-// // import { Request, Response } from "express";
-// // import { ImageDetailModel } from "../models/imageDetails";
-// // import { Auction } from "../models/aunctionModel";
-// // import { Item } from "../models/itemModel";
-
-// // const fetchDetails = async (req: Request, res: Response) => {
-// //   try {
-// //     const auctionType = req.body.auctionType;
-
-// //     const auctionDetail = await Auction.findAll({
-// //       where: auctionType ? { auctionType } : {},
-// //     });
-
-// //     const [imageDetails] = auctionDetail.length
-// //       ? await Promise.all([
-// //           ImageDetailModel.findOne({
-// //             include: {
-// //               model: Item,
-// //               attributes: ["itemId"],
-// //             },
-// //           }),
-// //           Item.findOne({
-// //             include: {
-// //               model: Auction,
-// //               attributes: ["auctionId"],
-// //             },
-// //             order: [["itemName", "ASC"]],
-// //           }),
-// //         ])
-// //       : [null, null];
-
-// //     if (!imageDetails) {
-// //       return res.status(404).json({ message: "Image details not found." });
-// //     }
-
-// //     // const result = {
-// //     //   imgId: imageDetails.getDataValue("imgId"),
-// //     //   itemId: imageDetails.getDataValue("itemId"),
-// //     //   imageUrl: imageDetails.getDataValue("imgUrl"),
-// //     //   imageDes: imageDetails.getDataValue("imgDescription"),
-// //     //   imageName: imageDetails.getDataValue("imgName"),
-// //     //   auctionItems,
-// //     //   auctionDetail,
-// //     // };
-
-// //     return res.status(200).json(imageDetails);
-// //   } catch (error) {
-// //     console.error(error);
-// //     return res.status(500).json({ message: "Internal server error." });
-// //   }
-// // };
-
-// // export default {
-// //   fetchDetails,
-// // };
-
-// import { Request, Response } from "express";
-// import { ImageDetailModel } from "../models/imageDetails";
+import { Request, Response } from "express";
+import { QueryTypes } from "sequelize";
+import { sequelize } from "../util/database";
 // import { Auction } from "../models/aunctionModel";
+// import { ImageDetailModel } from "../models/imageDetails";
 // import { Item } from "../models/itemModel";
 
-// const fetchDetails = async (req: Request, res: Response) => {
-//   try {
-//     // const { auctionType } = req.body;
+export const fetchDetails = async (_: Request, res: Response) => {
+ 
+  try {
+    // Fetch all auctions and  include associated items
+   const results = await sequelize.query( 
+      `SELECT auctions.*, itemDetails.*
+      FROM auctions
+      INNER JOIN (
+        SELECT items.itemId AS itemItemId, items.auctionId, items.itemName, imageDetails.imgUrl, imageDetails.imgName
+        FROM items
+        INNER JOIN imageDetails
+        ON items.itemId = imageDetails.itemId
+      ) AS itemDetails
+      ON auctions.auctionId = itemDetails.auctionId
+      ;
+      `,
+      {
+        // replacements: { buyerId: buyerId },
+        type: QueryTypes.SELECT,
+      }
+    );
 
-//     // const [auctionDetail] = await Promise.all([
-//     //   // Fetches the details of specific auction type
-//     //   auctionType != null
-//     //     ? Auction.findAll({
-//     //         where: {
-//     //           auctionType,
-//     //         },
-//     //       })
-//     //     : // Fetches the details of all the bid type
-//     //       Auction.findAll({}),
-//     // ]);
-
-
-//     // const [imageDetails,auctionItems] = auctionDetail.length
-//     //   ? await Promise.all([
-//     //     Item.findOne({
-//     //       include: {
-//     //         model: Auction,
-//     //         attributes: ["auctionType"],
-//     //       },
-//     //       order: [["itemName", "ASC"]],
-//     //     }), ImageDetailModel.findOne({
-//     //         include: {
-//     //           model: Item,
-//     //           attributes: ["itemId"],
-//     //         },
-//     //       }),
-//     //      ,
-//     //     ])
-//     //   : [null, null];
-
+    // Return the order details as JSON
+    res.json(results);
+  //   const results = await Auction.findAll({
+  //     include: [
+  //       {
+  //         model: Item,
+  //         attributes: ["itemId", "itemName"],
+  //         include: [{
+  //           model: ImageDetailModel,
+  //           attributes: ["imgId", "imgUrl", "imgDescription", "imgName"],
+  //         }] 
+  //       },
+  //     ],
+  //   });
     
-//     // if (imageDetails != null) {
-//     //   const result = {
-//     //     auctionDetail,
-//     //     auctionItems,
-//     //     imgId: imageDetails.getDataValue("imgId"),
-//     //     itemId: imageDetails.getDataValue("itemId"),
-//     //     imageUrl: imageDetails.getDataValue("imgUrl"),
-//     //     imageDes: imageDetails.getDataValue("imgDescription"),
-//     //     imageName: imageDetails.getDataValue("imgName"),
-//     //   };
-//       return res.status(200).json(result);
-     
-//     }
-//     //else{
-//       return res.status(404).json({ message: "Image details not found." });
-//     //}
+  //   // Transform the result into the desired format
+  //   const auctionDetails = results.map((auction) => ({
+  //     auctionId: auction.getDataValue("auctionId"),
+  //     auctionType: auction.getDataValue("auctionType"),
+  //     itemsDetails: auction.getDataValue("items").map((item: { getDataValue: (arg0: string) => any; }) => ({
+  //       itemId: item.getDataValue("itemId"),
+  //       itemName: item.getDataValue("itemName"),
+  //       imageDetails: item.getDataValue("imageDetail"),
+  //     })),
+  //   }));
+    
+  //   // Return the transformed result as JSON
+  //   res.json(auctionDetails);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while fetching orders" });
+  }
+};
 
-   
-   
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error." });
-//   }
-// };
-
-// export default {
-//   fetchDetails,
-// };
+export default {
+  fetchDetails
+};
