@@ -112,6 +112,13 @@ onMounted(()=>{
     //   console.log("time not fetched");
     // });
 
+    const images = auctionService.getImages(id).then((res)=> {
+      return res;
+    }).catch(()=>{
+      console.log("cant load auction details");
+    })
+
+
     auctionService.getAuctionDetails(id).then((res)=> {
       
       console.log(res.data);
