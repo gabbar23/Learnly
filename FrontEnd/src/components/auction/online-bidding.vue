@@ -104,7 +104,7 @@ const description = ref<String>();
 
 onMounted(()=>{
 
-    let id:number = 1
+    let id:number = 3
 
     // auctionService.getAuctionEndTime(id).then((res)=>{
     //   timer = res.data;
