@@ -50,13 +50,14 @@
       >
       </FormKit>
 
-      <FormKit
+      <FormKit 
         type="select"
         label="City"
         placeholder="Select City"
-        :options="cities"
-        v-model="sellerDetails.city"
-      />
+        :options="cityOptions"
+        validation="required" 
+      > 
+      </FormKit>
 
       <FormKit
         type="text"
@@ -103,7 +104,7 @@ import type {
   ISelectResponse,
 } from "@/interfaces/seller-registration";
 import AuthService from "@/services/AuthService";
-import { onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
 
 const states = ref<ISelectResponse<string>[]>([]);
@@ -111,6 +112,17 @@ const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
 const { notify } = useNotification();
+
+
+  let cityOptions = computed(() => { 
+  return cities.value.map((city) => {
+    return {
+      label: city.label,
+      value: city.value,
+    };
+  });
+});
+
 let sellerDetails = reactive<IGetSellerBidDetails>({
   nameOfOffering: "",
   startDate: "",
@@ -198,12 +210,12 @@ const triggerChange = async (val: string) => {
   console.warn(val);
   cities.value = [];
   try {
-    let response = await AuthService.getCities();
+    let response = await AuthService.getCities(val);
     console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
-        label: response.data[i].cities,
-        value: response.data[i].cities,
+        label: response.data[i].city,
+        value: response.data[i].city,
       });
     }
     console.warn(cities.value);
