@@ -30,11 +30,25 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref } from "vue";
+import { ref, onMounted } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import auctionService from "@/services/auctionService";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 const isItemSold = ref<boolean>(true);
+
+
+onMounted(async()=>{
+  // const { itemId } = route.query;
+  const itemId = 1;
+  try{
+    await auctionService.getAuctionDetails(itemId);
+    await auctionService.getItemDetails(itemId);
+  }
+});
 </script>
 
 <style>

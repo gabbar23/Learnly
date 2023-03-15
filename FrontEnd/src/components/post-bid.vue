@@ -191,6 +191,7 @@ const uploadImages = async (data: any) => {
     const imageDetails: IBidImageDetails = {
       imgUrl: image.data.url,
       imgName: image.data.originalname,
+      imgDescription: "test",
     };
     allImages.value.push(imageDetails);
   });
@@ -199,6 +200,9 @@ const uploadImages = async (data: any) => {
 
 const sellerRegister = async () => {
   sellerDetails.imageDetails = allImages.value;
+  sellerDetails.startTime = sellerDetails.startDate + " " + sellerDetails.startTime;
+  sellerDetails.endTime = sellerDetails.endDate + " " + sellerDetails.endTime;
+
   const details = localStorage.getItem("userDetails");
   const { userId } = JSON.parse(details);
   if (userId) {

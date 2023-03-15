@@ -54,5 +54,5 @@ export default {
 
   getBuyerOrderDetails(buyerId: any) {
     return apiClient.get("api/v1/sell/getOrder?buyerId=" + buyerId);
-  },
+  }
 };

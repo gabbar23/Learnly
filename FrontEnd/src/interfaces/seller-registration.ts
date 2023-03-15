@@ -66,4 +66,5 @@ export interface IGetSellerBidDetails {
 export interface IBidImageDetails {
   imgName: string;
   imgUrl: string;
+  imgDescription: string;
 }

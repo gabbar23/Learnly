@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Item } from "../models/itemModel";
 import { Auction } from "../models/aunctionModel";
+import { ImageDetailModel } from "../models/imageDetails";
 
 // Adding items listed for bidding
 export const addBidItems = async (req: Request, res: Response) => {
@@ -15,9 +16,13 @@ export const addBidItems = async (req: Request, res: Response) => {
     isSold,
     address,
     cityName,
+    // imageDetails,
     provinceName,
     postalCode,
+    userId,
   } = req.body;
+console.log(userId);
+const user_id = userId;
 
   // let userId = "";
   try {
@@ -27,22 +32,29 @@ export const addBidItems = async (req: Request, res: Response) => {
       itemDes,
       isSold,
       startPrice,
+      user_id,
     });
 
     const bidDetail = await Auction.create({
       startTime,
       endTime,
       bidType,
-
+      user_id,
       address,
       cityName,
       provinceName,
       postalCode,
     });
+      const item = itemDetail.get({ plain: true });
 
-    // Get the user ID
-    // userId = userDetail.get().userId;
-
+      const newArray = req.body.imageDetails.map((itemObject: any) => {
+        return { ...itemObject, itemId: item.itemId };
+      });
+        console.log(newArray);
+        
+      const imageDetails = await ImageDetailModel.bulkCreate(newArray
+      );
+      
     // Send response with item and bid details
     res.status(201).json({
       message: {
