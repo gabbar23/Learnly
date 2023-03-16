@@ -89,6 +89,11 @@ const router = createRouter({
       component: () => import("../components/post-bid.vue"),
     },
     {
+      path: "/add-card",
+      name: "Add Card",
+      component: () => import("../components/card-details.vue"),
+    },
+    {
       path: "/error",
       name: "error",
       component: () => import("../components/misc pages/error.vue"),

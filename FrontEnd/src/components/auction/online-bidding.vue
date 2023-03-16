@@ -17,11 +17,11 @@
       <div>
         <div class="row">
           <div class="details">
-            <div>Description:{{description}}</div>
-            <div>Starting At: {{startTime}}</div>
-          <div>Closing At: {{endTime}}</div>
-          <div>Start Price: {{startVal}}$</div>
-            <div>Current Max: {{highestBid}}$</div>
+            <div>Description:{{ description }}</div>
+            <div>Starting At: {{ startTime }}</div>
+            <div>Closing At: {{ endTime }}</div>
+            <div>Start Price: {{ startVal }}$</div>
+            <div>Current Max: {{ highestBid }}$</div>
             <div class="d-flex">
               <div class="mr-4">Make Bid</div>
               <FormKit
@@ -30,8 +30,12 @@
                 :actions="false"
                 @submit="makeBid"
               >
-                <FormKit type="text" v-model="bidAmount" />{{bidStatus}}
-                <button class="btn btn-danger ml-5" @click="sendMessage()" :disabled="isBidMade">
+                <FormKit type="text" v-model="bidAmount" />
+                <button
+                  class="btn btn-danger ml-5"
+                  @click="sendMessage()"
+                  :disabled="isBidMade"
+                >
                   Submit Bid{{ minVal }}
                 </button>
                 <div v-if="isBidMade">{{ timeLeft }} sec</div>
@@ -49,12 +53,17 @@
 </template>
 
 <script lang="ts" setup>
-
-
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import { computed, defineComponent, onMounted ,reactive, ref, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from "vue";
 
 
 
@@ -62,7 +71,7 @@ import io from 'socket.io-client';
 import type {Socket} from 'socket.io-client'
 import { message, number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
-import {formatDistance} from 'date-fns';
+import { formatDistance } from "date-fns";
 
 import Loader from "../loader.vue";
 
@@ -93,7 +102,7 @@ watch(timeLeft, (newValue, oldValue) => {
     timeLeft.value = 10;
   }
 });
-  
+
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
 let myVal = ref<Number>(0);
@@ -103,71 +112,67 @@ let endTime = ref<dateFns>();
 let socket = ref<Socket>();
 const description = ref<String>();
 
-onMounted(()=>{
+onMounted(() => {
+  let id: number = 1;
 
-    let id:number = 1
+  // auctionService
+  //   .getAuctionDetails(id)
+  //   .then((res) => {
+  // auctionService.getAuctionEndTime(id).then((res)=>{
+  //   timer = res.data;
+  // }).catch((res)=>{
+  //   console.log("time not fetched");
+  // });
 
-    // auctionService.getAuctionEndTime(id).then((res)=>{
-    //   timer = res.data;
-    // }).catch((res)=>{
-    //   console.log("time not fetched");
-    // });
+  // const images = auctionService.getImages(id).then((res)=> {
+  //   console.log(res);
+  //   return res;
+  // }).catch(()=>{
+  //   console.log("cant load auction details");
+  // })
 
-    // const images = auctionService.getImages(id).then((res)=> {
-    //   console.log(res);
-    //   return res;
-    // }).catch(()=>{
-    //   console.log("cant load auction details");
-    // })
-
-
-    auctionService.getAuctionDetails(id).then((res)=> {
-      
+  auctionService
+    .getAuctionDetails(id)
+    .then((res) => {
       console.log(res.data);
       startTime.value = res.data.startTime;
       endTime.value = res.data.endTime;
-      
-
-    }).catch(()=>{
-      console.log("cant load auction details");
     })
+    .catch(() => {
+      console.log("cant load auction details");
+    });
 
    
     auctionService.getItemDetails(id).then((res)=> {
       description.value = res.data.itemDes;    
       startVal.value = res.data.startPrice;
       console.log(res);
-    }).catch(()=>{
-     console.log("cant fetch item details"); 
     })
-
+    .catch(() => {
+      console.log("cant fetch item details");
+    });
 });
 
-
-setInterval(()=>{
-  timer= new Date().toLocaleString()
-  },500);
+setInterval(() => {
+  timer = new Date().toLocaleString();
+}, 500);
 
 // Connection to socket at server
 socket.value = io("http://localhost:3000/");
-    
+
 // Listen for 'chat message' events from the server
 
-socket.value.on('connection', (message:string) => {
-
-  console.log("connected");  
-
+socket.value.on("connection", (message: string) => {
+  console.log("connected");
 });
-     
-socket.value.on('disconnect', () => {
-  console.log('user disconnected');
-});
-    
 
-socket.value.on('bidUpdate',(info)=>{
+socket.value.on("disconnect", () => {
+  console.log("user disconnected");
+});
+
+socket.value.on("bidUpdate", (info) => {
   console.log(info);
   highestBid.value = info.highestBid;
-
 });
 
 socket.value.on('login',(data)=>{
@@ -181,21 +186,23 @@ socket.value.on('bidStatus',(data)=>{
 });
   
 const sendMessage = () => {
-  
   console.log("message sent");
   // Emit a 'chat message' event to the server
   const seesionId = localStorage.getItem("sessionId");
   const bidVal = 100;
-  socket.value!.emit('placeBid',{seesionId:seesionId,bidVal:bidAmount.value});
-}
+  socket.value!.emit("placeBid", {
+    seesionId: seesionId,
+    bidVal: bidAmount.value,
+  });
+};
 
-const formatTime = (time:any) =>  {
-
+const formatTime = (time: any) => {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-}
-
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+};
 </script>
 
 <style>

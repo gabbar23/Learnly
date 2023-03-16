@@ -246,7 +246,6 @@ let buyerSeller = ["", ""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
-    //await AuthService.getUploadImage();
     let response = await AuthService.getStates();
     states.value = [];
     console.log(states);
@@ -279,14 +278,6 @@ const sellerRegister = async (data: any) => {
     console.warn(fileItem);
     body.append("image", fileItem.file);
   });
-
-  for (const value of body.values()) {
-    console.error(value);
-  }
-
-  for (var key of body.entries()) {
-    console.log(key[0] + ", " + key[1]);
-  }
 
   userDetails.photoDetail = body;
   console.warn(body);
