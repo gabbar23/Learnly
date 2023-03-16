@@ -5,9 +5,25 @@
     <div v-else>
       <div class="w-100 m-1">
         <Carousel :autoplay="2000" :wrap-around="true">
-          <Slide v-for="slide in 4" :key="slide">
-            <div class="carousel__item">{{ slide }}</div>
+          <template v-if="sellItemDetail.imageDetails.length > 0">
+          <Slide
+            v-for="(item, index) in sellItemDetail.imageDetails"
+            :key="index"
+          >
+            <img
+              :src="item.imgUrl"
+              class="carousel__item item_size"
+              @click="bindClick(item)"
+            />
           </Slide>
+        </template>
+        <template v-else>
+          <Slide v-for="slide in 5" :key="slide">
+            <div class="carousel__item" @click="bindClick(slide)">
+              {{ slide }}
+            </div>
+          </Slide>
+        </template>
           <template #addons>
             <Navigation />
             <Pagination />
