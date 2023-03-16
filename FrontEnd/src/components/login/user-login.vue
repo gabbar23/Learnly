@@ -9,7 +9,7 @@
         </p>
       </div>
       <div id="form">
-        <FormKit type="form" @submit="onSubmit" class="parent_sect">
+        <FormKit type="form" @submit="onSubmit" class="parent_sect" @submit-invalid="loginError">
           <FormKit
             type="text"
             name="email"
@@ -66,10 +66,16 @@ const loginError=async()=>{
 const onSubmit = async () => {
   try {
     const response = await AuthService.checkLogin(loginDetails);
+    notify({
+    title: "Successfull!",
+    text: "Your Login was successful!!",
+    type: "success",
+  });
     const userDetails = JSON.stringify(response.data.message);
     console.log(userDetails);
     localStorage.setItem("userDetails", userDetails);
     router.push("/home"); // This needs to be updated
+
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");
     notify({
@@ -204,7 +210,7 @@ div#app div#login div#form button:hover {
 </style>
 <script lang="ts">
 import router from "@/router";
-import { FormKit } from "@formkit/vue";
+import { errorHandler, FormKit } from "@formkit/vue";
 import { defineComponent } from "vue";
 import type { ILoggedInUserDetails, ILoginDetails } from "@/interfaces/bid-for-good";
 export default defineComponent({

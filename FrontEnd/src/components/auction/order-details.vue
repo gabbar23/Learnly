@@ -7,33 +7,16 @@
       <thead>
         <tr>
           <th class="text-left">Name</th>
-          <th class="text-left">Address</th>
-          <th class="text-left">Email</th>
-          <th class="text-left">Phone</th>
-          <th class="text-left">Identity Doc</th>
-          <th class="text-left">Action</th>
+          <th class="text-left">Description</th>
+          <th class="text-left">Price</th>
         </tr>
       </thead>
       <tbody>
         <template v-if="orderDetails.length > 0">
           <tr v-for="item in orderDetails" :key="item.cityName">
-            <td>{{ item.firstName }} {{ item.lastName }}</td>
-            <td>{{ item.address }}</td>
-            <td>{{ item.loginDetail?.email }}</td>
-            <td>{{ item.phone }}</td>
-            <td>
-              <div v-if="!item.editInProgress">
-                <button @click="item.editInProgress = !item.editInProgress">
-                  Show ID
-                </button>
-              </div>
-              <div v-else class="d-flex">
-                <button @click="item.editInProgress = !item.editInProgress">
-                  Hide ID
-                </button>
-                <img src="{{ item.govtIdUrl }}" />
-              </div>
-            </td>
+            <td>{{ item.itemName }}</td>
+            <td>{{ item.itemDes }}</td>
+            <td>{{ item.startPrice }}</td>
           </tr>
         </template>
         <no-content
@@ -50,10 +33,13 @@ import { onMounted, ref } from "vue";
 import NoContent from "../no-content.vue";
 
 const orderDetails = ref<any>([]);
+const details = localStorage.getItem("userDetails");
+const { userId } = JSON.parse(details);
+
 onMounted(async () => {
   try {
-    const buyerUserId = "123";
-    orderDetails.value = await AuthService.getBuyerOrderDetails(buyerUserId);
+    const response = await AuthService.getBuyerOrderDetails(userId);
+    orderDetails.value = response.data;
   } catch (e) {
     console.error("Error in fetching states", e);
   }
