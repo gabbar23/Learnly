@@ -291,13 +291,13 @@ const sellerRegister = async (data: any) => {
   };
 
   try {
-    await AuthService.uploadImage(body, headerConfig);
-    let temp=await AuthService.getUploadImage()
-  console.log(temp.data[temp.data.length-1].imgUrl)
-  userDetails.govtIdUrl = temp.data[temp.data.length-1].imgUrl;
+    
+    let uploadImageData=await (await AuthService.uploadImage(body, headerConfig)).data
+  //console.log(uploadImageData.url)
+  userDetails.govtIdUrl = uploadImageData.url;
   
-  console.warn(body);
-  console.warn(userDetails.govtIdUrl);
+ // console.warn(body);
+  //console.warn(userDetails.govtIdUrl);
     await AuthService.register(userDetails);
     notify({
       title: "Success!",
@@ -317,11 +317,11 @@ const sellerRegister = async (data: any) => {
 
 
 const checkUserExists = async (email: string) => {
-  console.warn("User Exists", email);
+  //console.warn("User Exists", email);
   try {
     await AuthService.checkUserExist(email) 
       .then((res) => {
-        console.warn(res);
+      // console.warn(res);
         isUserAlreadyRegistered.value = res.data.isUserAlreadyPresent;
       })
       .catch((err) => {
@@ -357,7 +357,7 @@ const checkIsBuyerIsSeller = async (val: any, val2: any) => {
 };
 
 const triggerChange = async (val: string) => {
-  console.warn(val);
+//  console.warn(val);
   cities.value = [];
   try {
     let response = await AuthService.getCities(val);
@@ -368,7 +368,7 @@ const triggerChange = async (val: string) => {
         value: response.data[i].city,
       });
     }
-    console.log(cityOptions);
+ //  console.log(cityOptions);
   } catch (e) {
     console.error("Error in pulling cities");
   }
