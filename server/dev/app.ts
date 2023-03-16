@@ -28,7 +28,7 @@ import { userBidDetailsModel } from "./models/userBidDetails";
 
 import { initSocket } from "./util/socket";
 
-import { CorsOptions} from "cors"
+// import { CorsOptions} from "cors"
 
 
 declare module "express-session" {
@@ -91,28 +91,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-const corsOptions: CorsOptions = {
-  origin: (origin, callback) => {
-    if (origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173') {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}
+// const corsOptions: CorsOptions = {
+//   origin: (origin, callback) => {
+//     if (origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173') {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true
+// }
+
 
 app.use(
-  cors(corsOptions)
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
+  })
+
 );
 
-app.use((req, res, next) => {
+app.use((_, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
 
-  const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin!)) {
-    res.setHeader('Access-Control-Allow-Origin', origin!);
-  }
+
+// app.use((req, res, next) => {
+
+//   const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+//   const origin = req.headers.origin;
+//   if (allowedOrigins.includes(origin!)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin!);
+//   }
 
   // res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
