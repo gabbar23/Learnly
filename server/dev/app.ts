@@ -56,7 +56,7 @@ app.use(
 
 // const io = new Server(server, {
 //   cors: {
-//     origin: 'http://localhost:5173',
+//     origin: 'http://127.0.0.1:5173/',
 //     methods: ['GET', 'POST']
 //   }
 // });
@@ -89,13 +89,13 @@ app.use(bodyParser.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "http://127.0.0.1:5173",
     credentials: true,
   })
 );
 
 app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
@@ -138,8 +138,11 @@ userBidDetailsModel.belongsTo(Item, { foreignKey: "itemId" });
 
 //UserDetail.hasMany(userBidDetailsModel,{foreignKey: "user_id"});
 
-Auction.hasMany(userBidDetailsModel, { foreignKey: "bidId" });
-userBidDetailsModel.belongsTo(Auction, { foreignKey: "bidId" });
+Auction.hasMany(Item, { foreignKey: "auctionId" });
+Item.belongsTo(Auction, { foreignKey: "auctionId" });
+
+Auction.hasMany(userBidDetailsModel, { foreignKey: "auctionId" });
+userBidDetailsModel.belongsTo(Auction, { foreignKey: "auctionId" });
 
 Item.hasMany(ImageDetailModel, { foreignKey: "itemId" });
 ImageDetailModel.belongsTo(Item, { foreignKey: "itemId" });
@@ -151,11 +154,11 @@ userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 // userBidDetailsModel.sync({force:true}).then((_:any)=>{
 //   console.log("Models Loaded");
 // })
-// orderDetail.sync({ force: true }).then((res) => {
-//   console.log(res);
+// Auction.sync({ force: true }).then((_:any) => {
+//   console.log("true");
 // });
-// Item.sync({ force: true }).then((res) => {
-//   console.log(res);
+// Item.sync({ force: true }).then((_:any) => {
+//   console.log("true");
 // });
 
 sequelize
