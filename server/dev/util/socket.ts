@@ -7,26 +7,28 @@ import { Item } from "../models/itemModel";
 // import { Transaction } from "sequelize";
 
 
-const addBidOnDB = async (itemId:Number,bidVal:Number)=>{
+const addBidOnDB = async (itemId:Number,userId:Number,bidVal:Number)=>{
+
+  console.log(userId)
 
   try{
 
     // await sequelize.transaction(async (transaction:Transaction) => {
       await userBidDetailsModel.create({
-        itemId,
+        itemId:itemId,
         auctionId:itemId,
         isWinner:false,
         bidAmount:bidVal,
-        userId:1,
-      });
-      // .then((data)=> {
-      //   console.log("result="+data)
-      //   return;  
-      // })
-      // .catch((error) => {
-      //   console.log("error"+error)
-      //   return;
-      // })
+        userId:userId,
+      })
+      .then((data)=> {
+        console.log("result="+data)
+        // return;  
+      })
+      .catch((error) => {
+        console.log("error"+error)
+        // return;
+      })
       // await transaction.commit();
       
   }
@@ -36,7 +38,7 @@ const addBidOnDB = async (itemId:Number,bidVal:Number)=>{
 }
 
 
-const updateBidData = async (itemId:Number, bidVal :Number, io:Server ) => {
+const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Server, socket:Socket ) => {
 
   // Checking if the previous bid exist in auction ,
   // If yes then check the max value with newVal
@@ -57,8 +59,8 @@ const updateBidData = async (itemId:Number, bidVal :Number, io:Server ) => {
       // Checking if the new Value is bigger than maxVal
       if(maxVal <bidVal){
         
-        await addBidOnDB(itemId,bidVal);
-        console.log("updated");
+        await addBidOnDB(itemId,userId,bidVal);
+        console.log("updated - 1");
         
         let info = {
           highestBid:bidVal 
@@ -66,6 +68,8 @@ const updateBidData = async (itemId:Number, bidVal :Number, io:Server ) => {
 
         io.emit('bidUpdate', info);
         // return 1;
+        socket.emit('yourBidUpdate',info);
+        socket.broadcast.emit("out","out bid");
       }
       else{
         console.log("new Value is smaller.");
@@ -96,15 +100,19 @@ const updateBidData = async (itemId:Number, bidVal :Number, io:Server ) => {
           
           if(startPrice < bidVal){
             
-            console.log("updated");
+            console.log("updated - 1");
             
-            await addBidOnDB(itemId,bidVal);
+            await addBidOnDB(itemId,userId,bidVal);
             
             let info = {
               highestBid:bidVal 
             }
 
             io.emit('bidUpdate', info);
+            io.emit('bidUpdate', info);
+        
+            socket.emit('yourBidUpdate',info);
+            socket.broadcast.emit("out","out bid");
           
           }
           else{
@@ -150,9 +158,9 @@ export function initSocket(server: any): void {
 
         console.log(data.sessionId,data.bidVal);
         
-        if(!session){
+        if(data.userId != null){
 
-          await updateBidData(1,data.bidVal,io);
+          await updateBidData(data.itemId,data.userId,data.bidVal,io,socket);
           
             console.log("make Update on client");
 
