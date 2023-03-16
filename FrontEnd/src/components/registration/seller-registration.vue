@@ -142,6 +142,7 @@
               validation="accepted"
               :value="false"
               v-model="userDetails.termsCondition"
+              @input="ImageUpload"
             />
             <FormKit
               type="checkbox"
@@ -210,25 +211,19 @@ let cityOptions = computed(() => {
 let userDetails = reactive<IGetUserDetails>({
   firstName: "",
   lastName: "",
-  email: "",
-  phone: "",
-  nameOfOffering: "",
-  estimatedValue: null,
-  photoId: "1",
-  description: "a",
-  termsCondition: false,
-  address: "",
-  password: "",
-  cityName: "",
-  provinceName: "",
-  photoDetail: undefined,
-  postalCode: "",
   dateOfBirth: new Date(),
-  age: null,
+  gender: "male",
   isBuyer: false,
   isSeller: false,
-  isVerified: true,
-  gender: "male",
+  phone: "",
+  address: "",
+  cityName: "",
+  provinceName: "",
+  govtIdUrl: "",
+  email: "",
+  password: "",
+  postalCode: "",
+  termsCondition: false,
 });
 const { notify } = useNotification();
 
@@ -236,7 +231,7 @@ let buyerSeller = ["", ""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
-    //await AuthService.getUploadImage();
+    
     let response = await AuthService.getStates();
     states.value = [];
     console.log(states);
@@ -267,9 +262,12 @@ const login = () => {
   router.push("/buyer-details");
 };
 */
+const ImageUpload=async()=>{
+
+};
+
 
 const sellerRegister = async (data: any) => {
-  userDetails.age = 20;
   console.log(data);
   const body = new FormData();
   // Finally, we append the actual File object(s)
@@ -285,10 +283,7 @@ const sellerRegister = async (data: any) => {
   for (var key of body.entries()) {
     console.log(key[0] + ", " + key[1]);
   } */
-
-  userDetails.photoDetail = body;
-  console.warn(body);
-  console.warn(userDetails.photoDetail);
+  
   const headerConfig = {
     headers: {
       "content-type": "multipart/form-data",
@@ -296,13 +291,20 @@ const sellerRegister = async (data: any) => {
   };
 
   try {
-   // await AuthService.uploadImage(body, headerConfig);
-    let userRes=await AuthService.register(userDetails);
+    await AuthService.uploadImage(body, headerConfig);
+    let temp=await AuthService.getUploadImage()
+  console.log(temp.data[temp.data.length-1].imgUrl)
+  userDetails.govtIdUrl = temp.data[temp.data.length-1].imgUrl;
+  
+  console.warn(body);
+  console.warn(userDetails.govtIdUrl);
+    await AuthService.register(userDetails);
     notify({
       title: "Success!",
       text: "User Logged In Successfully! Wait for Admins approval",
       type: "success",
     });
+    
     router.push("/");
   } catch (e) {
     notify({

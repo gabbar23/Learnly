@@ -54,5 +54,7 @@ export default {
   getImageDetails(){
     return apiClient.get("/api/bid/fetchImageDetails");
   },
-
+  getUploadedImage(){
+    return apiClient.get("/api/")
+  }
 };
