@@ -58,6 +58,7 @@ const approvePayment = async () => {
   try {
     const requestPayload = Object.assign({isSold:true}, { ...route.query });
     await AuthService.createSimpleSellOrder(requestPayload);
+    router.push('/home');
     notify({
       title: "Successfull!",
       text: "Your Order has been placed Successfully!",

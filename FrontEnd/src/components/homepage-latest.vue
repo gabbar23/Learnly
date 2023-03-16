@@ -1,10 +1,14 @@
 <template>
-  <h1>Latest Homepage</h1>
   <loader v-if="isLoading"></loader>
   <template v-else>
-    <Carousel id="gallery" :items-to-show="1" :wrap-around="false">
+    <Carousel
+      id="gallery"
+      :items-to-show="1"
+      :wrap-around="false"
+      v-model="currentSlide"
+    >
       <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item">{{ slide }}</div>
+        <div class="carousel__item"    @click="liveAuctionClicked(slide)">{{ slide }}</div>
       </Slide>
     </Carousel>
 
@@ -12,22 +16,21 @@
       id="thumbnails"
       :items-to-show="4"
       :wrap-around="true"
+      v-model="currentSlide"
       ref="carousel"
     >
       <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item" @click="slideTo(slide - 1)">
+        <div class="carousel__item" @click="slideTo(slide - 1)" >
           {{ slide }}
         </div>
       </Slide>
     </Carousel>
-
     <h3>Blind Bid</h3>
 
     <Carousel>
       <template
         v-if="
-          blindAuctionDetails &&
-          blindAuctionDetails.imageDetails.length > 0
+          blindAuctionDetails && blindAuctionDetails.imageDetails.length > 0
         "
       >
         <Slide
@@ -37,13 +40,13 @@
           <img
             :src="item.imgUrl"
             class="carousel__item item_size"
-            @click="bindClick(item)"
+            @click="blindAuctionClicked(item)"
           />
         </Slide>
       </template>
       <template v-else>
         <Slide v-for="slide in 5" :key="slide">
-          <div class="carousel__item" @click="bindClick(slide)">
+          <div class="carousel__item" @click="blindAuctionClicked(slide)">
             {{ slide }}
           </div>
         </Slide>
@@ -77,13 +80,13 @@
           <img
             :src="item.imgUrl"
             class="carousel__item item_size"
-            @click="bindClick(item)"
+            @click="simpleSellClicked(item)"
           />
         </Slide>
       </template>
       <template v-else>
         <Slide v-for="slide in 5" :key="slide">
-          <div class="carousel__item" @click="bindClick(slide)">
+          <div class="carousel__item" @click="simpleSellClicked(slide)">
             {{ slide }}
           </div>
         </Slide>
@@ -106,6 +109,8 @@ import type {
 import { onMounted, reactive, ref } from "vue";
 import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
+import router from "@/router";
+
 
 const currentSlide = ref<Number>(0);
 
@@ -113,9 +118,44 @@ const slideTo = (val: any) => {
   currentSlide.value = val;
 };
 
-const bindClick = (args: any) => {
+const blindAuctionClicked = (args: any) => {
   console.log("Hello");
+  console.log(args);
+  let queryURL = {
+      itemId: "1",
+      auctionId: "1",
+      userId: "3",
+      auctionType: "blind",
+    };
+    router.push({ path: "/make-blind-auction", query: queryURL });
 };
+
+
+const simpleSellClicked = (args: any) => {
+  console.log("Hello");
+  console.log(args);
+  let queryURL = {
+      itemId: "1",
+      auctionId: "1",
+      userId: "3",
+      auctionType: "blind",
+    };
+    router.push({ path: "/make-sell", query: queryURL });
+};
+
+
+const liveAuctionClicked = (args: any) => {
+  console.log("Hello");
+  console.log(args);
+  let queryURL = {
+      itemId: "1",
+      auctionId: "1",
+      userId: "3",
+      auctionType: "blind",
+    };
+    router.push({ path: "/make-bid", query: queryURL });
+};
+
 // let auctionDetails = reactive<IPostBidDetails>({
 //   itemName: "",
 //   startTime: new Date(),
@@ -156,13 +196,15 @@ const blindAuctionDetails = ref<IGeneralAuctionDetails>({
       imgDescription: "image",
       imgId: 3,
       imgName: "ABC",
-      imgUrl: "https://imgs.search.brave.com/adfL4JhbA0MuED2eafOFSYiGISmx6NSwYo0MaTAKqSQ/rs:fit:1200:916:1/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vei93b3Jk/LWJsaW5kLWF1Y3Rp/b24tY29tcG9zZWQt/d29vZGVuLWRpY2Vz/LWdhdmVsLXRhYmxl/LWJhY2tncm91bmQt/Y2xvc2V1cC0xNTM4/NzYyNjYuanBn",
+      imgUrl:
+        "https://imgs.search.brave.com/adfL4JhbA0MuED2eafOFSYiGISmx6NSwYo0MaTAKqSQ/rs:fit:1200:916:1/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vei93b3Jk/LWJsaW5kLWF1Y3Rp/b24tY29tcG9zZWQt/d29vZGVuLWRpY2Vz/LWdhdmVsLXRhYmxl/LWJhY2tncm91bmQt/Y2xvc2V1cC0xNTM4/NzYyNjYuanBn",
     },
     {
       imgDescription: "image",
       imgId: 4,
       imgName: "ABCDE",
-      imgUrl: "https://imgs.search.brave.com/wSKxu342YkVQXp6Zvu-IvXCF4QorLvaTXB5ZXfCOYfY/rs:fit:980:342:1/g:ce/aHR0cHM6Ly9taWxp/ZmVzcGFuLm9yZy93/cC1jb250ZW50L3Vw/bG9hZHMvMjAyMC8x/MC8yMDIwLUJsaW5k/LUF1Y3Rpb24tU1RE/LTEwMTYyMC5qcGc",
+      imgUrl:
+        "https://imgs.search.brave.com/wSKxu342YkVQXp6Zvu-IvXCF4QorLvaTXB5ZXfCOYfY/rs:fit:980:342:1/g:ce/aHR0cHM6Ly9taWxp/ZmVzcGFuLm9yZy93/cC1jb250ZW50L3Vw/bG9hZHMvMjAyMC8x/MC8yMDIwLUJsaW5k/LUF1Y3Rpb24tU1RE/LTEwMTYyMC5qcGc",
     },
   ],
   itemId: 6,
