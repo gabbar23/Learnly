@@ -30,7 +30,7 @@
                 :actions="false"
                 @submit="makeBid"
               >
-                <FormKit type="text" v-model="bidAmount" />
+                <FormKit type="text" v-model="bidAmount" />{{bidStatus}}
                 <button class="btn btn-danger ml-5" @click="sendMessage()" :disabled="isBidMade">
                   Submit Bid{{ minVal }}
                 </button>
@@ -60,7 +60,7 @@ import { computed, defineComponent, onMounted ,reactive, ref, watch } from "vue"
 
 import io from 'socket.io-client';
 import type {Socket} from 'socket.io-client'
-import { number } from "@formkit/inputs";
+import { message, number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
 import {formatDistance} from 'date-fns';
 
@@ -73,6 +73,7 @@ const minVal = ref<Number>(5);
 const minValidation = ref<any>({ min: 5 });
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
+const bidStatus = ref<String>();
 
 const makeBid = () => {
   isBidMade.value = true;
@@ -125,7 +126,7 @@ onMounted(()=>{
       console.log(res.data);
       startTime.value = res.data.startTime;
       endTime.value = res.data.endTime;
-      startVal.value = 200;
+      
 
     }).catch(()=>{
       console.log("cant load auction details");
@@ -134,6 +135,7 @@ onMounted(()=>{
    
     auctionService.getItemDetails(id).then((res)=> {
       description.value = res.data.itemDes;    
+      startVal.value = res.data.startPrice;
       console.log(res);
     }).catch(()=>{
      console.log("cant fetch item details"); 
@@ -168,6 +170,15 @@ socket.value.on('bidUpdate',(info)=>{
 
 });
 
+socket.value.on('login',(data)=>{
+  console.log(data);
+});
+
+
+socket.value.on('bidStatus',(data)=>{
+  bidStatus.value = data;
+  console.log(data);
+});
   
 const sendMessage = () => {
   
