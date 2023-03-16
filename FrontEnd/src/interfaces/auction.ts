@@ -35,27 +35,33 @@ export interface IGetAuctionItemDetails {
   startPrice: Number;
   updatedAt: string;
   user_id: Number;
+  bidAmount?: Number | null;
 }
 export interface IGetAuctionItemsDetails {
-  itemID:number,
-  itemName: string,
-  itemDes: string,
-  startPrice: number,
-  createdAt: Date|string,
-  updatedAt: Date|string,
-  user_id: null,
+  itemID: number;
+  itemName: string;
+  itemDes: string;
+  startPrice: number;
+  createdAt: Date | string;
+  updatedAt: Date | string;
+  user_id: null;
 }
 export interface IGetAuctionDetails {
   address: string;
   auctionID: number;
   auctionType: string;
   cityName: string;
-  createdAt: Date|string;
-  endTime: Date|string;
-  isSold: boolean
-  postalCode: string
-  provinceName: string
-  startTime: Date|string;
-  updatedAt: Date|string;
-  user_id: null
+  createdAt: Date | string;
+  endTime: Date | string;
+  isSold: boolean;
+  postalCode: string;
+  provinceName: string;
+  startTime: Date | string;
+  updatedAt: Date | string;
+  user_id: null;
+}
+
+export interface IBlindAuctionQueryPayload {
+  itemId: string | null;
+  auctionId: string | null;
 }

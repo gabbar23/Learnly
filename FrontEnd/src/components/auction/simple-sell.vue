@@ -71,6 +71,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   startPrice: 0,
   updatedAt: "",
   user_id: 0,
+  bidAmount: null,
 });
 
 onMounted(async () => {

@@ -10,16 +10,12 @@
             v-for="(item, index) in sellItemDetail.imageDetails"
             :key="index"
           >
-            <img
-              :src="item.imgUrl"
-              class="carousel__item item_size"
-              @click="bindClick(item)"
-            />
+            <img :src="item.imgUrl" class="carousel__item item_size" />
           </Slide>
         </template>
         <template v-else>
           <Slide v-for="slide in 5" :key="slide">
-            <div class="carousel__item" @click="bindClick(slide)">
+            <div class="carousel__item">
               {{ slide }}
             </div>
           </Slide>
@@ -41,7 +37,7 @@
             </div>
             <div class="d-flex">
               <div class="mr-4">Make Bid</div>
-              <FormKit type="text" />
+              <FormKit type="text" v-model="sellItemDetail.bidAmount" />
               <button
                 class="btn btn-danger ml-5"
                 @click="makePayment"
@@ -49,7 +45,7 @@
               >
                 Submit Bid
               </button>
-              <p>Bid Already Made.</p>
+              <p v-if="sellItemDetail.isSold">Bid Already Made.</p>
             </div>
           </div>
         </div>
@@ -65,9 +61,14 @@ import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import auctionService from "@/services/auctionService";
 import { useRoute } from "vue-router";
-import type { IGetAuctionItemDetails } from "@/interfaces/auction";
+import type {
+  IBlindAuctionQueryPayload,
+  IGetAuctionItemDetails,
+} from "@/interfaces/auction";
 import { Loader } from "../component";
+import { useNotification } from "@kyvg/vue3-notification";
 
+const { notify } = useNotification();
 const route = useRoute();
 const isLoading = ref<boolean>(false);
 let sellItemDetail = reactive<IGetAuctionItemDetails>({
@@ -80,13 +81,24 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   startPrice: 0,
   updatedAt: "",
   user_id: 0,
+  bidAmount: null,
 });
 
+// let routePayload = reactive<IBlindAuctionQueryPayload>({
+//   itemId: "",
+//   auctionId: ""
+// });
+
+const itemId = ref<string>("");
+const auctionId = ref<string>("");
+
 onMounted(async () => {
-  const { itemId } = route.query;
+  itemId.value = route.query.itemId;
+  auctionId.value = route.query.auctionId;
+
   try {
     isLoading.value = true;
-    const response = await auctionService.getItemDetails(11);
+    const response = await auctionService.getItemDetails(itemId.value);
     sellItemDetail = response.data;
     // await auctionService.getAuctionDetails(11);
   } catch (e) {
@@ -96,10 +108,32 @@ onMounted(async () => {
   }
 });
 
-const makePayment = () => {
+const makePayment = async () => {
   const details = localStorage.getItem("userDetails");
   const { userId } = JSON.parse(details);
   // console.log();
+  try {
+    const requestPayload = {
+      itemId: itemId.value,
+      bidAmount: sellItemDetail.bidAmount,
+      auctionId: auctionId.value,
+      userId: userId,
+    };
+    console.log(requestPayload);
+    await auctionService.makeBlindBid(requestPayload);
+    notify({
+      title: "Successfull!",
+      text: "Your Bid has been placed Successfully!",
+      type: "success",
+    });
+  } catch (e) {
+    console.log("Error occured in placing a bid");
+    notify({
+      title: "Failure!",
+      text: "Opps Something went wrong!",
+      type: "danger",
+    });
+  }
 };
 
 const bindClick = (args: any) => {
