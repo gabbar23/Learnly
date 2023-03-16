@@ -88,7 +88,7 @@ onMounted(async () => {
     isLoading.value = true;
     const response = await auctionService.getItemDetails(11);
     sellItemDetail = response.data;
-    await auctionService.getAuctionDetails(11);
+    // await auctionService.getAuctionDetails(11);
   } catch (e) {
     console.log(e);
   } finally {
