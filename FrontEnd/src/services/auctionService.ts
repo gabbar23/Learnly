@@ -37,4 +37,8 @@ export default {
   makeBlindBid(payload: any) {
     return apiClient.post("api/bid/placeBid", payload);
   },
+
+  getAllBidDetails(){
+    return apiClient.get("api/bid/fetchDetails");
+  }
 };
