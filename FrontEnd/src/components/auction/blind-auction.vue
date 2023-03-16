@@ -41,11 +41,11 @@
               <button
                 class="btn btn-danger ml-5"
                 @click="makePayment"
-                :disabled="sellItemDetail.isSold"
+                :disabled="isBidAlreadyMade"
               >
                 Submit Bid
               </button>
-              <p v-if="sellItemDetail.isSold">Bid Already Made.</p>
+              <p v-if="isBidAlreadyMade">Bid Already Made.</p>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   user_id: 0,
   bidAmount: null,
 });
-
+const isBidAlreadyMade = ref<boolean>(true);
 // let routePayload = reactive<IBlindAuctionQueryPayload>({
 //   itemId: "",
 //   auctionId: ""
@@ -91,6 +91,8 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 
 const itemId = ref<string>("");
 const auctionId = ref<string>("");
+const details = localStorage.getItem("userDetails");
+const { userId } = JSON.parse(details);
 
 onMounted(async () => {
   itemId.value = route.query.itemId;
@@ -98,8 +100,18 @@ onMounted(async () => {
 
   try {
     isLoading.value = true;
-    const response = await auctionService.getItemDetails(itemId.value);
-    sellItemDetail = response.data;
+    // const response = await auctionService.getItemDetails(itemId.value);
+    const requestPayload = {
+      itemId: itemId.value,
+      auctionId: auctionId.value,
+      auctionType: "blind",
+      userId,
+    };
+    const response = await auctionService.getNewItemDetails(requestPayload);
+    sellItemDetail = response.data.item;
+    isBidAlreadyMade.value = response.data.userCount
+      ? response.data.userCount > 0
+      : false;
     // await auctionService.getAuctionDetails(11);
   } catch (e) {
     console.log(e);
@@ -109,8 +121,6 @@ onMounted(async () => {
 });
 
 const makePayment = async () => {
-  const details = localStorage.getItem("userDetails");
-  const { userId } = JSON.parse(details);
   // console.log();
   try {
     const requestPayload = {

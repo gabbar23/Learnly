@@ -15,6 +15,10 @@ export default {
     });
   },
 
+  getNewItemDetails(requestPayload:any){
+    return apiClient.post("api/auction/auctionItemDetails", requestPayload);
+  },
+
   getImages(auction: Number) {
     return apiClient.post("api/auction/auctionImages", { itemId: auction });
   },
