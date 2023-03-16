@@ -1,68 +1,65 @@
 import { Request, Response } from "express";
 import { QueryTypes } from "sequelize";
 import { sequelize } from "../util/database";
-// import { Auction } from "../models/aunctionModel";
-// import { ImageDetailModel } from "../models/imageDetails";
-// import { Item } from "../models/itemModel";
 
 export const fetchDetails = async (_: Request, res: Response) => {
- 
   try {
-    // Fetch all auctions and  include associated items
-   const results = await sequelize.query( 
-      `SELECT auctions.*, itemDetails.*
-      FROM auctions
-      INNER JOIN (
-        SELECT items.itemId AS itemItemId, items.auctionId, items.itemName, imageDetails.imgUrl, imageDetails.imgName
-        FROM items
-        INNER JOIN imageDetails
-        ON items.itemId = imageDetails.itemId
-      ) AS itemDetails
-      ON auctions.auctionId = itemDetails.auctionId
-      ;
+    const results = await sequelize.query(
+      `
+        SELECT auctions.*, items.*, imageDetails.*
+        FROM auctions
+        INNER JOIN items ON items.auctionId = auctions.auctionId
+        INNER JOIN imageDetails ON imageDetails.itemId = items.itemId
       `,
       {
-        // replacements: { buyerId: buyerId },
         type: QueryTypes.SELECT,
       }
     );
 
-    // Return the order details as JSON
-    res.json(results);
-  //   const results = await Auction.findAll({
-  //     include: [
-  //       {
-  //         model: Item,
-  //         attributes: ["itemId", "itemName"],
-  //         include: [{
-  //           model: ImageDetailModel,
-  //           attributes: ["imgId", "imgUrl", "imgDescription", "imgName"],
-  //         }] 
-  //       },
-  //     ],
-  //   });
-    
-  //   // Transform the result into the desired format
-  //   const auctionDetails = results.map((auction) => ({
-  //     auctionId: auction.getDataValue("auctionId"),
-  //     auctionType: auction.getDataValue("auctionType"),
-  //     itemsDetails: auction.getDataValue("items").map((item: { getDataValue: (arg0: string) => any; }) => ({
-  //       itemId: item.getDataValue("itemId"),
-  //       itemName: item.getDataValue("itemName"),
-  //       imageDetails: item.getDataValue("imageDetail"),
-  //     })),
-  //   }));
-    
-  //   // Return the transformed result as JSON
-  //   res.json(auctionDetails);
+    const auctionDetails = results.reduce((acc: any, auction: any) => {
+      const auctionId = auction.auctionId;
+      const itemId = auction.itemId;
+
+      if (acc[auctionId]) {
+        const item = acc[auctionId].items[itemId];
+        item.imageDetails.push({
+          imgId: auction.imgId,
+          imgUrl: auction.imgUrl,
+          imgDescription: auction.imgDescription,
+          imgName: auction.imgName,
+        });
+      } else {
+        const auctionObj: any = {};
+        auctionObj.auctionId = auction.auctionId;
+        auctionObj.auctionType = auction.auctionType;
+        auctionObj.items = {};
+        auctionObj.items[itemId] = {
+          itemId: auction.itemId,
+          itemName: auction.itemName,
+          imageDetails: [
+            {
+              imgId: auction.imgId,
+              imgUrl: auction.imgUrl,
+              imgDescription: auction.imgDescription,
+              imgName: auction.imgName,
+            },
+          ],
+        };
+        acc[auctionId] = auctionObj;
+      }
+
+      return acc;
+    }, {});
+
+    const auctionDetailsArray = Object.values(auctionDetails);
+
+    res.json(auctionDetailsArray);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while fetching orders" });
+    res.status(500).json({ message: "An error occurred while fetching details" });
   }
 };
 
 export default {
-  fetchDetails
+  fetchDetails,
 };
