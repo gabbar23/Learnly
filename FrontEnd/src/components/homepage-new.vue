@@ -1,456 +1,340 @@
 <template>
-<body>
-    <v-carousel hide-delimiters>
-      <v-carousel-item
-      :src="'../src/assets/img/home/slider1_new.webp'"
-      >
-        <v-row
-          class="fill-height"
-          align-content="center"
-          justify="center"
-        >
-          <div class="display-2 white-smoke pl-5 pr-5 hidden-sm-only"><strong>Auction 1</strong></div><br/>
-        </v-row>
-      </v-carousel-item>
-      <v-carousel-item
-        :src="'../src/assets/img/home/slider2.webp'"
-      >
-        <v-row
-          class="fill-height"
-          align-content="center"
-          justify="center"
-        >
-          <div class="display-2 white-smoke pl-5 pr-5 hidden-sm-only" style="text-decoration: white;"><strong>Auction 2</strong></div><br/>
-        </v-row>
-      </v-carousel-item>
-      <v-carousel-item
-        :src="'../src/assets/img/home/slider3.webp'"
-      >
-        <v-row
-          class="fill-height"
-          align-content="center"
-          justify="center"
-        >
-          <div class="display-2 white-smoke pl-5 pr-5 hidden-sm-only"><strong>Auction 3</strong></div><br/>
-        </v-row>
-      </v-carousel-item>
-      <v-carousel-item
-        :src="'../src/assets/img/home/slider4.webp'"
-      >
-        <v-row
-          class="fill-height"
-          align-content="center"
-          justify="center"
-        >
-          <div class="white-smoke display-2 pl-5 pr-5 hidden-sm-only"><strong>Auction 4</strong></div><br/>
-        </v-row>
-      </v-carousel-item>
-
-    </v-carousel>
-    <div class="pl-4 pr-4 row">
-      <div
-       class="col-md-6 col-sm-6 col-xs-12"
-      >
-        <v-card>
-
-          <v-img
-            :src="'../src/assets/img/home/slider2.webp'"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="400px"
-          >
-           <h1 class="text-center font-size white-smoke">LAST FEW SEATS LEFT!</h1>
-            <div class="text-center">
-              <v-btn  href="/" class="white--text " outlined>REGISTER NOW!</v-btn>
-            </div>
-
-
-<!--            <v-expand-transition>-->
-<!--              <div-->
-<!--                v-if="hover"-->
-<!--                class="d-flex transition-fast-in-fast-out orange darken-2 v-card&#45;&#45;reveal display-3 white&#45;&#45;text"-->
-<!--                style="height: 100%;"-->
-<!--              >-->
-
-<!--                <h3>Top Picks</h3><br/>-->
-<!--                <h3>sdfs</h3>-->
-<!--              </div>-->
-<!--            </v-expand-transition>-->
-          </v-img>
-        </v-card>
-<!--        </v-hover>-->
-      </div>
-      <div
-        class="col-md-6 col-sm-6 col-xs-12"
-      >
-        <v-card>
-          <v-img
-            :src="'../src/assets/img/home/slider3.webp'"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="400px"
-          >
-            <h1 class="text-center font-size white-smoke">BLIND</h1>
-            <div class="text-center">
-              <v-btn  href="/" class="white--text" outlined>REGISTER NOW!</v-btn>
-            </div>
-          </v-img>
-        </v-card>
-      </div>
+  <body>
+    <Carousel id="gallery" :items-to-show="1" :wrap-around="true" v-model="currentSlide" v-if="LiveAuctionList.length>0"
+      class="container"
+    >
+      <Slide v-if="LiveAuctionList.length!=0" v-for="slide in LiveAuctionList.length" :key="slide" >
+        <div class="carStyle" style="background-color: black;" @click="SendId(false);AuctionClassifier();" >
+          <img :src="LiveAuctionList[currentSlide].imgUrl" v-if="slide>0 " />
+        <h1 class="centered">{{LiveAuctionList[currentSlide].auctionId}}</h1> <h1> {{LiveAuctionList[currentSlide].startTime  }}</h1></div>
+        <br/>
+       <!-- <h2>{{ bidDetails.length }} , {{ bidDetails }} , {{ slide }}</h2> -->
+      </Slide>
+    </Carousel>
+    <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no live auctions available right now. </h1>
     </div>
-    <div class="pl-4 pr-4 row">
-      <div
-       class="col-md-4 col-sm-4 col-xs-12"
-      >
-        <v-card outlined>
-          <v-img
-            :src="'../src/assets/img/home/deal2.jpg'"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="300px"
-          >
-            <h1 class="text-center font-size white-smoke">Buy</h1>
-            <div class="text-center mt-2">
-              <v-btn class="white--text caption"  href="/" text>Buy <v-icon class="caption">mdi-arrow-right</v-icon></v-btn>
-            </div>
-          </v-img>
-        </v-card>
-      </div>
-      <div
-        class="col-md-4 col-sm-4 col-xs-12"
-      >
-        <v-card outlined>
-          <v-img
-            :src="'../src/assets/img/home/deal3.jpg'"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="300px"
-          >
-            <h1 class="text-center font-size white-smoke">Buy</h1>
-            <div class="text-center mt-2">
-              <v-btn class="white--text caption"  href="/" text>SHOP NOW <v-icon class="white--text caption">mdi-arrow-right</v-icon></v-btn>
-            </div>
-          </v-img>
-        </v-card>
-      </div>
-      <div
-        class="col-md-4 col-sm-4 col-xs-12"
-      >
-        <v-card outlined>
-          <v-img
-            :src="'../src/assets/img/home/deal4.jpg'"
-            class="white--text align-center"
-            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="300px"
-          >
-            <h1 class="text-center font-size white-smoke">Buy</h1>
-            <div class="text-center mt-2">
-              <v-btn class="white--text caption"  href="/" text>SHOP NOW <v-icon class="white--text caption">mdi-arrow-right</v-icon></v-btn>
-            </div>
-          </v-img>
-        </v-card>
-      </div>
-    </div>
-    <v-container>
-      <v-row no-gutters>
-        <v-col :cols="12">
-          <v-card-text
-            class=""
-            tile
-            outlined
-          >
-            <v-card-title class="subheading ">Sweet Deals in the Auction</v-card-title>
-            <v-divider></v-divider>
-            <div class="row">
-              <div class="col-12 col-md-3 col-sm-6 col-xs-6 text-center">
-                <v-hover
-                  v-slot:default="{ hover }"
-                  open-delay="200"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                >
-                  <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    :src="'../src/assets/img/home/deal1.jpg'"
-                  >
-                    <v-card-title>Bags & Purses </v-card-title>
-                  </v-img>
+  
+    <Carousel 
+      style="background-color: black; color: #000;"
+      id="thumbnails"
+      :items-to-show="3" 
+      v-model="currentSlide"
+      :wrap-around="true"
+      :autoplay="5000"
+      ref="carousel"
+      class="container"
+    >
+      <Slide  v-for="slide in LiveAuctionList.length" :key="slide" style="background-color: black;">
+        <div class="carousel__item" @click="slideTo(slide-1); SendId(false);"> 
+          
+          <img :src="LiveAuctionList[slide-1].imgUrl" v-if="slide>0"/>
 
-                  <v-card-text class="text--primary text-center">
-                    <div>Lorem ipsum</div>
-                    <div>Vintage Baggit, Zara, Fossil</div>
-                  </v-card-text>
+</div>
+      </Slide>
+    </Carousel>
 
-                  <div class="text-center">
-                    <v-btn
-                      href="/"
-                      class="ma-2"
-                      outlined
-                      color="info"
-                    >
-                      Explore
-                    </v-btn>
-                  </div>
-                </v-card>
-                </v-hover>
-              </div>
-              <div class="col-12 col-md-3 col-sm-6 col-xs-6 text-center" >
-                <v-hover
-                  v-slot:default="{ hover }"
-                  open-delay="200"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                  >
-                  <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    :src="'../src/assets/img/home/deal2.jpg'"
-                  >
-                    <v-card-title>T-Shirt </v-card-title>
-                  </v-img>
+    <br/>
+    <h1 style="text-align: center;"> Blind Auctions</h1>
+    <Carousel 
+    :items-to-show="2" 
+    item v-if="BlindAuctionList.length>0"
+    class="container"
+    style="background-color: black;"
+    >
+    <Slide v-for="slide in BlindAuctionList.length" :key="slide">
+        <div class="carousel__item" @click=" SendId(true); AuctionClassifier();" >
+        <img :src="BlindAuctionList[slide-1].imgUrl" v-if="slide>0"/></div>
+          <h1 class="centered" style="color: red;">{{ BlindAuctionList[slide-1].auctionId }}</h1>
+      </Slide>
+  </Carousel>
+  <div v-else><h1 style="text-align: center; color: red;"> Sorry, there are no blind auctions available right now. </h1></div>
 
-                  <v-card-text class="text--primary text-center">
-                    <div></div>
-                    <div>Limited Edition Zara, Selected, Celio</div>
-                  </v-card-text>
+  <br/>
+      <br/>
+      <h1 style="text-align: center;"> Items on Sale</h1>
 
-  <Carousel id="gallery" :items-to-show="1" :wrap-around="false" v-model="currentSlide"
-  >
-    <Slide v-for="slide in bidDetails.length" :key="slide">
-      <div class="carStyle" style="background-color: black;" @click="AuctionClassifier">
-        <img :src="link1"/></div>
-      <h1>{{imgLinks[slide-1]}}</h1>
-    </Slide>
+
+  <Carousel :items-to-show="3"  :wrap-around="true" class="container">
+    <Slide v-for="slide in ItemsOnSaleList.length" :key="slide" >
+        <div class="carousel__item" @click="BuyItem">
+        <img :src="bidDetails[slide-1].imgUrl" v-if="slide>0"/>
+        <h1 class="centered">Item on Sale {{ slide }}</h1>
+        </div>
+      </Slide>
   </Carousel>
 
-                  <div class="text-center">
-                    <v-btn href="/"
-                      class="ma-2"
-                      outlined
-                      color="info"
-                    >
-                      Explore
-                    </v-btn>
-                  </div>
-                </v-card>
-                </v-hover>
-              </div>
-              <div class="col-12 col-md-3 col-sm-6 col-xs-6 text-center" >
-                <v-hover
-                  v-slot:default="{ hover }"
-                  open-delay="200"
-                >
-                  <v-card
-                    :elevation="hover ? 16 : 2"
-                  >
-                  <v-img
-                    class="white--text align-end"
-                    height="200px"
-                    :src="'../src/assets/img/home/deal4.jpg'"
-                  >
-                    <v-card-title>Vintage Shoes</v-card-title>
-                  </v-img>
 
-                  <v-card-text class="text--primary text-center">
-                    <div>Exclusive</div>
-                    <div>Nike, Adidas, Puma</div>
-                  </v-card-text>
-
-                  <div class="text-center">
-                    <v-btn href="/"
-                      class="ma-2"
-                      outlined
-                      color="info"
-                    >
-                      Explore
-                    </v-btn>
-                  </div>
-                </v-card>
-                </v-hover>
-              </div>
-            </div>
-          </v-card-text>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-card  class="accent" >
-      <v-container>
-        <v-row no-gutters>
-          <v-col class="col-12 col-md-4 col-sm-12">
-            <v-row >
-              <v-col class="col-12 col-sm-3 pr-4"  align: right>
-                <v-icon class="display-2">mdi-truck</v-icon>
-              </v-col>
-              <v-col class="col-12 col-sm-9 pr-4">
-                <h3 class="font-weight-light">SHIPPING CHARGES EXTRA</h3>
-                              <p class="font-weight-thin">Free Shipping over $300</p>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col class="col-12 col-md-4 col-sm-12">
-            <v-row >
-              <v-col class="col-12 col-sm-3 pr-4"   align: right>
-                <v-icon class="display-2">mdi-cash-usd</v-icon>
-              </v-col>
-              <v-col  class="col-12 col-sm-9 pr-4">
-                <h3 class="font-weight-light"></h3>
-                <p class="font-weight-thin"></p>
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col class="col-12 col-md-4 col-sm-12">
-            <v-row>
-              <v-col class="col-12 col-sm-3 pr-4" align:right>
-                <v-icon class="display-2">mdi-headset</v-icon>
-              </v-col>
-              <v-col  class="col-12 col-sm-9 pr-4">
-                <h3 class="font-weight-light">+1-456-789-123</h3>
-                <p class="font-weight-thin">24/7 Available Support</p>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-  </body>
-</template>
-
-<script> 
-export default {
-  name: 'Gallery',
-  components: {
-    Carousel, 
-    Slide,
-    Navigation,
-  },
-  data: (async) => ({
-    currentSlide: 0,
-    imgLinks:["\"../assets/img/home/slider1.jpg\"","\"../assets/img/home/slider2.jpg\"","\"../assets/img/home/slider3.jpg\""],
-    blindBidImageList:["\"../assets/img/home/slider4.jpg\""],
-    ItemsOnSaleList:["\"../assets/img/home/slider4.jpg\""],
-    link1:"../assets/img/home/slider1.jpg",
-    bidItems: bidItemsRes.data,
-    bidDetails:bidDetailsRes.data,
-  }),
-  methods: {
+    </body>
+  </template>
   
-    slideTo(val: number) {
-      this.currentSlide = val
+  <script lang="ts"> 
+  import { Carousel, Navigation, Slide } from 'vue3-carousel'
+  import { computed, onMounted, reactive, ref } from 'vue';
+  import AuthService from '@/services/AuthService';
+  import auctionService from '@/services/auctionService';
+  import router from '@/router';
+import type { IPostBidDetails, IGetAuctionItemDetails } from '@/interfaces/auction';
+import { color, range } from '@formkit/inputs';
+  
+  let auctionDetails =reactive<IPostBidDetails>({
+  itemName: "",
+  startTime: new Date(),
+  endTime: new Date(),
+  startPrice: "",
+  provinceName: "",
+  cityName: "",
+  postalCode: "",
+  address: "",
+  itemDes: "",
+  imageDetails: [],
+  bidType: "",
+  isSold: 0,
+  startDate: new Date(),
+  endDate: new Date(),
+  });
+  let auctionItemDetails = reactive<IGetAuctionItemDetails>({
+    imageDetails: [],
+    createdAt: "",
+    isSold: false,
+    itemDes: "",
+    itemId: 0,
+    itemName: "",
+    startPrice: 0,
+    updatedAt: "",
+    user_id: 0,
+    });
+    let bidDetailsRes=await AuthService.fetchDetails();
+    let ItemIdData=await auctionService.getItemDetails(1);
+
+
+  export default {
+    name: 'Gallery',
+    components: {
+      Carousel, 
+      Slide,
+      Navigation,
     },
-    Logger(){
-      console.log("button clicked!")
-    },
-    async getAuctionNum(){
-     console.log("image clicked",this.currentSlide+1)
+    created() {
+        this.AuctionList()
+        this.SaleItems()
 
     },
+    data: () => ({
+      currentSlide: 0,
+   //   imgLinks:["\"../assets/img/home/slider1.jpg\"","\"../assets/img/home/slider2.jpg\"","\"../assets/img/home/slider3.jpg\""],
+//     blindBidImageList:["\"../assets/img/home/slider4.jpg\""],
+      ItemsOnSaleList:[],
+//      link1:"../assets/img/home/slider1.jpg",
+      bidDetails:bidDetailsRes.data,
+      LiveAuctionList: [],
+      BlindAuctionList: [],
+      flag:false,
+      AucIdData: "",
+      ItemIdData: ItemIdData.data,
+    }),
+    methods: {
+      async SaleItems(){
 
-      async AuctionClassifier(data:any) {
-  try {
-    await AuthService.getBidDetails()
-    .then((res:any) => {
-        //console.warn(res);
-        //console.log(AuthService.getImageDetails())
-        
-        let currentBidDetails=res.data[this.currentSlide];
-        
-        //console.log(currentBidDetails.bidType)
-       if(currentBidDetails.bidType=="blind"){
-        router.push({path: "/make-blind-auction",
-        query: { 
-            bidId: currentBidDetails.bidId,
-            startTime: currentBidDetails.startTime,
-            endTime: currentBidDetails.endTime,
-          }
-        })
-       }
-       else if(currentBidDetails.bidType=="live")
-       {
-          router.push({path: "/make-bid", 
-          query: { 
-            bidId: currentBidDetails.bidId,
-            startTime: currentBidDetails.startTime,
-            endTime: currentBidDetails.endTime,
-          },
-        });
-        
-       }
-      })
-      .catch((err: any) => {
-        console.error(err);
-      });
-  } catch {
-    console.error("Error in auction button exception");
-  }
-    },
-    async BuyItem(){
-      console.log("item bought")
-      router.push("/make-sell");
+        let ItemDetails=await auctionService.getItemDetails
+        for(let i=0;i<6;i++){
+        this.ItemsOnSaleList.push(ItemDetails(i).data);
+} 
+        //console.log(await ItemDetails.data)
+ 
+        console.log(await auctionService.getAuctionDetails(2))
+      }
+      ,
+      AuctionList(){
+        let auctionData=bidDetailsRes.data
+//console.log(bidDetailsRes.data)
+
+for(let i in auctionData){
+   // console.log(auctionData[i].auctionType)
+    if (auctionData[i].auctionType=="live"){
+      this.LiveAuctionList.push(auctionData[i])
 
     }
-  },
-  setup() {
-    const sell = () => {
-      console.log("Sell");
-    };
+    if (auctionData[i].auctionType=="blind"){
+      this.BlindAuctionList.push(auctionData[i])
+    
+}}
+    
+      },
+      slideTo(val: number) {
+        this.currentSlide = val
+      },
+      
+      
+      async SendId(flag: boolean){
+        if(flag==true){
+          this.AucIdData= this.BlindAuctionList[this.currentSlide]
 
-    const auction = () => {
-      console.log("Auction");
-    };
+        }
+        else{
+          this.AucIdData= this.LiveAuctionList[this.currentSlide]
+        }
+          console.log(this.AucIdData)
+      },
 
-    return {
-      sell,
-      auction,
-    };
-  },
-};
-</script>
-<style>
-body {
-  background-color: lightseagreen;
-}
-.white-smoke{
-  color: whitesmoke;
-}
-  .v-card--reveal {
-    align-items: center;
-    bottom: 0;
+        async AuctionClassifier() {
+    try {
+      await AuthService.fetchDetails()
+      .then((res:any) => {
+          //console.warn(res);
+          //console.log(AuthService.getImageDetails())
+          let currentBidDetails=this.AucIdData;
+         // console.log(res.data)
+        //  console.log(currentBidDetails)
+        //  console.log(currentBidDetails.auctionType)
+
+          let queryURL= { 
+            address: currentBidDetails.address,
+            auctionId: currentBidDetails.auctionId,
+            auctionType: currentBidDetails.auctionType,
+            cityName:currentBidDetails.cityName,
+            createdAt: currentBidDetails.createdAt,
+            endTime: currentBidDetails.endTime,
+            imgName: currentBidDetails.imgName,
+            imgUrl: currentBidDetails.imgUrl,
+            itemItemId: currentBidDetails.itemItemId,
+            itemName: currentBidDetails.itemName,
+            postalCode: currentBidDetails.postalCode,
+            provinceName: currentBidDetails.provinceName,
+            startTime: currentBidDetails.startTime,
+            updatedAt: currentBidDetails.updatedAt,
+            user_id: currentBidDetails.user_id
+            }
+            if(currentBidDetails.auctionType=="blind"){
+          router.push({path: "/make-blind-auction", query: queryURL})
+         }
+         else if(currentBidDetails.auctionType=="live")
+         {
+            router.push({path: "/make-bid", 
+            query: queryURL,
+          });
+          
+         }
+        })
+        .catch((err: any) => {
+          console.error(err);
+        });
+    } catch {
+      console.error("Error in auction button exception");
+    }
+      },
+      async BuyItem(){
+        console.log("item bought")
+       // console.log(check)
+       try {
+      await AuthService.fetchDetails()
+      .then((res:any) => {
+          //console.warn(res);
+          //console.log(AuthService.getImageDetails())
+          let currentItem=this.ItemIdData;
+         // console.log(res.data)
+        //  console.log(currentBidDetails)
+        //  console.log(currentBidDetails.auctionType)
+          console.log(currentItem.imageDetails)
+          let queryURL= { 
+            imageDetails: currentItem.imageDetails[0].imgUrl,
+            createdAt: currentItem.createdAt,
+            isSold: currentItem.isSold,
+            itemDes: currentItem.itemDes,
+            itemId: currentItem.itemId,
+            itemName: currentItem.itemName,
+            startPrice: currentItem.startPrice,
+            updatedAt: currentItem.updatedAt,
+            user_id: currentItem.user_id,
+            }
+            {
+          router.push({path: "/make-sell", query: queryURL})
+         }
+        })
+         .catch((err: any) => {
+          console.error(err);
+        });
+    } catch {
+      console.error("Error in auction button exception");
+    }
+        
+      }
+    },
+    setup() {
+      const sell = () => {
+        console.log("Sell");
+      };
+  
+      const auction = () => {
+        console.log("Auction");
+      };
+  
+      return {
+        sell,
+        auction,
+      };
+    },
+  };
+  </script>
+  <style>
+  body {
+    background-color: #eadfdf;
+  }
+  .white-smoke{
+    color: whitesmoke;
+  }
+    .v-card--reveal {
+      align-items: center;
+      bottom: 0;
+      justify-content: center;
+      opacity: .5;
+      position: absolute;
+      width: 100%;
+    }
+  img {
+    height: 300px;
+    width: 400px;
+  }
+  
+  
+  .main-card {
+    border: 1px solid;
+    max-width: 30vw;
+    margin: 0.5em;
+  }
+  
+  .main-card > .img {
+    height: 30vh;
+  }
+  .main-home-section {
+    height: 30vh;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .banner {
+    display: flex;
     justify-content: center;
-    opacity: .5;
-    position: absolute;
-    width: 100%;
+    align-items: center;
+  }
+  
+  .bottom-btn > button {
+    margin: 2em;
+    padding: 1em;
   }
 
-
-.main-card {
-  border: 1px solid;
-  max-width: 30vw;
-  margin: 0.5em;
+  .container {
+  position: relative;
+  text-align: center;
+  color: white;
 }
-
-.main-card > .img {
-  height: 30vh;
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-.main-home-section {
-  height: 30vh;
-  display: flex;
-  flex-wrap: wrap;
-}
-.banner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.bottom-btn > button {
-  margin: 2em;
-  padding: 1em;
-}
-
-.try{
-  position:fixed; left:0;right:0;top:0;bottom:0;
-}
-</style>
+  
+  .try{
+    position:fixed; left:0;right:0;top:0;bottom:0;
+  }
+  </style>
+  

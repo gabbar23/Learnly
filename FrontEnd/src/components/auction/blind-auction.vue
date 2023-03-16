@@ -29,21 +29,33 @@
           <Pagination />
         </template>
       </Carousel>
-    </div>
-    <div>
       <div>
-        <div class="details">
-          <p></p>
-          <div class = "d-flex">
-            <div class = "mr-4">Make Bid</div>
-            <FormKit  type="text" />
-            <button class="btn btn-danger ml-5" @click="printConsole()" :disabled = "isItemSold" >Submit Bid</button>
-            <p>Bid Already Made.</p>
+        <div>
+          <div class="details">
+            <div class="row p-3">
+              <div class="col-2">Name:</div>
+              <div class="col-10">{{ sellItemDetail.itemName }}</div>
+              <div class="w-100"></div>
+              <div class="col-2">Description:</div>
+              <div class="col-10">{{ sellItemDetail.itemDes }}</div>
+            </div>
+            <div class="d-flex">
+              <div class="mr-4">Make Bid</div>
+              <FormKit type="text" />
+              <button
+                class="btn btn-danger ml-5"
+                @click="makePayment"
+                :disabled="sellItemDetail.isSold"
+              >
+                Submit Bid
+              </button>
+              <p>Bid Already Made.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div><h1>{{ route.query }}</h1>
+    </template>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -51,15 +63,48 @@ import { ref, onMounted, reactive } from "vue";
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import auctionService from "@/services/auctionService";
 import { useRoute } from "vue-router";
-const isItemSold = ref<boolean>(false);
+import type { IGetAuctionItemDetails } from "@/interfaces/auction";
+import { Loader } from "../component";
 
-  const route = useRoute();
-  
+const route = useRoute();
+const isLoading = ref<boolean>(false);
+let sellItemDetail = reactive<IGetAuctionItemDetails>({
+  imageDetails: [],
+  createdAt: "",
+  isSold: false,
+  itemDes: "",
+  itemId: 0,
+  itemName: "",
+  startPrice: 0,
+  updatedAt: "",
+  user_id: 0,
+});
 
-function printConsole() {
-console.log(route.query)
-}
+onMounted(async () => {
+  const { itemId } = route.query;
+  try {
+    isLoading.value = true;
+    const response = await auctionService.getItemDetails(11);
+    sellItemDetail = response.data;
+    // await auctionService.getAuctionDetails(11);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    isLoading.value = false;
+  }
+});
+
+const makePayment = () => {
+  const details = localStorage.getItem("userDetails");
+  const { userId } = JSON.parse(details);
+  // console.log();
+};
+
+const bindClick = (args: any) => {
+  console.log("Hello");
+};
 </script>
 
 <style>

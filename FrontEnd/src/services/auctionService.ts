@@ -16,6 +16,6 @@ export default {
   },
 
   getImages(auction: Number) {
-    return apiClient.post("api/auction//auctionImages", { itemId: auction });
+    return apiClient.post("api/auction/auctionImages", { itemId: auction });
   },
 };
