@@ -12,19 +12,19 @@ const ImageDetail = sequelize.define(
     },
     imgDescription: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     imgName: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     imgUrl: {
       type: DataTypes.STRING(4000),
-      allowNull: true,
+      allowNull: false,
     },
     itemId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
   },
   {
