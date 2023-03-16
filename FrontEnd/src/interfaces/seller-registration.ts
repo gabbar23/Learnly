@@ -22,27 +22,24 @@ export interface IGetAddress {
 }
 
 export interface IGetUserDetails {
-  firstName: string;
-  lastName: string;
-  email: string;
+  firstName: string,
+  lastName: string,
+  dateOfBirth: Date|string,
+  gender: string,
+  isBuyer:boolean;
+  isSeller:boolean;
   phone: string;
-  nameOfOffering: string;
-  estimatedValue: number | null;
-  photoId: string;
-  description: string;
-  termsCondition: boolean;
+  email: string;
+
   address: string;
-  password: string;
   cityName: string;
-  provinceName: string;
+  password: string;
   postalCode: string;
-  dateOfBirth: Date;
-  gender: string;
-  isBuyer: boolean;
-  isSeller: boolean;
-  isVerified: boolean;
-  age: number | null;
-  photoDetail?: Blob | FormData;
+
+  provinceName: string;
+  govtIdUrl?: string;
+
+  termsCondition: boolean;
 }
 
 export interface IGetSellerBidDetails {
