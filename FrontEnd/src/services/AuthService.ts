@@ -1,4 +1,5 @@
 import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
+import type { IPostBidDetails } from "@/interfaces/auction";
 import type { ILoginDetails } from "@/interfaces/bid-for-good";
 import type {
   IGetState,
@@ -14,8 +15,8 @@ export default {
   getStates() {
     return apiClient.get("api/fetch/fetchStates");
   },
-  getCities(province:any) {
-    console.log(province)
+  getCities(province: any) {
+    console.log(province);
     return apiClient.get("api/fetch/fetchCity?province=" + province);
   },
 
@@ -42,19 +43,16 @@ export default {
   approveOrDeclineSeller(payload: IApproveOrDeclineReqPayload) {
     return apiClient.put("api/v1/register/markAsVerified", { query: payload });
   },
- 
-  getBidDetails(){
-  return apiClient.get("/api/bid/fetchBidDetails");
+
+  postBidDetails(bidDetails: IPostBidDetails) {
+    return apiClient.post("api/bid/addBidDetails", bidDetails);
   },
-  
-  getBidItems(){
-  return apiClient.get("/api/bid/fetchBidItems");
+
+  createSimpleSellOrder(orderDetails: any) {
+    return apiClient.post("api/v1/sell/saveOrder", orderDetails);
   },
-  
-  getImageDetails(){
-    return apiClient.get("/api/bid/fetchImageDetails");
-  },
-  getUploadedImage(){
-    return apiClient.get("/api/")
+
+  getBuyerOrderDetails(buyerId: any) {
+    return apiClient.get("api/v1/sell/getOrder?buyerId=" + buyerId);
   }
 };

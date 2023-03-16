@@ -43,22 +43,25 @@ export interface IGetUserDetails {
 }
 
 export interface IGetSellerBidDetails {
-  nameOfOffering: string;
-  startDate: Date | string;
+  itemName: string;
   startTime: Date | string;
-  endDate: Date | string;
   endTime: Date | string;
-  estimatedValue: string;
-  province: string;
-  city: string;
+  startPrice: string;
+  provinceName: string;
+  cityName: string;
   postalCode: string;
   address: string;
-  description: string;
+  itemDes: string;
   imageDetails: IBidImageDetails[];
-  bidType: BidTypeEnum;
+  bidType: string;
+  isSold: Number;
+  startDate:Date|string;
+  endDate: Date|string;
+  userId: Number | null;
 }
 
 export interface IBidImageDetails {
-  imageName: string;
-  imageUrl: string;
+  imgName: string;
+  imgUrl: string;
+  imgDescription: string;
 }

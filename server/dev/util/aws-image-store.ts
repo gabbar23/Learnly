@@ -49,7 +49,7 @@ const uploadImageToAWS = async(req: Request) => {
     let imgResponse = null;
     try{
         await s3.send(command);
-        const url = await getSignedUrl(s3, getObjCommand);
+        const url = await getSignedUrl(s3, getObjCommand, {expiresIn: 604800});
         imgResponse = Object.assign({},{url},req.file);
     }catch(e){
         console.log("Error Occured in AWS \n",e);

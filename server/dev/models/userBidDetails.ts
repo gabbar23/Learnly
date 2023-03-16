@@ -23,7 +23,7 @@ const userBiddingModel = sequelize.define("userBidDetails", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  bidId: {
+  auctionId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

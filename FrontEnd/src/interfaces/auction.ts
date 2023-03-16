@@ -1,0 +1,38 @@
+import type { IBidImageDetails } from "./seller-registration";
+
+export interface IPostBidDetails {
+  itemName: string;
+  startTime: Date | string;
+  endTime: Date | string;
+  startPrice: string;
+  provinceName: string;
+  cityName: string;
+  postalCode: string;
+  address: string;
+  itemDes: string;
+  imageDetails: IBidImageDetails[];
+  bidType: string;
+  isSold: Number;
+  startDate: Date | string;
+  endDate: Date | string;
+}
+
+export interface itemImageDetails {
+  imgDescription: string;
+  imgId: Number;
+  imgName: string;
+  imgUrl: string;
+  itemId: Number;
+}
+
+export interface IGetAuctionItemDetails {
+  imageDetails: itemImageDetails[];
+  createdAt: string;
+  isSold: boolean;
+  itemDes: string;
+  itemId: Number;
+  itemName: string;
+  startPrice: Number;
+  updatedAt: string;
+  user_id: Number;
+}

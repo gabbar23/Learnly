@@ -5,13 +5,13 @@
       <FormKit
         type="text"
         label="Name Of Offering"
-        v-model="sellerDetails.nameOfOffering"
+        v-model="sellerDetails.itemName"
       />
 
       <FormKit
         type="number"
         label="Estimated Value"
-        v-model="sellerDetails.estimatedValue"
+        v-model="sellerDetails.startPrice"
       />
 
       <FormKit
@@ -45,18 +45,18 @@
         label="State"
         placeholder="Select a State"
         :options="states"
-        v-model="sellerDetails.province"
-        @change="triggerChange(sellerDetails.province)"
+        v-model="sellerDetails.provinceName"
+        @change="triggerChange(sellerDetails.provinceName)"
       >
       </FormKit>
 
-      <FormKit 
+      <FormKit
         type="select"
         label="City"
         placeholder="Select City"
+        v-model="sellerDetails.cityName"
         :options="cityOptions"
-        validation="required" 
-      > 
+      >
       </FormKit>
 
       <FormKit
@@ -91,7 +91,7 @@
       <FormKit
         type="textarea"
         label="Description"
-        v-model="sellerDetails.description"
+        v-model="sellerDetails.itemDes"
       />
     </section>
   </FormKit>
@@ -113,8 +113,7 @@ const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
 const { notify } = useNotification();
 
-
-  let cityOptions = computed(() => { 
+let cityOptions = computed(() => {
   return cities.value.map((city) => {
     return {
       label: city.label,
@@ -124,32 +123,35 @@ const { notify } = useNotification();
 });
 
 let sellerDetails = reactive<IGetSellerBidDetails>({
-  nameOfOffering: "",
-  startDate: "",
+  itemName: "",
   startTime: "",
-  endDate: "",
   endTime: "",
-  estimatedValue: "",
-  province: "",
-  city: "",
+  startPrice: "",
+  provinceName: "",
+  cityName: "",
   postalCode: "",
+  isSold: 0,
   address: "",
-  description: "",
+  itemDes: "",
   imageDetails: [],
-  bidType: BidTypeEnum.liveBidding,
+  bidType: "",
+  startDate: "",
+  endDate: "",
+  userId: null,
 });
-const bidTypeOptions: ISelectResponse<BidTypeEnum>[] = [
+
+const bidTypeOptions: ISelectResponse<string>[] = [
   {
     label: BidDescriptionEnum[BidTypeEnum.liveBidding],
-    value: BidTypeEnum.liveBidding,
+    value: "live",
   },
   {
     label: BidDescriptionEnum[BidTypeEnum.normalBidding],
-    value: BidTypeEnum.normalBidding,
+    value: "blind",
   },
   {
     label: BidDescriptionEnum[BidTypeEnum.simpleSell],
-    value: BidTypeEnum.simpleSell,
+    value: "simple",
   },
 ];
 
@@ -187,8 +189,9 @@ const uploadImages = async (data: any) => {
     const image = await AuthService.uploadImage(body, headerConfig);
     console.warn(image);
     const imageDetails: IBidImageDetails = {
-      imageUrl: image.data.url,
-      imageName: image.data.originalname,
+      imgUrl: image.data.url,
+      imgName: image.data.originalname,
+      imgDescription: "test",
     };
     allImages.value.push(imageDetails);
   });
@@ -196,14 +199,37 @@ const uploadImages = async (data: any) => {
 };
 
 const sellerRegister = async () => {
-  // console.warn(allImages.value);
-  // sellerDetails.imageDetails = allImages.value;
-  console.warn(sellerDetails);
-  notify({
-    title: "Successfull!",
-    text: "Your Bid has been registered Successfully!",
-    type: "success",
-  });
+  sellerDetails.imageDetails = allImages.value;
+  sellerDetails.startTime = sellerDetails.startDate + " " + sellerDetails.startTime;
+  sellerDetails.endTime = sellerDetails.endDate + " " + sellerDetails.endTime;
+
+  const details = localStorage.getItem("userDetails");
+  const { userId } = JSON.parse(details);
+  if (userId) {
+    sellerDetails.userId = userId;
+  }else{
+    notify({
+      title: "Failure!",
+      text: "Unable to pull user details!",
+      type: "danger",
+    });
+    return;
+  }
+  try {
+    await AuthService.postBidDetails(sellerDetails);
+    console.warn(sellerDetails);
+    notify({
+      title: "Successfull!",
+      text: "Your Bid has been registered Successfully!",
+      type: "success",
+    });
+  } catch (e) {
+    notify({
+      title: "Failure!",
+      text: "Opps Something went wrong!",
+      type: "danger",
+    });
+  }
 };
 
 const triggerChange = async (val: string) => {
