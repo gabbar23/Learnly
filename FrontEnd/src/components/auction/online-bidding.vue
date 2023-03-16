@@ -31,7 +31,7 @@
                 :actions="false"
                 @submit="makeBid"
               >
-              <p style="color: red;">{{bidStatus}}</p>
+                <p style="color: red">{{ bidStatus }}</p>
                 <FormKit type="text" v-model="bidAmount" />
                 <button
                   class="btn btn-danger ml-5"
@@ -40,7 +40,6 @@
                 >
                   Submit Bid{{ minVal }}
                 </button>
-                
 
                 <!-- <div v-if="isBidMade">{{ timeLeft }} sec</div> -->
               </FormKit>
@@ -73,16 +72,15 @@ import {
   watch,
 } from "vue";
 
-
-
-import io from 'socket.io-client';
-import type {Socket} from 'socket.io-client'
+import io from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { message, number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
 import { formatDistance } from "date-fns";
 
 import Loader from "../loader.vue";
 import authentication from "../../../../server/dev/util/authentication";
+import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -93,15 +91,27 @@ const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
 const countdown = ref<Date>();
 
+let sellItemDetail = reactive<IGetAuctionItemDetails>({
+  imageDetails: [],
+  createdAt: "",
+  isSold: false,
+  itemDes: "",
+  itemId: 0,
+  itemName: "",
+  startPrice: 0,
+  updatedAt: "",
+  user_id: 0,
+  bidAmount: null,
+});
 
-const userDetails  = localStorage.getItem("userDetails");
+const userDetails = localStorage.getItem("userDetails");
 
 let user = JSON.parse(userDetails!);
 const userId = ref<Number>(user.userId);
 
 const makeBid = () => {
   isBidMade.value = true;
-  timer = setInterval(() => {
+  timer.value = setInterval(() => {
     timeLeft.value--;
     if (timeLeft.value === 0) {
       clearInterval(timer);
@@ -131,10 +141,8 @@ let myBid = ref<Number>();
 let timer = ref<String>();
 
 onMounted(() => {
-
-  
   // let userId = user.userId
-  
+
   let id = 1;
 
   // auctionService
@@ -153,7 +161,9 @@ onMounted(() => {
   //   console.log("cant load auction details");
   // })
 
-  auctionService.getAuctionDetails(id).then((res) => {
+  auctionService
+    .getAuctionDetails(id)
+    .then((res) => {
       console.log(res.data);
       startTime.value = res.data.startTime;
       endTime.value = res.data.endTime;
@@ -162,26 +172,36 @@ onMounted(() => {
       console.log("cant load auction details");
     });
 
-   
-    auctionService.getItemDetails(id).then((res)=> {
-      description.value = res.data.itemDes;    
-      startVal.value = res.data.startPrice;
-      console.log(res);
+  // auctionService.getItemDetails(id).then((res)=> {
+  const requestPayload = {
+    itemId: 1,
+    auctionId: 1,
+    auctionType: "live",
+    userId: 3,
+  };
+  auctionService
+    .getNewItemDetails(requestPayload)
+    .then((res) => {
+      description.value = res.data.item.itemDes;
+      startVal.value = res.data.item.startPrice;
+      sellItemDetail = res.data.item;
     })
     .catch(() => {
       console.log("cant fetch item details");
     });
 
-    auctionService.getCurrentMax(id).then((res) => {
+  auctionService
+    .getCurrentMax(id)
+    .then((res) => {
       highestBid.value = res.data;
-    }).catch((res) => {
+    })
+    .catch((res) => {
       console.log("Current Max Failed = " + res);
     });
 
-    auctionService.getCurrentUserBid(userId.value,id).then((res) => {
-      myBid.value = res.data;
-    });
-
+  auctionService.getCurrentUserBid(userId.value, id).then((res) => {
+    myBid.value = res.data;
+  });
 });
 
 // setInterval(() => {
@@ -191,7 +211,7 @@ onMounted(() => {
 //   const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 //   const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
 //   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-      
+
 //       timer.value = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
 // }, 1000);
@@ -210,40 +230,38 @@ socket.value.on("bidUpdate", (info) => {
   highestBid.value = info.highestBid;
 });
 
-socket.value.on('login',(data)=>{
+socket.value.on("login", (data) => {
   bidStatus.value = data;
 });
 
-
-socket.value.on('bidStatus',(data)=>{
+socket.value.on("bidStatus", (data) => {
   bidStatus.value = data;
   console.log(data);
 });
 
+socket.value.on("yourBidUpdate", (data) => {
+  myBid.value = data.highestBid;
+});
 
-socket.value.on('yourBidUpdate',(data)=>{
-  myBid.value = data.highestBid
-})
-
-socket.value.on('out',(data)=>{
-  bidStatus.value = data
+socket.value.on("out", (data) => {
+  bidStatus.value = data;
 });
 
 socket.value.on("disconnect", () => {
   console.log("user disconnected");
 });
-  
+
 const sendMessage = () => {
   console.log("message sent");
   // Emit a 'chat message' event to the server
   const seesionId = localStorage.getItem("sessionId");
-  const itemId = 1
+  const itemId = 1;
 
   const bidVal = 100;
   socket.value!.emit("placeBid", {
     seesionId: seesionId,
-    itemId:itemId,
-    userId:userId.value,
+    itemId: itemId,
+    userId: userId.value,
     bidVal: bidAmount.value,
   });
 };
