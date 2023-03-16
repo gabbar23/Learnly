@@ -33,6 +33,9 @@ const ItemModel = sequelize.define("item", {
   updatedAt: {
     type: DataTypes.DATE,
   },
+  auctionId:{
+    type: DataTypes.INTEGER,
+  }
 });
 
 export const Item = ItemModel;

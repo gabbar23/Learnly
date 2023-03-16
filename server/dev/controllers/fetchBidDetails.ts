@@ -3,19 +3,24 @@ import { Auction } from "../models/aunctionModel";
 
 //Fecth the bid details
 const fetchBidDetails = async (req: Request, res: Response) => {
-  try {
-    console.log("fetch live bid details");
-    const bid_type = req.body.bidType;
-    var details;
-    if (bid_type != null) {
-      details = await Auction.findAll({
-        where: {
-          bidType: bid_type,
-        },
-      });
-    } else {
-      details = await Auction.findAll({});
-    }
+    try {
+      
+      const bid_type = req.body.bidType;
+      var details ;
+
+      //fetches the details of specific bid type
+      if(bid_type != null){
+       details = await Auction.findAll({
+          where: {
+              auctionType:bid_type
+          }
+        });
+      }
+
+      //fetches the details of all the bid type
+      else{
+         details = await Auction.findAll({});
+      }
     res.status(200).json(details);
   } catch (error) {
     console.error(error);
