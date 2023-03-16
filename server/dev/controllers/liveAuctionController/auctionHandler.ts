@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { Auction } from "../../models/aunctionModel";
 import { ImageDetailModel } from "../../models/imageDetails";
 import { Item } from "../../models/itemModel";
+import { userBidDetailsModel } from "../../models/userBidDetails";
 // import { Socket,Server } from "socket.io";
 
 const makeBid = (req: Request, res: Response) => {
@@ -21,7 +22,7 @@ const getAuctionDetails = async (req: Request, res: Response) => {
         auctionId: req.body.bidId,
       },
     }).then((result) => {
-      console.log(result);
+      // console.log(result);
       res.status(200).json(result);
     });
   } catch {
@@ -42,7 +43,7 @@ const getAuctionItemDetails = async (req: Request, res: Response) => {
       res.status(200).json(result);
     });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -74,6 +75,42 @@ const endTime = (_req: Request, res: Response) => {
   });
 };
 
+
+const findMaxBidAmount = (req : Request, res : Response) => {
+
+    userBidDetailsModel.max("bidAmount",{
+      where:{
+        itemId : req.body.auctionId
+      }
+    })
+    .then((result)=>{
+      res.status(200).json(result);
+    })
+    .catch((res)=>{
+      console.log(res);
+    });
+
+}
+
+
+const findMyBidAmount = (req : Request , res : Response) => {
+  
+  userBidDetailsModel.max("bidAmount",{
+    where:{
+      itemId : req.body.auctionId,
+      userId : req.body.userId
+    }
+  })
+  .then((result)=>{
+    res.status(200).json(result);
+  })
+  .catch((res)=>{
+    console.log(res);
+  });
+
+
+}
+
 const validateAmount = () => {
   console.log();
 };
@@ -86,6 +123,8 @@ export default {
   getImages,
   endTime,
   validateAmount,
+  findMaxBidAmount,
+  findMyBidAmount,
 };
 
 

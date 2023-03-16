@@ -16,6 +16,15 @@ export default {
   },
 
   getImages(auction: Number) {
-    return apiClient.post("api/auction//auctionImages", { itemId: auction });
+    return apiClient.post("api/auction/auctionImages", { itemId: auction });
   },
+
+  getCurrentMax(auction:Number){
+    return apiClient.post("api/auction/highestPrice",{auctionId:auction});
+  },
+
+  getCurrentUserBid(userId:Number,auction:Number){
+    return apiClient.post("api/auction/myBidValue",{userId:userId,auctionId:auction});
+  }
+  
 };

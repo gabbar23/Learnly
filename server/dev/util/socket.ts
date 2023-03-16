@@ -1,26 +1,42 @@
+import { Session } from "express-session";
 import { Socket,Server } from "socket.io";
 // import { Auction } from "../models/aunctionModel";
 import { userBidDetailsModel } from "../models/userBidDetails";
 import { Item } from "../models/itemModel";
-// import { stat } from "fs";
+// import { sequelize } from "./database";
+// import { Transaction } from "sequelize";
 
 
-const addBidOnDB = (itemId:Number,bidVal:Number)=>{
+const addBidOnDB = async (itemId:Number,bidVal:Number)=>{
 
-  userBidDetailsModel.create({
-    itemId,
-    auctionId:itemId,
-    isWinner:false,
-    bidAmount:bidVal,
-    userId:1,
-  })
-  .then(()=>console.log("Data Stored."))
-  .catch(()=>console.log("Data storing failed."));
+  try{
 
+    // await sequelize.transaction(async (transaction:Transaction) => {
+      await userBidDetailsModel.create({
+        itemId,
+        auctionId:itemId,
+        isWinner:false,
+        bidAmount:bidVal,
+        userId:1,
+      });
+      // .then((data)=> {
+      //   console.log("result="+data)
+      //   return;  
+      // })
+      // .catch((error) => {
+      //   console.log("error"+error)
+      //   return;
+      // })
+      // await transaction.commit();
+      
+  }
+  catch{
+    console.log("Failed");
+  }  
 }
 
 
-const updateBidData = (itemId:Number, bidVal :Number ) => {
+const updateBidData = async (itemId:Number, bidVal :Number, io:Server ) => {
 
   // Checking if the previous bid exist in auction ,
   // If yes then check the max value with newVal
@@ -29,42 +45,47 @@ const updateBidData = (itemId:Number, bidVal :Number ) => {
       itemId:itemId,
     }
   })
-  .then((result)=>{
+  .then(async (result)=>{
     if(result){
       
       const maxVal = result;
 
-      console.log(maxVal);
+      // console.log(maxVal);
       
       //updateBidValue(itemId,bidVal);
       
       // Checking if the new Value is bigger than maxVal
       if(maxVal <bidVal){
+        
+        await addBidOnDB(itemId,bidVal);
         console.log("updated");
-        addBidOnDB(itemId,bidVal);
-        return 1;
+        
+        let info = {
+          highestBid:bidVal 
+        }
+
+        io.emit('bidUpdate', info);
+        // return 1;
       }
       else{
         console.log("new Value is smaller.");
-        return 0;
+        // return 0;
       }
 
     } 
     else{
-      // bidVal
-      console.log(result);
 
       // If the value is does not exist then, it could be the first bid, 
       // so check inside the itemtable where startPrice is stored.
 
-      Item.findOne({
+      await Item.findOne({
         where:{
           auctionId:itemId
         },
         attributes: ["startPrice"],
         
       })
-      .then((result)=>{
+      .then(async (result)=>{
         
         console.log("worked = " + result);
         
@@ -77,9 +98,13 @@ const updateBidData = (itemId:Number, bidVal :Number ) => {
             
             console.log("updated");
             
-            addBidOnDB(itemId,bidVal);
+            await addBidOnDB(itemId,bidVal);
             
-            return 1;
+            let info = {
+              highestBid:bidVal 
+            }
+
+            io.emit('bidUpdate', info);
           
           }
           else{
@@ -99,13 +124,8 @@ const updateBidData = (itemId:Number, bidVal :Number ) => {
     console.log("successfull");
   })
 
-  return 0
+  
 }
-
-
-// const getCurrentVal = (_auctionId:Number) =>{
-
-// }
 
 
 export function initSocket(server: any): void {
@@ -118,41 +138,29 @@ export function initSocket(server: any): void {
       });
 
 
-    io.on('connection', (socket:Socket)=>{
-    
-      console.log("user just connected!");
-    
-      const session = null;
+    io.on('connection', async (socket:Socket)=>{
 
-      socket.on('placeBid', (data) => {
+    const session: Session = (socket.request as any).session;
 
-        // console.log(data.sessionId,data.bidVal);
+      console.log("user just connected! - session = " + session);
+    
+      // const session = null;
+
+      socket.on('placeBid',async (data) => {
+
+        console.log(data.sessionId,data.bidVal);
         
         if(!session){
 
-
-          // if(data.bidVal > getCurrentVal())
-
-          const state = updateBidData(1,data.bidVal);
+          await updateBidData(1,data.bidVal,io);
           
-          if(state == 1){
-            
-            const info = {
-              highestBid:data.bidVal,
-              sessionId:data.sessionId
-            }
-            
-            io.emit('bidUpdate', info);
-            // socket.broadcast.emit('','');
-          }else
-          {
-            socket.emit('bidStatus',"small value entered.");
-          }
+            console.log("make Update on client");
 
-        }else{
+        }
+        else{
          console.log("null");
-          socket.emit('login',"Please Login for to participate in auction");
 
+          socket.emit('login',"Please Login for to participate in auction");
         }
     
       });

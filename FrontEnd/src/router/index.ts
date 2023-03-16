@@ -27,9 +27,9 @@ const router = createRouter({
         import("../components/registration/buyer-registration.vue"),
       children: [
         /* { path: "", name: "Buyer Details", component: BuyerDetails }, */
-        { path: "/donations", component: DonationDetails },
-        { path: "/buyer/orders", component: OrderDetails },
-        { path: "/buyer/report-issue", component: ReportIssue },
+        // { path: "/donations", component: DonationDetails },
+        // { path: "/buyer/orders", component: OrderDetails },
+        // { path: "/buyer/report-issue", component: ReportIssue },
       ],
     },
     {

@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div class="main-section w-50 mx-auto m-2">
+  <div class="main-section w-50 mx-auto m-2 my-hover">
     <loader v-if="isLoading"></loader>
     <div v-else>
       <div class="w-100 m-1">
@@ -14,14 +14,15 @@
           </template>
         </Carousel>
       </div>
-      <div>
+      <div class>
         <div class="row">
           <div class="details">
             <div>Description:{{ description }}</div>
             <div>Starting At: {{ startTime }}</div>
             <div>Closing At: {{ endTime }}</div>
             <div>Start Price: {{ startVal }}$</div>
-            <div>Current Max: {{ highestBid }}$</div>
+            <div>Highest Bid Price: {{ highestBid }}$</div>
+            <div>Your Bid: {{ myBid }}$</div>
             <div class="d-flex">
               <div class="mr-4">Make Bid</div>
               <FormKit
@@ -30,6 +31,7 @@
                 :actions="false"
                 @submit="makeBid"
               >
+              {{bidStatus}}
                 <FormKit type="text" v-model="bidAmount" />
                 <button
                   class="btn btn-danger ml-5"
@@ -38,10 +40,16 @@
                 >
                   Submit Bid{{ minVal }}
                 </button>
+                
+
                 <div v-if="isBidMade">{{ timeLeft }} sec</div>
               </FormKit>
             </div>
           </div>
+          <!-- <div>
+            <h1>Auction Ending in:</h1>
+            <div>{{ countdown }}</div>
+          </div> -->
           <div>
             <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
             <div v-else>Time's up!</div>
@@ -74,15 +82,16 @@ import auctionService from "./../../services/auctionService";
 import { formatDistance } from "date-fns";
 
 import Loader from "../loader.vue";
+import authentication from "../../../../server/dev/util/authentication";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
-let timer: any;
 const minVal = ref<Number>(5);
 const minValidation = ref<any>({ min: 5 });
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
+const countdown = ref<Date>();
 
 const makeBid = () => {
   isBidMade.value = true;
@@ -105,12 +114,15 @@ watch(timeLeft, (newValue, oldValue) => {
 
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
-let myVal = ref<Number>(0);
+// let myVal = ref<Number>(0);
 
 let startTime = ref<dateFns>();
 let endTime = ref<dateFns>();
 let socket = ref<Socket>();
 const description = ref<String>();
+let myBid = ref<Number>();
+
+let timer = ref<String>();
 
 onMounted(() => {
   let id: number = 1;
@@ -131,9 +143,7 @@ onMounted(() => {
   //   console.log("cant load auction details");
   // })
 
-  auctionService
-    .getAuctionDetails(id)
-    .then((res) => {
+  auctionService.getAuctionDetails(id).then((res) => {
       console.log(res.data);
       startTime.value = res.data.startTime;
       endTime.value = res.data.endTime;
@@ -151,11 +161,30 @@ onMounted(() => {
     .catch(() => {
       console.log("cant fetch item details");
     });
+
+    auctionService.getCurrentMax(id).then((res) => {
+      highestBid.value = res.data;
+    }).catch((res) => {
+      console.log("Current Max Failed = " + res);
+    });
+
+    auctionService.getCurrentUserBid(1,id).then((res) => {
+      myBid.value = res.data;
+    });
+
 });
 
-setInterval(() => {
-  timer = new Date().toLocaleString();
-}, 500);
+// setInterval(() => {
+//   const now:Date = new Date();
+//   let remainingTime:number = new Date(endTime.value) - now;
+//   const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+//   const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+//   const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+//   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+      
+//       timer.value = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+// }, 1000);
 
 // Connection to socket at server
 socket.value = io("http://localhost:3000/");
@@ -163,11 +192,7 @@ socket.value = io("http://localhost:3000/");
 // Listen for 'chat message' events from the server
 
 socket.value.on("connection", (message: string) => {
-  console.log("connected");
-});
-
-socket.value.on("disconnect", () => {
-  console.log("user disconnected");
+  console.log(message);
 });
 
 socket.value.on("bidUpdate", (info) => {
@@ -176,13 +201,17 @@ socket.value.on("bidUpdate", (info) => {
 });
 
 socket.value.on('login',(data)=>{
-  console.log(data);
+  bidStatus.value = data;
 });
 
 
 socket.value.on('bidStatus',(data)=>{
   bidStatus.value = data;
   console.log(data);
+});
+
+socket.value.on("disconnect", () => {
+  console.log("user disconnected");
 });
   
 const sendMessage = () => {
@@ -238,4 +267,14 @@ const formatTime = (time: any) => {
   box-sizing: content-box;
   border: 5px solid white;
 }
+
+/* .my-hover{
+  background-color: white;
+  border:1px lightblue
+}
+
+.my-hover:hover{
+  transition: 1s;
+  box-shadow: 0px 0px 20px 20px gray;
+} */
 </style>
