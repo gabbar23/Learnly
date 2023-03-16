@@ -19,10 +19,9 @@ export const addBidItems = async (req: Request, res: Response) => {
     provinceName,
     postalCode,
     imageDetails,
-    user_id
-    //userId
+    userId
    } = req.body;
-  
+  const user_id = userId;
   try {
 
   //Create a instance of auction
@@ -119,5 +118,4 @@ export default {
   addBidItems,
   showAuctionDetails,
   showItemDetails,
-  
 };

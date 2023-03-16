@@ -2,38 +2,47 @@
   <section>
     <h1>Order Details</h1>
   </section>
-  <div class="text-center">
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
+  <section>
+    <v-table>
+      <thead>
+        <tr>
+          <th class="text-left">Name</th>
+          <th class="text-left">Description</th>
+          <th class="text-left">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-if="orderDetails.length > 0">
+          <tr v-for="item in orderDetails" :key="item.cityName">
+            <td>{{ item.itemName }}</td>
+            <td>{{ item.itemDes }}</td>
+            <td>{{ item.startPrice }}</td>
+          </tr>
+        </template>
+        <no-content
+          v-else
+          :message="'No Buyer Orders Available at the Moment'"
+        ></no-content>
+      </tbody>
+    </v-table>
+  </section>
 </template>
-<script lang="ts">
-import router from "@/router";
-import { defineComponent } from "vue";
-export default defineComponent({
-  components: {},
-  data() {
-    return {};
-  },
-  props: {
-    headerText: {
-      type: String,
-      default: "header",
-    },
-    list: {
-      type: Array,
-      default: () => {
-        return [];
-      },
-    },
-    options: {
-      type: Object,
-      default: () => {
-        return null;
-      },
-    },
-  },
-  setup(props) {},
-  methods: {},
+<script lang="ts" setup>
+import AuthService from "@/services/AuthService";
+import { onMounted, ref } from "vue";
+import NoContent from "../no-content.vue";
+
+const orderDetails = ref<any>([]);
+const details = localStorage.getItem("userDetails");
+const { userId } = JSON.parse(details);
+
+onMounted(async () => {
+  try {
+    const response = await AuthService.getBuyerOrderDetails(userId);
+    orderDetails.value = response.data;
+  } catch (e) {
+    console.error("Error in fetching states", e);
+  }
 });
 </script>
 <style>
