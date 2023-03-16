@@ -5,6 +5,7 @@
         <FormKit
           type="form"
           @submit="sellerRegister"
+          @submit-invalid="InvalidSignup"
           enctype="multipart/form-data"
         >
           <section class="container parent_sect">
@@ -33,23 +34,12 @@
               validation-visibility="dirty"
             />
 
-            <FormKit
-              type="date"
-              label="Date of birth"
-              style="color: black"
-              validation="required"
-            />
-            <!-- <FormKit
-        type="text"
-        label="Name Of Offering"
-        v-model="userDetails.nameOfOffering"  
-      />
+       <FormKit type="date" 
+       label="Date of birth"  
+       style="color: black;"
+       validation="required"
+        />     
 
-      <FormKit
-        type="number"
-        label="Estimated Value"
-        v-model="userDetails.estimatedValue"
-      /> -->
 
             <FormKit
               type="text"
@@ -82,14 +72,13 @@
             <FormKit
               type="text"
               label="Postal Zip Code"
-              help="format: a1b-c2d | a1bc2d | a1b c2d"
+              help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
               :validation="[
                 ['required'],
                 [
                   'matches',
-                  /^\w\d\w \w\d\w$/,
-                  /^\w\d\w-\w\d\w$/,
-                  /^\w\d\w\w\d\w$/,
+
+                  /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i
                 ],
               ]"
               v-model="userDetails.postalCode"
@@ -153,6 +142,7 @@
               validation="accepted"
               :value="false"
               v-model="userDetails.termsCondition"
+              @input="ImageUpload"
             />
             <FormKit
               type="checkbox"
@@ -206,6 +196,7 @@ import {
   watch,
 } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import { RouterLink } from "vue-router";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -220,25 +211,19 @@ let cityOptions = computed(() => {
 let userDetails = reactive<IGetUserDetails>({
   firstName: "",
   lastName: "",
-  email: "",
-  phone: "",
-  nameOfOffering: "",
-  estimatedValue: null,
-  photoId: "1",
-  description: "a",
-  termsCondition: false,
-  address: "",
-  password: "",
-  cityName: "",
-  provinceName: "",
-  photoDetail: undefined,
-  postalCode: "",
   dateOfBirth: new Date(),
-  age: null,
+  gender: "male",
   isBuyer: false,
   isSeller: false,
-  isVerified: true,
-  gender: "male",
+  phone: "",
+  address: "",
+  cityName: "",
+  provinceName: "",
+  govtIdUrl: "",
+  email: "",
+  password: "",
+  postalCode: "",
+  termsCondition: false,
 });
 const { notify } = useNotification();
 
@@ -246,6 +231,7 @@ let buyerSeller = ["", ""];
 const isUserAlreadyRegistered = ref<boolean>(false);
 onMounted(async () => {
   try {
+    
     let response = await AuthService.getStates();
     states.value = [];
     console.log(states);
@@ -261,6 +247,14 @@ onMounted(async () => {
     console.error("Error in fetching states", e);
   }
 });
+const InvalidSignup=()=>{
+  notify({
+      title: "Failure!",
+      text: "Registration Failed! Please Contact Help Desk.",
+      type: "error",
+    });
+};
+
 const login = () => {
   router.push("/");
 };
@@ -268,9 +262,12 @@ const login = () => {
   router.push("/buyer-details");
 };
 */
+const ImageUpload=async()=>{
+
+};
+
 
 const sellerRegister = async (data: any) => {
-  userDetails.age = 20;
   console.log(data);
   const body = new FormData();
   // Finally, we append the actual File object(s)
@@ -279,9 +276,14 @@ const sellerRegister = async (data: any) => {
     body.append("image", fileItem.file);
   });
 
-  userDetails.photoDetail = body;
-  console.warn(body);
-  console.warn(userDetails.photoDetail);
+/*  for (const value of body.values()) {
+    console.error(value);
+  }
+
+  for (var key of body.entries()) {
+    console.log(key[0] + ", " + key[1]);
+  } */
+  
   const headerConfig = {
     headers: {
       "content-type": "multipart/form-data",
@@ -289,13 +291,21 @@ const sellerRegister = async (data: any) => {
   };
 
   try {
-    await AuthService.uploadImage(body, headerConfig);
+    
+    let uploadImageData=await (await AuthService.uploadImage(body, headerConfig)).data
+  //console.log(uploadImageData.url)
+  userDetails.govtIdUrl = uploadImageData.url;
+  
+ // console.warn(body);
+  //console.warn(userDetails.govtIdUrl);
     await AuthService.register(userDetails);
     notify({
       title: "Success!",
       text: "User Logged In Successfully! Wait for Admins approval",
       type: "success",
     });
+    
+    router.push("/");
   } catch (e) {
     notify({
       title: "Failure!",
@@ -305,12 +315,13 @@ const sellerRegister = async (data: any) => {
   }
 };
 
+
 const checkUserExists = async (email: string) => {
-  console.warn("User Exists", email);
+  //console.warn("User Exists", email);
   try {
-    await AuthService.checkUserExist(email)
+    await AuthService.checkUserExist(email) 
       .then((res) => {
-        console.warn(res);
+      // console.warn(res);
         isUserAlreadyRegistered.value = res.data.isUserAlreadyPresent;
       })
       .catch((err) => {
@@ -346,7 +357,7 @@ const checkIsBuyerIsSeller = async (val: any, val2: any) => {
 };
 
 const triggerChange = async (val: string) => {
-  console.warn(val);
+//  console.warn(val);
   cities.value = [];
   try {
     let response = await AuthService.getCities(val);
@@ -357,7 +368,7 @@ const triggerChange = async (val: string) => {
         value: response.data[i].city,
       });
     }
-    console.log(cityOptions);
+ //  console.log(cityOptions);
   } catch (e) {
     console.error("Error in pulling cities");
   }
