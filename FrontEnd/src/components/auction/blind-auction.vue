@@ -17,10 +17,12 @@
       <div>
         <div class="details">
           <p></p>
-          <div class = "d-flex">
-            <div class = "mr-4">Make Bid</div>
-            <FormKit  type="text" />
-            <button class="btn btn-danger ml-5" :disabled = "isItemSold" >Submit Bid</button>
+          <div class="d-flex">
+            <div class="mr-4">Make Bid</div>
+            <FormKit type="text" />
+            <button class="btn btn-danger ml-5" :disabled="isItemSold">
+              Submit Bid
+            </button>
             <p>Bid Already Made.</p>
           </div>
         </div>
@@ -40,13 +42,12 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 const isItemSold = ref<boolean>(true);
 
-
-onMounted(async()=>{
+onMounted(async () => {
   // const { itemId } = route.query;
   const itemId = 1;
   // try{//userId, itemId and Auction Id
-    await auctionService.getAuctionDetails(itemId);
-    await auctionService.getItemDetails(itemId);
+  await auctionService.getAuctionDetails(itemId);
+  await auctionService.getItemDetails(itemId);
   // }
 });
 </script>
