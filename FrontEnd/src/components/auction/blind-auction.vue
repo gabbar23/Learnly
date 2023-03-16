@@ -44,10 +44,10 @@ const isItemSold = ref<boolean>(true);
 onMounted(async()=>{
   // const { itemId } = route.query;
   const itemId = 1;
-  try{
+  // try{//userId, itemId and Auction Id
     await auctionService.getAuctionDetails(itemId);
     await auctionService.getItemDetails(itemId);
-  }
+  // }
 });
 </script>
 
