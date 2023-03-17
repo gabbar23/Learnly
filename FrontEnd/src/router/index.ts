@@ -35,7 +35,7 @@ const router = createRouter({
     {
       path: "/home",
       name: "Home",
-      component: () => import("../components/homepage-new.vue"),
+      component: () => import("../components/homepage-latest.vue"),
     },
     {
       path: "/interim-home",

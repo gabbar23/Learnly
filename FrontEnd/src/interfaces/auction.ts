@@ -22,7 +22,7 @@ export interface itemImageDetails {
   imgId: Number;
   imgName: string;
   imgUrl: string;
-  itemId: Number;
+  itemId?: Number;
 }
 
 export interface IGetAuctionItemDetails {
@@ -64,4 +64,12 @@ export interface IGetAuctionDetails {
 export interface IBlindAuctionQueryPayload {
   itemId: string | null;
   auctionId: string | null;
+}
+
+export interface IGeneralAuctionDetails {
+  imageDetails: itemImageDetails[];
+  auctionId: number | null;
+  auctionType: string;
+  itemId: Number | null;
+  itemName: string;
 }
