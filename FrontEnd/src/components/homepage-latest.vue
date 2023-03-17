@@ -8,7 +8,9 @@
       v-model="currentSlide"
     >
       <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item"    @click="liveAuctionClicked(slide)">{{ slide }}</div>
+        <div class="carousel__item" @click="liveAuctionClicked(slide)">
+          {{ slide }}
+        </div>
       </Slide>
     </Carousel>
 
@@ -20,7 +22,7 @@
       ref="carousel"
     >
       <Slide v-for="slide in 10" :key="slide">
-        <div class="carousel__item" @click="slideTo(slide - 1)" >
+        <div class="carousel__item" @click="slideTo(slide - 1)">
           {{ slide }}
         </div>
       </Slide>
@@ -111,7 +113,6 @@ import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
 import router from "@/router";
 
-
 const currentSlide = ref<Number>(0);
 
 const slideTo = (val: any) => {
@@ -122,38 +123,36 @@ const blindAuctionClicked = (args: any) => {
   console.log("Hello");
   console.log(args);
   let queryURL = {
-      itemId: "1",
-      auctionId: "1",
-      userId: "3",
-      auctionType: "blind",
-    };
-    router.push({ path: "/make-blind-auction", query: queryURL });
+    itemId: "1",
+    auctionId: "1",
+    userId: "3",
+    auctionType: "blind",
+  };
+  router.push({ path: "/make-blind-auction", query: queryURL });
 };
-
 
 const simpleSellClicked = (args: any) => {
   console.log("Hello");
   console.log(args);
   let queryURL = {
-      itemId: "1",
-      auctionId: "1",
-      userId: "3",
-      auctionType: "blind",
-    };
-    router.push({ path: "/make-sell", query: queryURL });
+    itemId: "1",
+    auctionId: "1",
+    userId: "3",
+    auctionType: "simple",
+  };
+  router.push({ path: "/make-sell", query: queryURL });
 };
-
 
 const liveAuctionClicked = (args: any) => {
   console.log("Hello");
   console.log(args);
   let queryURL = {
-      itemId: "1",
-      auctionId: "1",
-      userId: "3",
-      auctionType: "blind",
-    };
-    router.push({ path: "/make-bid", query: queryURL });
+    itemId: "1",
+    auctionId: "1",
+    userId: "3",
+    auctionType: "blind",
+  };
+  router.push({ path: "/make-bid", query: queryURL });
 };
 
 // let auctionDetails = reactive<IPostBidDetails>({
