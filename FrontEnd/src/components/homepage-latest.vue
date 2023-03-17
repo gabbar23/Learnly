@@ -1,7 +1,7 @@
 <template>
   <loader v-if="isLoading"></loader>
   <template v-else>
-    <Carousel
+    <!-- <Carousel
       id="gallery"
       :items-to-show="1"
       :wrap-around="false"
@@ -25,6 +25,43 @@
         <div class="carousel__item" @click="slideTo(slide - 1)">
           {{ slide }}
         </div>
+      </Slide>
+    </Carousel> -->
+    <!-- <h3>{{ liveAuctionDetails[0].imageDetails.length }}</h3> -->
+    <Carousel
+      id="gallery"
+      :items-to-show="1"
+      :wrap-around="false"
+      v-model="currentSlide"
+    >
+      <Slide
+        v-for="(item, index) in liveAuctionDetails[0].imageDetails"
+        :key="index"
+      >
+        <img
+          :src="item.imgUrl"
+          class="carousel__item item_size"
+          @click="blindAuctionClicked(item)"
+        />
+      </Slide>
+    </Carousel>
+
+    <Carousel
+      id="thumbnails"
+      :items-to-show="4"
+      :wrap-around="true"
+      v-model="currentSlide"
+      ref="carousel"
+    >
+      <Slide
+        v-for="(item, index) in liveAuctionDetails[0].imageDetails"
+        :key="index"
+      >
+        <img
+          :src="item.imgUrl"
+          class="carousel__item item_size"
+          @click="slideTo(index - 1)"
+        />
       </Slide>
     </Carousel>
     <h3>Blind Bid</h3>
@@ -102,7 +139,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Carousel, Slide } from "vue3-carousel";
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import type {
   IPostBidDetails,
   IGetAuctionItemDetails,
@@ -238,37 +275,37 @@ const simpleSellAuctionDetails = ref<IGeneralAuctionDetails>({
     },
   ],
 });
-const liveAuctionDetails = ref<IGeneralAuctionDetails>({
-  auctionId: 5,
-  auctionType: "live",
-  imageDetails: [
-    {
-      imgDescription: "image",
-      imgId: 1,
-      imgName: "WER",
-      imgUrl:
-        "https://imgs.search.brave.com/dFgEyDwggmFd5VkqXJwjQWeLtNK7tyQfX3CnZy8s2Tw/rs:fit:1200:1000:1/g:ce/aHR0cHM6Ly9nZWF1/Y3Rpb24uY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE4LzA3/LzUtQXVjdGlvbi1U/aXBzLWZvci1CZWdp/bm5lcnMyLmpwZw",
-    },
-    {
-      imgDescription: "image",
-      imgId: 2,
-      imgName: "WER",
-      imgUrl:
-        "https://imgs.search.brave.com/YtDzxgSycFJwydh6HmTzyQPoQHkO7x07Mt1nqvjU1a8/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93ZWFy/ZXJvYXN0LmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMjAxNy8w/OC9zaHV0dGVyc3Rv/Y2tfNjkxNjk4MDE5/LmpwZw",
-    },
-    {
-      imgDescription: "image",
-      imgId: 3,
-      imgName: "WER",
-      imgUrl:
-        "https://bidforgood.s3.ca-central-1.amazonaws.com/Screenshot%202023-03-11%20at%2012.02.34%20AM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA4C5UR2PMKV2ZI2EO%2F20230316%2Fca-central-1%2Fs3%2Faws4_request&X-Amz-Date=20230316T025203Z&X-Amz-Expires=604800&X-Amz-Signature=8a841d72eb3106837585d26c2ffb6d2bfbe8cc5a3df030bcdbb67c453c856412&X-Amz-SignedHeaders=host&x-id=GetObject",
-    },
-  ],
-  itemId: 5,
-  itemName: "Flower",
-});
-const isLoading = ref<boolean>(false);
-
+// const liveAuctionDetails = ref<IGeneralAuctionDetails>({
+//   auctionId: 5,
+//   auctionType: "live",
+//   imageDetails: [
+//     {
+//       imgDescription: "image",
+//       imgId: 1,
+//       imgName: "WER",
+//       imgUrl:
+//         "https://imgs.search.brave.com/dFgEyDwggmFd5VkqXJwjQWeLtNK7tyQfX3CnZy8s2Tw/rs:fit:1200:1000:1/g:ce/aHR0cHM6Ly9nZWF1/Y3Rpb24uY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDE4LzA3/LzUtQXVjdGlvbi1U/aXBzLWZvci1CZWdp/bm5lcnMyLmpwZw",
+//     },
+//     {
+//       imgDescription: "image",
+//       imgId: 2,
+//       imgName: "WER",
+//       imgUrl:
+//         "https://imgs.search.brave.com/YtDzxgSycFJwydh6HmTzyQPoQHkO7x07Mt1nqvjU1a8/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93ZWFy/ZXJvYXN0LmNvbS93/cC1jb250ZW50L3Vw/bG9hZHMvMjAxNy8w/OC9zaHV0dGVyc3Rv/Y2tfNjkxNjk4MDE5/LmpwZw",
+//     },
+//     {
+//       imgDescription: "image",
+//       imgId: 3,
+//       imgName: "WER",
+//       imgUrl:
+//         "https://bidforgood.s3.ca-central-1.amazonaws.com/Screenshot%202023-03-11%20at%2012.02.34%20AM.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIA4C5UR2PMKV2ZI2EO%2F20230316%2Fca-central-1%2Fs3%2Faws4_request&X-Amz-Date=20230316T025203Z&X-Amz-Expires=604800&X-Amz-Signature=8a841d72eb3106837585d26c2ffb6d2bfbe8cc5a3df030bcdbb67c453c856412&X-Amz-SignedHeaders=host&x-id=GetObject",
+//     },
+//   ],
+//   itemId: 5,
+//   itemName: "Flower",
+// });
+const isLoading = ref<boolean>(true);
+const liveAuctionDetails = ref<IGeneralAuctionDetails[]>([]);
 onMounted(async () => {
   try {
     isLoading.value = true;
@@ -287,11 +324,11 @@ onMounted(async () => {
     // simpleSellAuctionDetails.value = allAuctionDetails.filter(
     //   (auction) => auction.auctionType == null
     // );
-    // liveAuctionDetails.value = allAuctionDetails.filter(
-    //   (auction) => auction.auctionType == "live"
-    // );
-    console.log(blindAuctionDetails.value);
-    console.log(simpleSellAuctionDetails.value);
+    liveAuctionDetails.value = allAuctionDetails.filter(
+      (auction) => auction.auctionType == "live"
+    );
+    // console.log(blindAuctionDetails.value);
+    // console.log(simpleSellAuctionDetails.value);
     console.log(liveAuctionDetails.value);
   } catch (e) {
     console.log("Error occured");
