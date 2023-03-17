@@ -72,4 +72,5 @@ export interface IGeneralAuctionDetails {
   auctionType: string;
   itemId: Number | null;
   itemName: string;
+  imgUrl: string;
 }
