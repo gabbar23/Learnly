@@ -5,6 +5,8 @@ import { Auction } from "../../models/aunctionModel";
 import { ImageDetailModel } from "../../models/imageDetails";
 import { Item } from "../../models/itemModel";
 import { userBidDetailsModel } from "../../models/userBidDetails";
+import { QueryTypes } from "sequelize";
+import { sequelize } from "../../util/database";
 // import { Socket,Server } from "socket.io";
 
 const makeBid = (req: Request, res: Response) => {
@@ -32,6 +34,8 @@ const getAuctionDetails = async (req: Request, res: Response) => {
 
 const getAuctionItemDetails = async (req: Request, res: Response) => {
   try {
+    const userCount = await checkForUser(req, res);
+    
     await Item.findOne({
       where: {
         itemId: req.body.itemId,
@@ -40,13 +44,46 @@ const getAuctionItemDetails = async (req: Request, res: Response) => {
         model:ImageDetailModel
       }]
     }).then((result) => {
-      res.status(200).json(result);
+      res.status(200).json({
+        item: result,
+        userCount: userCount // add the userCount to the response object
+      });
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+interface CountResult {
+  'COUNT(userId)': number;
+}
+
+const checkForUser = async (req: Request, res: Response) => {
+  var userId = req.body.userId;
+  var auctionId = req.body.auctionId;
+  var itemId = req.body.itemId;
+  try {
+    const results: CountResult[] = await sequelize.query(
+      `
+      select count(userId) as "COUNT(userId)" from userBidDetails 
+      where itemId = ` + itemId + ` and auctionId = ` + auctionId + ` and userId = ` + userId + `;
+      `,
+      {
+        type: QueryTypes.SELECT,
+      }
+    );
+    const count = results[0]['COUNT(userId)'];
+    console.log("No of users", count);
+    return count;
+    
   } catch (error) {
     // console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
 
 const getImages =async (req:Request, res: Response) => {
   
@@ -125,6 +162,7 @@ export default {
   validateAmount,
   findMaxBidAmount,
   findMyBidAmount,
+  checkForUser
 };
 
 

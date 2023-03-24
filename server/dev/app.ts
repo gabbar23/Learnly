@@ -10,6 +10,7 @@ import { fetch } from "./routes/formRoutes";
 import { bidRoutes } from "./routes/bidRoutes";
 import { orderRoutes } from "./routes/orderRoutes";
 import { auctionRoutes } from "./routes/auctionRoutes/auctionRoutes";
+import { reportRoutes } from "./routes/reportRoutes";
 // import { Socket,Server } from "socket.io";
 
 // import { sellerModel } from "./models/sellerModel";
@@ -147,6 +148,7 @@ app.use("/api/fetch", fetch);
 app.use("/api/bid", bidRoutes);
 app.use("/api/v1/sell", orderRoutes);
 app.use("/api/auction/", auctionRoutes);
+app.use("/api/report/", reportRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });

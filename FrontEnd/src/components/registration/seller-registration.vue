@@ -1,14 +1,16 @@
 <template>
-  <div id="app">
-    <div id="login2">
-      <div id="form2">
-        <FormKit
-          type="form"
-          @submit="sellerRegister"
-          @submit-invalid="InvalidSignup"
-          enctype="multipart/form-data"
-        >
-          <section class="container parent_sect">
+  <FormKit
+    type="form"
+    :actions="false"
+    @submit="sellerRegister"
+    @submit-invalid="InvalidSignup"
+    enctype="multipart/form-data"
+  >
+    <div class="card mb-3 w-100 wid">
+      <div class="card-body">
+        <h5 class="card-title">Registration</h5>
+        <div class="row">
+          <div class="col-md-6">
             <FormKit
               type="text"
               label="First Name"
@@ -34,13 +36,24 @@
               validation-visibility="dirty"
             />
 
-       <FormKit type="date" 
-       label="Date of birth"  
-       style="color: black;"
-       validation="required"
-        />     
+            <FormKit
+              type="date"
+              label="Date of birth"
+              style="color: black"
+              validation="required"
+            />
+            <FormKit
+              id="fileUpload"
+              name="idproof"
+              type="file"
+              label="Photo of Government ID"
+              accept=".jpg,.jpeg,.png"
+              help="Upload a goverment approved ID such as Driving License or Passport. 
+              Only .pdf,.jpg,.jpeg,.png files allowed"
+            />
+          </div>
 
-
+          <div class="col-md-6">
             <FormKit
               type="text"
               label="Address"
@@ -75,45 +88,26 @@
               help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
               :validation="[
                 ['required'],
-                [
-                  'matches',
-
-                  /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i
-                ],
+                ['matches', /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i],
               ]"
               v-model="userDetails.postalCode"
               style="color: black"
             />
-
-            <FormKit
-              id="fileUpload"
-              name="idproof"
-              type="file"
-              label="Photo of Government ID"
-              accept=".jpg,.jpeg,.png"
-              help="Upload a goverment approved ID such as Driving License or Passport. 
-        Only .pdf,.jpg,.jpeg,.png files allowed"
-            />
-
-            <!-- <FormKit
-        type="textarea"
-        label="Description"
-        v-model="userDetails.description"
-      /> -->
-
-            <br />
+          </div>
+          <hr class="hr hr-blurry" />
+          <h5 class="card-title">User Credentials</h5>
+          <div class="col-md-6">
             <FormKit
               type="email"
               label="Email"
+              placeholder="Email"
               v-model="userDetails.email"
               @blur="checkUserExists(userDetails.email)"
               validation="required|email"
-              style="color: black"
             />
             <div class="error" v-if="isUserAlreadyRegistered">
               User Already Registered.
             </div>
-            <br />
 
             <FormKit
               type="password"
@@ -122,81 +116,57 @@
               label="Password"
               placeholder="Password"
               v-model="userDetails.password"
-              style="color: black"
             />
+          </div>
 
+          <div class="col-md-6">
             <FormKit
               type="password"
               name="password_confirm"
               validation="required|confirm"
               label="Confirm Password"
               placeholder="Re-Enter Password"
-              style="color: black"
             />
 
             <FormKit
               type="checkbox"
-              label="Terms and Conditions"
-              help="Do you agree to our terms of service?"
-              name="terms"
-              validation="accepted"
-              :value="false"
-              v-model="userDetails.termsCondition"
-              @input="ImageUpload"
-            />
-            <FormKit
-              type="checkbox"
               label="Register as Buyer/Seller or Both"
               name="terms"
-              :options="['buyer', 'seller']"
+              :options="['Buyer', 'Seller']"
               validation="required"
               v-model="buyerSeller"
               @input="
                 checkIsBuyerIsSeller(userDetails.isSeller, userDetails.isBuyer)
               "
             />
-          </section>
-        </FormKit>
-      </div>
-    </div>
-    <section>
-      <div id="app2">
-        <div id="form">
-          <FormKit type="button" :ignore="false" @click="login()">
-            Already have an account? Sign In!
-          </FormKit>
-          <!--    <h1 class="align_center">OR</h1>
-        <FormKit type="button" :ignore="false" @click="buyerPage()">
-          Register as Buyer
-        </FormKit>  -->
+          </div>
+          <FormKit
+            type="checkbox"
+            label="Terms and Conditions"
+            help="Do you agree to our terms of service?"
+            name="terms"
+            validation="accepted"
+            :value="false"
+            v-model="userDetails.termsCondition"
+          />
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary">Submit</button>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </FormKit>
 </template>
 
 <script lang="ts" setup>
-import { validation } from "@/constants";
 import type {
-  IGetStateDetails,
   IGetUserDetails,
   ISelectResponse,
 } from "@/interfaces/seller-registration";
 import router from "@/router";
 import AuthService from "@/services/AuthService";
-import type { error, FormKitProps, register } from "@formkit/core";
-import { fa, tr } from "@formkit/i18n";
-import { email, label, options, selectInput, submit } from "@formkit/inputs";
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
-import { RouterLink } from "vue-router";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -229,9 +199,9 @@ const { notify } = useNotification();
 
 let buyerSeller = ["", ""];
 const isUserAlreadyRegistered = ref<boolean>(false);
+
 onMounted(async () => {
   try {
-    
     let response = await AuthService.getStates();
     states.value = [];
     console.log(states);
@@ -247,25 +217,14 @@ onMounted(async () => {
     console.error("Error in fetching states", e);
   }
 });
-const InvalidSignup=()=>{
+
+const InvalidSignup = () => {
   notify({
-      title: "Failure!",
-      text: "Registration Failed! Please Contact Help Desk.",
-      type: "error",
-    });
+    title: "Failure!",
+    text: "Registration Failed! Please Contact Help Desk.",
+    type: "error",
+  });
 };
-
-const login = () => {
-  router.push("/");
-};
-/*const buyerPage = () => {
-  router.push("/buyer-details");
-};
-*/
-const ImageUpload=async()=>{
-
-};
-
 
 const sellerRegister = async (data: any) => {
   console.log(data);
@@ -276,14 +235,6 @@ const sellerRegister = async (data: any) => {
     body.append("image", fileItem.file);
   });
 
-/*  for (const value of body.values()) {
-    console.error(value);
-  }
-
-  for (var key of body.entries()) {
-    console.log(key[0] + ", " + key[1]);
-  } */
-  
   const headerConfig = {
     headers: {
       "content-type": "multipart/form-data",
@@ -291,20 +242,17 @@ const sellerRegister = async (data: any) => {
   };
 
   try {
-    
-    let uploadImageData=await (await AuthService.uploadImage(body, headerConfig)).data
-  //console.log(uploadImageData.url)
-  userDetails.govtIdUrl = uploadImageData.url;
-  
- // console.warn(body);
-  //console.warn(userDetails.govtIdUrl);
+    let uploadImageData = await (
+      await AuthService.uploadImage(body, headerConfig)
+    ).data;
+    userDetails.govtIdUrl = uploadImageData.url;
     await AuthService.register(userDetails);
     notify({
       title: "Success!",
       text: "User Logged In Successfully! Wait for Admins approval",
       type: "success",
     });
-    
+
     router.push("/");
   } catch (e) {
     notify({
@@ -315,20 +263,16 @@ const sellerRegister = async (data: any) => {
   }
 };
 
-
 const checkUserExists = async (email: string) => {
-  //console.warn("User Exists", email);
   try {
-    await AuthService.checkUserExist(email) 
+    await AuthService.checkUserExist(email)
       .then((res) => {
-      // console.warn(res);
         isUserAlreadyRegistered.value = res.data.isUserAlreadyPresent;
       })
       .catch((err) => {
         console.error(err);
         isUserAlreadyRegistered.value = false;
       });
-    //console.log("TEst");
   } catch {
     console.error("Error in checking user existence");
   }
@@ -351,154 +295,25 @@ const checkIsBuyerIsSeller = async (val: any, val2: any) => {
       userDetails.isBuyer = false;
     }
   }
-  //console.log(buyerSeller)
-  //console.log(userDetails.isBuyer)
-  //console.log(userDetails.isSeller)
 };
 
 const triggerChange = async (val: string) => {
-//  console.warn(val);
   cities.value = [];
   try {
     let response = await AuthService.getCities(val);
-    //  console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
         label: response.data[i].city,
         value: response.data[i].city,
       });
     }
- //  console.log(cityOptions);
   } catch (e) {
     console.error("Error in pulling cities");
   }
 };
 </script>
-<style>
-* {
-  box-sizing: border-box;
-  font-family: Verdana, sans-serif;
-}
-
-#app,
-#app2 {
-  width: 100%;
-  height: 100%;
-  background-color: #eadfdf;
-}
-
-#app2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #eadfdf;
-}
-
-#app #login2,
-#app #login2 #form2 {
-  width: auto;
-  height: auto;
-  background-color: #eadfdf;
-}
-
-#app #login2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#app #login2 #form2 {
-  width: 1000px;
-  padding: 35px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 30px 0px #666;
-  color: black;
-  background-color: #eadfdf;
-}
-
-#app2 #form {
-  width: 260px;
-  padding: 35px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 30px 0px #666;
-  color: black;
-  justify-content: flex-end;
-  background-color: #34495e;
-}
-
-#app2 #form label {
-  color: black;
-  font-size: 0.8em;
-}
-
-#app #login2 #form2 label,
-#app #login2 #form2 input {
-  outline: none;
-  width: 100%;
-  color: #000;
-}
-
-#app #login2 #form2 label {
-  color: black;
-  font-size: 0.8em;
-}
-
-#app #login2 #form2 input {
-  background-color: transparent;
-  border: none;
-  color: transparent;
-  font-size: 1em;
-  margin-bottom: 15px;
-}
-
-#app #login2 #form2 form::placeholder,
-#app #login2 #form2 select {
-  color: black;
-  opacity: 1;
-}
-
-#app #login2 #form2 button,
-#app2 #form button {
-  background-color: whitesmoke;
-  color: #000;
-  cursor: pointer;
-  border: none;
-  padding: 15px;
-  transition: background-color 0.2s ease-in-out;
-  margin-left: 25px;
-  width: 75%;
-}
-
-#app #login2 #form2 button:hover,
-#app2 #form button:hover {
-  color: #ecf0f1;
-  background-color: #381e1e;
-}
-
-@media screen and (max-width: 600px) {
-  #app #login2 {
-    align-items: unset;
-    background-color: #eadfdf;
-    display: unset;
-    justify-content: unset;
-  }
-
-  #app #login2 #form2 {
-    border-radius: unset;
-    box-shadow: unset;
-    width: 100%;
-    color: black;
-  }
-
-  #app #login2 #form2 form {
-    margin: 0 auto;
-    max-width: min-content;
-    width: 100%;
-  }
-
-  .parent_sect {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
+<style scoped>
+.wid {
+  max-width: 900px;
 }
 </style>

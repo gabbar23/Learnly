@@ -71,14 +71,23 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   startPrice: 0,
   updatedAt: "",
   user_id: 0,
+  bidAmount: null,
 });
+const details = localStorage.getItem("userDetails");
+  const { userId } = JSON.parse(details);
 
 onMounted(async () => {
-  const { itemId } = route.query;
+  const { itemId, auctionId, auctionType } = route.query;
   try {
     isLoading.value = true;
-    const response = await auctionService.getItemDetails(11);
-    sellItemDetail = response.data;
+    const requestPayload = {
+      itemId,
+      auctionId,
+      auctionType,
+      userId,
+    };
+    const response = await auctionService.getNewItemDetails(requestPayload);
+    sellItemDetail = response.data.item;
     // await auctionService.getAuctionDetails(11);
   } catch (e) {
     console.log(e);
@@ -92,8 +101,7 @@ const bindClick = (args: any) => {
 };
 
 const makePayment = () => {
-  const details = localStorage.getItem("userDetails");
-  const { userId } = JSON.parse(details);
+ 
   // console.log();
   router.push({
     path: "/add-card",

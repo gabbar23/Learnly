@@ -9,7 +9,12 @@
         </p>
       </div>
       <div id="form">
-        <FormKit type="form" @submit="onSubmit" class="parent_sect" @submit-invalid="loginError">
+        <FormKit
+          type="form"
+          @submit="onSubmit"
+          class="parent_sect"
+          @submit-invalid="loginError"
+        >
           <FormKit
             type="text"
             name="email"
@@ -52,30 +57,29 @@ let loginDetails = reactive<ILoginDetails>({
 });
 const { notify } = useNotification();
 
-if(localStorage.getItem("sessionId")){
+if (localStorage.getItem("sessionId")) {
   //router.push('/homepage');
 }
 
-const loginError=async()=>{
+const loginError = async () => {
   notify({
     title: "Fail!",
     text: "Invalid Credentials!",
     type: "fail",
   });
-}
+};
 const onSubmit = async () => {
   try {
     const response = await AuthService.checkLogin(loginDetails);
     notify({
-    title: "Successfull!",
-    text: "Your Login was successful!!",
-    type: "success",
-  });
+      title: "Successfull!",
+      text: "Your Login was successful!!",
+      type: "success",
+    });
     const userDetails = JSON.stringify(response.data.message);
     console.log(userDetails);
     localStorage.setItem("userDetails", userDetails);
     router.push("/home"); // This needs to be updated
-
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");
     notify({
@@ -212,7 +216,10 @@ div#app div#login div#form button:hover {
 import router from "@/router";
 import { errorHandler, FormKit } from "@formkit/vue";
 import { defineComponent } from "vue";
-import type { ILoggedInUserDetails, ILoginDetails } from "@/interfaces/bid-for-good";
+import type {
+  ILoggedInUserDetails,
+  ILoginDetails,
+} from "@/interfaces/bid-for-good";
 export default defineComponent({
   methods: {
     route() {

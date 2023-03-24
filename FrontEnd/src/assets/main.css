@@ -1,11 +1,18 @@
 /* @import './base.css'; */
 
+
+* {
+  box-sizing: border-box;
+  font-family: Verdana, sans-serif;
+}
+
 #app {
   margin: 0 auto;
   padding: 1rem;
-  background-color:#eadfdf;
+  background-color: #ffffff;
   font-weight: normal;
 }
+
 /* 
 a,
 .green {
