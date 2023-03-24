@@ -39,7 +39,7 @@ import { def } from "@vue/shared";
 
   </script>
   
-  <style>
+  <style scoped>
   * {
     box-sizing: border-box;
     font-family: Verdana, sans-serif;

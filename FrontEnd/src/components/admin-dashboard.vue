@@ -130,7 +130,7 @@ const decline = async (seller: IVerfiedSeller) => {
   await getRegisteredSellers();
 };
 </script>
-<style>
+<style scoped>
 .parent_sect {
   display: grid;
   grid-template-columns: 1fr 1fr;
