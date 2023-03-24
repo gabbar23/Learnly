@@ -150,7 +150,7 @@ export default defineComponent({
   },
 });
 </script>
-<style>
+<style scoped>
 
 
 .side-bar > div {

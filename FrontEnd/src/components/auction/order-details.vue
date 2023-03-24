@@ -45,7 +45,7 @@ onMounted(async () => {
   }
 });
 </script>
-<style>
+<style scoped>
 .side-bar > div {
   cursor: pointer;
   border: 1px solid;
