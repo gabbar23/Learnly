@@ -103,6 +103,21 @@ const router = createRouter({
       name: "congratulations",
       component: () => import("../components/misc pages/congratulations.vue"),
     },
+    {
+      path: "/nav-bar",
+      name: "nav",
+      component: () => import("../components/navigation-bar.vue"),
+    },
+    {
+      path: "/filter",
+      name: "auctionFilter",
+      component: () => import("../components/auction-filter.vue"),
+    },
+    {
+      path:"/timer",
+      name:"timer",
+      component: () => import("../components/auction/auction-timer.vue"),
+    },
   ],
 });
 
