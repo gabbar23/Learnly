@@ -3,7 +3,7 @@
   <div class="main-section w-50 mx-auto m-2">
     <loader v-if="isLoading"></loader>
     <template v-else>
-      <h3>Blind Auction</h3>
+      <h3 class="text-center mb-5">Blind Auction</h3>
       <Carousel>
         <template v-if="sellItemDetail.imageDetails.length > 0">
           <Slide
@@ -29,17 +29,31 @@
         <div>
           <div class="details">
             <div class="row p-3">
-              <div class="col-2">Name:</div>
-              <div class="col-10">{{ sellItemDetail.itemName }}</div>
+              <div class="col-4 p-2 font-weight-bold">Name:</div>
+              <div class="col-8 p-2">{{ sellItemDetail.itemName }}</div>
               <div class="w-100"></div>
-              <div class="col-2">Description:</div>
-              <div class="col-10">{{ sellItemDetail.itemDes }}</div>
+              <div class="col-4 p-2 font-weight-bold">Description:</div>
+              <div class="col-8 p-2">{{ sellItemDetail.itemDes }}</div>
+              <div class="col-4 p-2 font-weight-bold">Date Posted:</div>
+              <div class="col-8 p-2">{{ sellItemDetail.createdAt }}</div>
+              <div class="col-4 p-2 font-weight-bold">Time Posted:</div>
+              <div class="col-8 p-2">{{ sellItemDetail.createdTime }}</div>
+              <div class="col-4 p-2 font-weight-bold">Start Price:</div>
+              <div class="col-8 p-2 text-wrap">
+                {{
+                  sellItemDetail.startPrice > 0
+                    ? sellItemDetail.startPrice + "$"
+                    : "N/A"
+                }}
+              </div>
+              <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
+              <div class="col-8 p-2">
+                <FormKit type="text" v-model="sellItemDetail.bidAmount" />
+              </div>
             </div>
-            <div class="d-flex">
-              <div class="mr-4">Make Bid</div>
-              <FormKit type="text" v-model="sellItemDetail.bidAmount" />
+            <div class="text-center">
               <button
-                class="btn btn-danger ml-5"
+                class="btn btn-danger"
                 @click="makePayment"
                 :disabled="isBidAlreadyMade"
               >
@@ -57,16 +71,13 @@
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from "vue";
 import "vue3-carousel/dist/carousel.css";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import auctionService from "@/services/auctionService";
 import { useRoute } from "vue-router";
-import type {
-  IBlindAuctionQueryPayload,
-  IGetAuctionItemDetails,
-} from "@/interfaces/auction";
+import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Loader } from "../component";
 import { useNotification } from "@kyvg/vue3-notification";
+import { getDate, getTime } from "@/utility";
 
 const { notify } = useNotification();
 const route = useRoute();
@@ -82,13 +93,9 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   updatedAt: "",
   user_id: 0,
   bidAmount: null,
+  createdTime: "",
 });
 const isBidAlreadyMade = ref<boolean>(true);
-// let routePayload = reactive<IBlindAuctionQueryPayload>({
-//   itemId: "",
-//   auctionId: ""
-// });
-
 const itemId = ref<string>("");
 const auctionId = ref<string>("");
 const details = localStorage.getItem("userDetails");
@@ -100,7 +107,6 @@ onMounted(async () => {
 
   try {
     isLoading.value = true;
-    // const response = await auctionService.getItemDetails(itemId.value);
     const requestPayload = {
       itemId: itemId.value,
       auctionId: auctionId.value,
@@ -112,7 +118,8 @@ onMounted(async () => {
     isBidAlreadyMade.value = response.data.userCount
       ? response.data.userCount > 0
       : false;
-    // await auctionService.getAuctionDetails(11);
+    sellItemDetail.createdAt = getDate(response.data.item.createdAt);
+    sellItemDetail.createdTime = getTime(response.data.item.createdAt);
   } catch (e) {
     console.log(e);
   } finally {
@@ -121,7 +128,6 @@ onMounted(async () => {
 });
 
 const makePayment = async () => {
-  // console.log();
   try {
     const requestPayload = {
       itemId: itemId.value,
@@ -129,7 +135,6 @@ const makePayment = async () => {
       auctionId: auctionId.value,
       userId: userId,
     };
-    console.log(requestPayload);
     await auctionService.makeBlindBid(requestPayload);
     notify({
       title: "Successfull!",
@@ -150,35 +155,39 @@ const bindClick = (args: any) => {
   console.log("Hello");
 };
 </script>
-
-<style>
+<style scoped>
 .main-section {
-  border: 1px solid;
-  width: 50vw;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
+
 .carousel__item {
-  min-height: 200px;
-  width: 100%;
-  background-color: green;
-  color: white;
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel__slide {
-  padding: 10px;
-}
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-}
-
-.item_size {
   height: 300px;
+  width: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ff4c4c;
+  color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+  color: #000000;
 }
 </style>
