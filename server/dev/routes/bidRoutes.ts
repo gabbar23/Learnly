@@ -6,7 +6,7 @@ import fetchBidDetails from "../controllers/fetchBidDetails";
 import fetchImageDetails from "../controllers/fetchImageDetails";
 import fetchDetails from "../controllers/fetchDetails";
 import placeBidController from "../controllers/placeBid";
-
+import fetchTimer from "../controllers/fetchTimer";
 
 const router = express.Router();
 
@@ -18,5 +18,6 @@ router.get("/fetchBidDetails", fetchBidDetails.fetchBidDetails);
 router.get("/fetchImageDetails",fetchImageDetails.fetchImageDetails);
 router.get("/fetchDetails",fetchDetails.fetchDetails);
 router.post("/placeBid", placeBidController.placeBid);
+router.get("/fetchTimer",fetchTimer.fetchBidTime)
 
 export const bidRoutes = router;
