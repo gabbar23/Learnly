@@ -1,9 +1,8 @@
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
   <div class="main-section w-50 mx-auto m-2">
     <loader v-if="isLoading"></loader>
     <template v-else>
-      <h3>Simple Sell</h3>
+      <h3 class="text-center mb-5">Simple Sell</h3>
       <Carousel>
         <template v-if="sellItemDetail.imageDetails.length > 0">
           <Slide
@@ -29,14 +28,23 @@
           <Pagination />
         </template>
       </Carousel>
-      <div>
-        <div class="row p-3">
-          <div class="col-2">Name:</div>
-          <div class="col-10">{{ sellItemDetail.itemName }}</div>
-          <div class="w-100"></div>
-          <div class="col-2">Description:</div>
-          <div class="col-10">{{ sellItemDetail.itemDes }}</div>
+
+      <div class="row p-3 mt-5">
+        <div class="col-4 font-weight-bold">Name:</div>
+        <div class="col-8">{{ sellItemDetail.itemName }}</div>
+        <div class="col-4 font-weight-bold">Price:</div>
+        <div class="col-8">
+          {{
+            sellItemDetail.startPrice > 0
+              ? sellItemDetail.startPrice + `$`
+              : "N/A"
+          }}
         </div>
+        <div class="w-100"></div>
+        <div class="col-4 font-weight-bold">Description:</div>
+        <div class="col-8 text-wrap">{{ sellItemDetail.itemDes }}</div>
+      </div>
+      <div class="text-center mt-5">
         <button
           class="btn btn-danger"
           @click="makePayment"
@@ -74,7 +82,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
 });
 const details = localStorage.getItem("userDetails");
-  const { userId } = JSON.parse(details);
+const { userId } = JSON.parse(details);
 
 onMounted(async () => {
   const { itemId, auctionId, auctionType } = route.query;
@@ -88,7 +96,6 @@ onMounted(async () => {
     };
     const response = await auctionService.getNewItemDetails(requestPayload);
     sellItemDetail = response.data.item;
-    // await auctionService.getAuctionDetails(11);
   } catch (e) {
     console.log(e);
   } finally {
@@ -101,8 +108,6 @@ const bindClick = (args: any) => {
 };
 
 const makePayment = () => {
- 
-  // console.log();
   router.push({
     path: "/add-card",
     query: {
@@ -113,35 +118,39 @@ const makePayment = () => {
   });
 };
 </script>
-
-<style>
+<style scoped>
 .main-section {
-  border: 1px solid;
-  width: 50vw;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
+
 .carousel__item {
-  min-height: 200px;
-  width: 100%;
-  background-color: green;
-  color: white;
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel__slide {
-  padding: 10px;
-}
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-}
-
-.item_size {
   height: 300px;
+  width: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ff4c4c;
+  color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+  color: #000000;
 }
 </style>
