@@ -36,6 +36,7 @@ export interface IGetAuctionItemDetails {
   updatedAt: string;
   user_id: Number;
   bidAmount?: Number | null;
+  createdTime ?: string;
 }
 export interface IGetAuctionItemsDetails {
   itemID: number;

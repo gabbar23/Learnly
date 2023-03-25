@@ -30,10 +30,10 @@
       </Carousel>
 
       <div class="row p-3 mt-5">
-        <div class="col-4 font-weight-bold">Name:</div>
-        <div class="col-8">{{ sellItemDetail.itemName }}</div>
-        <div class="col-4 font-weight-bold">Price:</div>
-        <div class="col-8">
+        <div class="col-4 p-2 font-weight-bold">Name:</div>
+        <div class="col-8 p-2">{{ sellItemDetail.itemName }}</div>
+        <div class="col-4 p-2 font-weight-bold">Price:</div>
+        <div class="col-8 p-2">
           {{
             sellItemDetail.startPrice > 0
               ? sellItemDetail.startPrice + `$`
@@ -41,8 +41,8 @@
           }}
         </div>
         <div class="w-100"></div>
-        <div class="col-4 font-weight-bold">Description:</div>
-        <div class="col-8 text-wrap">{{ sellItemDetail.itemDes }}</div>
+        <div class="col-4 p-2 font-weight-bold">Description:</div>
+        <div class="col-8 p-2 text-wrap">{{ sellItemDetail.itemDes }}</div>
       </div>
       <div class="text-center mt-5">
         <button
