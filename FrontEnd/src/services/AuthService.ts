@@ -1,6 +1,9 @@
 import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { IPostBidDetails } from "@/interfaces/auction";
-import type { ILoginDetails, ILogOutRequestPayload } from "@/interfaces/bid-for-good";
+import type {
+  ILoginDetails,
+  ILogOutRequestPayload,
+} from "@/interfaces/bid-for-good";
 import type {
   IGetState,
   IGetUserDetails,
@@ -65,5 +68,13 @@ export default {
 
   logOut(sessionId: ILogOutRequestPayload) {
     return apiClient.post("api/v1/register/logoutUser", sessionId);
+  },
+
+  getCurrentUserDetails(userId: string) {
+    return apiClient.get("api/v1/register/userDetails?user=" + userId);
+  },
+
+  updateCurrentUserDetails(payload: any) {
+    return apiClient.put("api/v1/register/userDetails", payload);
   },
 };

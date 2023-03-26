@@ -13,5 +13,7 @@ router.post("/checkLoginCredentials", registerCont.checkLoginCredentials);
 router.post("/logoutUser", registerCont.logoutUser);
 router.get("/verifiedSellers", adminController.getVerfiedSellers);
 router.put("/markAsVerified", adminController.markAsVerifiedSeller);
+router.get("/userDetails", registerCont.getCurrentUserDetails);
+router.put("/userDetails", registerCont.updateUserDetails);
 
 export const registerRoutes = router;
