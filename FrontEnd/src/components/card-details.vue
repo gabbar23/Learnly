@@ -12,7 +12,7 @@
         <div class="col-12">
           <div class="d-flex flex-column">
             <p class="text mb-1">Card Number</p>
-            <FormKit type="text" placeholder="1234 5678 435678" />
+            <FormKit type="text"  placeholder="1234 5678 4356 7898" />
           </div>
         </div>
         <div class="col-6">
@@ -199,5 +199,9 @@ p {
 ::placeholder {
   font-size: 14px;
   font-weight: 600;
+}
+
+.formkit-wrapper, .formkit-fieldset {
+    max-width: none !important;
 }
 </style>
