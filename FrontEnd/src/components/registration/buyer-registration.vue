@@ -6,28 +6,41 @@
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" href="#">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer' }"
+                href="javascript:void"
+              >
                 <router-link to="/buyer">Details</router-link>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer/orders' }"
+                href="javascript:void"
+              >
                 <router-link to="/buyer/orders">Orders</router-link>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer/report-issue' }"
+                href="javascript:void"
+              >
                 <router-link to="/buyer/report-issue"
                   >Report an Issue</router-link
                 >
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
+            <!-- <li class="nav-item">
+              <a class="nav-link"  :class="{ active: currentRoute.path == '/buyer' }"
+                href="javascript:void">
                 <i class="fas fa-cog"></i>
                 Settings
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </nav>
@@ -39,6 +52,12 @@
   </div>
 </template>
 <script lang="ts" setup>
+import router from "@/router";
+import { computed } from "vue";
+
+const currentRoute = computed(() => {
+  return router.currentRoute.value;
+});
 </script>
 <style>
 /* Sidebar */
@@ -84,11 +103,6 @@
   font-size: 0.75rem;
   text-transform: uppercase;
 }
-
-/* Main content */
-/* [role="main"] {
-  padding-top: 48px; 
-} */
 
 /* Navbar */
 .navbar {
@@ -147,6 +161,11 @@
 .btn-group-vertical > .btn-group:focus > .btn,
 .btn-group-vertical > .btn-group:hover > .btn {
   z-index: 1;
+}
+
+.nav-link.active {
+  background-color: #b9eedc;
+  color: #fff;
 }
 
 /* Grid breakpoints */
