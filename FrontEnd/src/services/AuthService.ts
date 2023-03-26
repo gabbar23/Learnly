@@ -66,4 +66,8 @@ export default {
   logOut(sessionId: ILogOutRequestPayload) {
     return apiClient.post("api/v1/register/logoutUser", sessionId);
   },
+
+  getCurrentUserDetails(userId:string){
+    return apiClient.get("api/v1/register/userDetails?user="+ userId);
+  }
 };

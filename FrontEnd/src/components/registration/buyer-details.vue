@@ -1,127 +1,132 @@
 <template>
-  <FormKit
-    type="form"
-    :actions="false"
-    @submit="sellerRegister"
-    @submit-invalid="InvalidSignup"
-    enctype="multipart/form-data"
-  >
-    <div class="card mb-3 w-100 wid">
-      <div class="card-body">
-        <h5 class="card-title">Registration</h5>
-        <div class="row">
-          <div class="col-md-6">
-            <FormKit
-              type="text"
-              label="First Name"
-              v-model="userDetails.firstName"
-              style="color: black"
-              validation="required|alpha"
-            />
+  <loader v-if="isLoading"></loader>
+  <template v-else>
+    <FormKit
+      type="form"
+      :actions="false"
+      @submit="sellerRegister"
+      @submit-invalid="InvalidSignup"
+      enctype="multipart/form-data"
+    >
+      <div class="card mb-3 w-100 wid">
+        <div class="card-body">
+          <h5 class="card-title">Registration {{ userDetails.firstName }}</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <FormKit
+                type="text"
+                label="First Name"
+                v-model="userDetails.firstName"
+                style="color: black"
+                validation="required|alpha"
+              />
 
-            <FormKit
-              type="text"
-              label="Last Name"
-              v-model="userDetails.lastName"
-              style="color: black"
-              validation="required|alpha"
-            />
+              <FormKit
+                type="text"
+                label="Last Name"
+                v-model="userDetails.lastName"
+                style="color: black"
+                validation="required|alpha"
+              />
 
-            <FormKit
-              type="tel"
-              label="Phone Number"
-              v-model="userDetails.phone"
-              style="color: black"
-              validation="required|number|length:10,10"
-              validation-visibility="dirty"
-            />
+              <FormKit
+                type="tel"
+                label="Phone Number"
+                v-model="userDetails.phone"
+                style="color: black"
+                validation="required|number|length:10,10"
+                validation-visibility="dirty"
+              />
 
-            <FormKit
-              type="date"
-              label="Date of birth"
-              style="color: black"
-              validation="required"
-            />
+              <FormKit
+                type="date"
+                label="Date of birth"
+                style="color: black"
+                validation="required"
+                v-model="userDetails.dateOfBirth"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <FormKit
+                type="text"
+                label="Address"
+                v-model="userDetails.address"
+                style="color: black"
+                validation="required"
+              />
+
+              <FormKit
+                type="select"
+                label="State"
+                placeholder="Select a State"
+                :options="states"
+                v-model="userDetails.provinceName"
+                validation="required"
+                @change="triggerChange(userDetails.provinceName)"
+              >
+              </FormKit>
+
+              <FormKit
+                type="select"
+                label="City"
+                placeholder="Select City"
+                :options="cityOptions"
+                validation="required"
+                v-model="userDetails.cityName"
+              ></FormKit>
+
+              <FormKit
+                type="text"
+                label="Postal Zip Code"
+                help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
+                :validation="[
+                  ['required'],
+                  ['matches', /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i],
+                ]"
+                v-model="userDetails.postalCode"
+                style="color: black"
+              />
+            </div>
+            <hr class="hr hr-blurry" />
+            <h5 class="card-title">User Credentials</h5>
+            <div class="col-md-6">
+              <FormKit
+                type="email"
+                label="Email"
+                placeholder="Email"
+                v-model="userDetails.email"
+                disabled
+                help="Once Registered Can't be Changed"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <FormKit
+                type="checkbox"
+                label="Role"
+                name="terms"
+                :options="['Buyer', 'Seller']"
+                validation="required"
+                v-model="buyerSeller"
+                @input="
+                  checkIsBuyerIsSeller(
+                    userDetails.isSeller,
+                    userDetails.isBuyer
+                  )
+                "
+                help="Contact BidForGood"
+                disabled
+              />
+            </div>
           </div>
-
-          <div class="col-md-6">
-            <FormKit
-              type="text"
-              label="Address"
-              v-model="userDetails.address"
-              style="color: black"
-              validation="required"
-            />
-
-            <FormKit
-              type="select"
-              label="State"
-              placeholder="Select a State"
-              :options="states"
-              v-model="userDetails.provinceName"
-              validation="required"
-              @change="triggerChange(userDetails.provinceName)"
-            >
-            </FormKit>
-
-            <FormKit
-              type="select"
-              label="City"
-              placeholder="Select City"
-              :options="cityOptions"
-              validation="required"
-              v-model="userDetails.cityName"
-            ></FormKit>
-
-            <FormKit
-              type="text"
-              label="Postal Zip Code"
-              help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
-              :validation="[
-                ['required'],
-                ['matches', /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i],
-              ]"
-              v-model="userDetails.postalCode"
-              style="color: black"
-            />
+          <div class="text-center">
+            <button class="btn btn-primary">Submit</button>
           </div>
-          <hr class="hr hr-blurry" />
-          <h5 class="card-title">User Credentials</h5>
-          <div class="col-md-6">
-            <FormKit
-              type="email"
-              label="Email"
-              placeholder="Email"
-              v-model="userDetails.email"
-              disabled
-              help="Once Registered Can't be Changed"
-            />
-
-          </div>
-
-          <div class="col-md-6">
-            <FormKit
-              type="checkbox"
-              label="Register as Buyer/Seller or Both"
-              name="terms"
-              :options="['Buyer', 'Seller']"
-              validation="required"
-              v-model="buyerSeller"
-              @input="
-                checkIsBuyerIsSeller(userDetails.isSeller, userDetails.isBuyer)
-              "
-              help="Contact BidForGood"
-
-              disabled
-            />
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary">Submit</button>
         </div>
       </div>
-    </div>
-  </FormKit>
+    </FormKit>
+  </template>
 </template>
 
 <script lang="ts" setup>
@@ -133,6 +138,7 @@ import router from "@/router";
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import Loader from "../loader.vue";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -162,24 +168,45 @@ let userDetails = reactive<IGetUserDetails>({
   termsCondition: false,
 });
 const { notify } = useNotification();
+const isLoading = ref<boolean>(true);
 
-let buyerSeller = ["", ""];
+let buyerSeller = reactive<any>(["", ""]);
+const userDetailsObject = localStorage.getItem("userDetails");
+const userDetail = JSON.parse(userDetailsObject);
 
 onMounted(async () => {
   try {
+    isLoading.value = true;
     let response = await AuthService.getStates();
     states.value = [];
-    console.log(states);
     for (let i = 0; i < response.data.length; i++) {
-      console.warn(response.data[i].province_name);
       states.value.push({
         label: response.data[i].province_name,
         value: response.data[i].province_name,
       });
     }
-    console.log(states.value);
+    const userResponse = await AuthService.getCurrentUserDetails(
+      userDetail.userId
+    );
+    userDetails = Object.assign(
+      {},
+      { ...userResponse.data },
+      { ...userResponse.data.loginDetail }
+    );
+    if (userResponse.data.isBuyer) {
+      buyerSeller.push("Buyer");
+    }
+    if (userResponse.data.isSeller) {
+      buyerSeller.push("Seller");
+    }
   } catch (e) {
-    console.error("Error in fetching states", e);
+    notify({
+      title: "Failure!",
+      text: "Error in fetching States.",
+      type: "error",
+    });
+  } finally {
+    isLoading.value = false;
   }
 });
 
@@ -193,25 +220,8 @@ const InvalidSignup = () => {
 
 const sellerRegister = async (data: any) => {
   console.log(data);
-  const body = new FormData();
-  // Finally, we append the actual File object(s)
-  data.idproof.forEach((fileItem: any) => {
-    console.warn(fileItem);
-    body.append("image", fileItem.file);
-  });
-
-  const headerConfig = {
-    headers: {
-      "content-type": "multipart/form-data",
-    },
-  };
 
   try {
-    let uploadImageData = await (
-      await AuthService.uploadImage(body, headerConfig)
-    ).data;
-    userDetails.govtIdUrl = uploadImageData.url;
-    await AuthService.register(userDetails);
     notify({
       title: "Success!",
       text: "User Logged In Successfully! Wait for Admins approval",
