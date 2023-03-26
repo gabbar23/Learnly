@@ -53,6 +53,7 @@
           Pay
         </button>
       </div>
+      <button class="wishlist-svg" @click="wishlist"></button>
     </template>
   </div>
 </template>
@@ -107,6 +108,10 @@ const bindClick = (args: any) => {
   console.log("Hello");
 };
 
+const wishlist=()=>{
+  console.log("wishlist");
+}
+
 const makePayment = () => {
   router.push({
     path: "/add-card",
@@ -135,6 +140,15 @@ const makePayment = () => {
 
 .font-weight-bold {
   font-weight: bold;
+}
+
+.wishlist-svg{
+  background: url(../../assets/heart-fill-svgrepo-com.svg) no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 52px;
+    width: 40px;
 }
 
 button {

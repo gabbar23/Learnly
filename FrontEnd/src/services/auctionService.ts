@@ -40,5 +40,18 @@ export default {
 
   getAllBidDetails(){
     return apiClient.get("api/bid/fetchDetails");
+  },
+  getWishlist(){
+    return apiClient.get("api/wishlist/getWishlist");
+  },
+  postWishlist(){
+    return apiClient.post("api/wishlist/addWishlist");
+  },
+  getReport(){
+    return apiClient.get("api/report/getReport");
+  },
+  postReport(){
+    return apiClient.post("api/report/addReport");
   }
+
 };
