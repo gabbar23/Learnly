@@ -26,10 +26,6 @@ const goBack = () => {
 </script>
 
 <style scoped>
-/* * {
-  box-sizing: border-box;
-  font-family: Verdana, sans-serif;
-} */
 .center {
   display: flex;
   justify-content: center;

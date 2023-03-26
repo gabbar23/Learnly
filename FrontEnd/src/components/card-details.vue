@@ -12,7 +12,7 @@
         <div class="col-12">
           <div class="d-flex flex-column">
             <p class="text mb-1">Card Number</p>
-            <FormKit type="text"  placeholder="1234 5678 4356 7898" />
+            <FormKit type="text" placeholder="1234 5678 4356 7898" />
           </div>
         </div>
         <div class="col-6">
@@ -56,9 +56,10 @@ const route = useRoute();
 
 const approvePayment = async () => {
   try {
-    const requestPayload = Object.assign({isSold:true}, { ...route.query });
+    const requestPayload = Object.assign({ isSold: true }, { ...route.query });
     await AuthService.createSimpleSellOrder(requestPayload);
-    router.push('/home');
+    // router.push('/home');
+    router.push("/congratulations");
     notify({
       title: "Successfull!",
       text: "Your Order has been placed Successfully!",
@@ -76,10 +77,13 @@ const approvePayment = async () => {
 const cancelPayment = () => {
   notify({
     title: "Failure!",
-    text: "Payment Cancelled Redirecting!",
+    text: "Payment Cancelled. Redirecting!",
     type: "danger",
   });
-  router.push("/home");
+  const timeOut = setTimeout(() => {
+    router.push("/home");
+  }, 2000);
+  clearTimeout(timeOut);
 };
 </script>
 <style>
@@ -201,7 +205,8 @@ p {
   font-weight: 600;
 }
 
-.formkit-wrapper, .formkit-fieldset {
-    max-width: none !important;
+.formkit-wrapper,
+.formkit-fieldset {
+  max-width: none !important;
 }
 </style>

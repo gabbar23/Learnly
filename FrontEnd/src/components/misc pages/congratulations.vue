@@ -7,43 +7,29 @@
   <br />
   <br />
   <div class="center">
-    <FormKit
-      type="button"
-      label="Go to payment page"
-      style="background-color: seagreen"
-      @click="goToPayment"
-    />
-    <FormKit
-      type="button"
-      label="Cancel payment"
-      style="background-color: red"
-      @click="goToHomepage"
-    />
+    <h3>Redirecting to HomePage in: {{ count }} seconds</h3>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import router from "@/router";
-import { FormKit } from "@formkit/vue";
-import { def } from "@vue/shared";
-import { defineComponent } from "vue";
-export default defineComponent({
-  methods: {
-    goToPayment() {
-      router.push("/error");
-    },
-    goToHomepage() {
+import { ref, onMounted } from "vue";
+
+const count = ref<number>(5);
+
+onMounted(() => {
+  const interval = setInterval(() => {
+    count.value--;
+    if (count.value == 0) {
+      clearInterval(interval);
       router.push("/home");
-    },
-  },
+      count.value = 5;
+    }
+  }, 1000);
 });
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-  font-family: Verdana, sans-serif;
-}
 .center {
   display: flex;
   justify-content: center;
