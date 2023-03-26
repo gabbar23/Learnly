@@ -96,9 +96,9 @@ const router = createRouter({
       component: () => import("../components/card-details.vue"),
     },
     {
-      path: "/error",
+      path: "/:pathMatch(.*)",
       name: "error",
-      component: () => import("../components/misc pages/error.vue"),
+      component: () => import("../components/misc pages/not-found.vue"),
     },
     {
       path: "/congratulations",
