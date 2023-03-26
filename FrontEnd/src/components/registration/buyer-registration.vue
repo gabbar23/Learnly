@@ -5,33 +5,31 @@
       <nav class="col-md-2 d-none d-md-block sidebar mt-5">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
-            <li class="nav-item">
+            <li class="nav-item" @click="navigateTo('details')">
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer' }"
                 href="javascript:void"
               >
-                <router-link to="/buyer">Details</router-link>
+                Details
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" @click="navigateTo('orders')">
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/orders' }"
                 href="javascript:void"
               >
-                <router-link to="/buyer/orders">Orders</router-link>
+                Orders
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" @click="navigateTo('report')">
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/report-issue' }"
                 href="javascript:void"
               >
-                <router-link to="/buyer/report-issue"
-                  >Report an Issue</router-link
-                >
+                Report an Issue
               </a>
             </li>
             <!-- <li class="nav-item">
@@ -58,6 +56,16 @@ import { computed } from "vue";
 const currentRoute = computed(() => {
   return router.currentRoute.value;
 });
+
+const navigateTo = (buttonClicked: String) => {
+  if (buttonClicked == "details") {
+    router.push("/buyer");
+  } else if (buttonClicked == "orders") {
+    router.push("/buyer/orders");
+  } else if (buttonClicked == "report") {
+    router.push("/buyer/report-issue");
+  }
+};
 </script>
 <style>
 /* Sidebar */
