@@ -3,72 +3,97 @@
   <div class="main-section w-50 mx-auto m-2 my-hover">
     <loader v-if="isLoading"></loader>
     <div v-else>
+      <h3 class="text-center mb-5">Live Bidding</h3>
       <div class="w-100 m-1">
         <Carousel :autoplay="2000" :wrap-around="true">
           <template v-if="sellItemDetail.imageDetails.length > 0">
-          <Slide
-            v-for="(item, index) in sellItemDetail.imageDetails"
-            :key="index"
-          >
-            <img
-              :src="item.imgUrl"
-              class="carousel__item item_size"
-              @click="bindClick(item)"
-            />
-          </Slide>
-        </template>
-        <template v-else>
-          <Slide v-for="slide in 5" :key="slide">
-            <div class="carousel__item" @click="bindClick(slide)">
-              {{ slide }}
-            </div>
-          </Slide>
-        </template>
+            <Slide
+              v-for="(item, index) in sellItemDetail.imageDetails"
+              :key="index"
+            >
+              <img
+                :src="item.imgUrl"
+                class="carousel__item item_size"
+                @click="bindClick(item)"
+              />
+            </Slide>
+          </template>
+          <template v-else>
+            <Slide v-for="slide in 5" :key="slide">
+              <div class="carousel__item" @click="bindClick(slide)">
+                {{ slide }}
+              </div>
+            </Slide>
+          </template>
           <template #addons>
             <Navigation />
             <Pagination />
           </template>
         </Carousel>
       </div>
-      <div class>
-        <div class="row">
-          <div class="details">
-            <div>Description:{{ description }}</div>
-            <div>Starting At: {{ startTime }}</div>
-            <div>Closing At: {{ endTime }}</div>
-            <div>Start Price: {{ startVal }}$</div>
-            <div>Highest Bid Price: {{ highestBid }}$</div>
-            <div>Your Bid: {{ myBid }}$</div>
-            <div class="d-flex">
-              <div class="mr-4">Make Bid</div>
-              <FormKit
-                type="form"
-                submit-label="Make Bid"
-                :actions="false"
-                @submit="makeBid"
-              >
-                <p style="color: red">{{ bidStatus }}</p>
-                <FormKit type="text" v-model="bidAmount" />
-                <button
-                  class="btn btn-danger ml-5"
-                  @click="sendMessage()"
-                  :disabled="isBidMade"
-                >
-                  Submit Bid{{ minVal }}
-                </button>
+      <div class="details">
+        <div class="row p-3">
+          <div class="col-4 p-2 font-weight-bold">Description:</div>
+          <div class="col-8 p-2">{{ description }}</div>
+          <div class="col-4 p-2 font-weight-bold">Starting At:</div>
+          <div class="col-8 p-2">{{ startTime }}</div>
 
-                <!-- <div v-if="isBidMade">{{ timeLeft }} sec</div> -->
-              </FormKit>
-            </div>
+          <div class="col-4 p-2 font-weight-bold">Closing At:</div>
+          <div class="col-8 p-2">{{ endTime }}</div>
+
+          <div class="col-4 p-2 font-weight-bold">Start Price:</div>
+          <div class="col-8 p-2">{{ startVal }}$</div>
+
+          <div class="col-4 p-2 font-weight-bold">Highest Bid Price:</div>
+          <div class="col-8 p-2">{{ highestBid }}$</div>
+
+          <div class="col-4 p-2 font-weight-bold">Your Bid:$</div>
+          <div class="col-8 p-2">{{ myBid }}$</div>
+
+          <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
+          <div class="col-8 p-2">
+            <FormKit type="text" v-model="bidAmount" />
           </div>
-          <!-- <div>
+        </div>
+
+        <div class="text-center">
+          <button
+            class="btn btn-danger"
+            @click="sendMessage()"
+            :disabled="isBidMade"
+          >
+            Submit Bid
+          </button>
+        </div>
+
+        <!-- <div class="d-flex">
+            <div class="mr-4">Make Bid</div>
+            <FormKit
+              type="form"
+              submit-label="Make Bid"
+              :actions="false"
+              @submit="makeBid"
+            >
+              <p style="color: red">{{ bidStatus }}</p>
+              <FormKit type="text" v-model="bidAmount" />
+              <button
+                class="btn btn-danger ml-5"
+                @click="sendMessage()"
+                :disabled="isBidMade"
+              >
+                Submit Bid{{ minVal }}
+              </button>
+
+            </FormKit>
+          </div> -->
+
+        <!-- <div>
             <h1>Auction Ending in:</h1>
             <div>{{ countdown }}</div>
           </div> -->
-          <div>
-            <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
-            <div v-else>Time's up!</div>
-          </div>
+        <div>
+          <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
+          <div v-else>Time's up!</div>
         </div>
       </div>
     </div>
@@ -291,7 +316,7 @@ const formatTime = (time: any) => {
 };
 </script>
 
-<style>
+<!-- <style>
 .in {
   display: inline-block;
 }
@@ -334,4 +359,40 @@ const formatTime = (time: any) => {
   transition: 1s;
   box-shadow: 0px 0px 20px 20px gray;
 } */
+</style> -->
+<style scoped>
+.main-section {
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.carousel__item {
+  height: 300px;
+  width: 100%;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ff4c4c;
+  color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+h3 {
+  color: #000000;
+}
 </style>
