@@ -17,6 +17,7 @@ import * as directives from "vuetify/directives";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faTrashCan, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import store from "./store";
 
 library.add(faTrashCan, faSignOutAlt);
 
@@ -33,4 +34,5 @@ app.use(router);
 app.use(plugin, defaultConfig);
 app.use(vuetify);
 app.use(Notifications);
+app.use(store);
 app.mount("#app");
