@@ -229,19 +229,33 @@ const getCurrentUserDetails = async (req: Request, res: Response) => {
 };
 
 const updateUserDetails = async (req: Request, res: Response) => {
-  const { sessionId } = req.body;
-  if (sessionId === req.session.id) {
-    // console.log(`Destroying session ${sessionId}`);
-    // req.session.destroy((err) => {
-    //   if (err) {
-    //     console.log(err);
-    //     res.status(500).json({ message: "Failed to destroy session" });
-    //   } else {
-    //     res.status(200).json({ message: "Session destroyed" });
-    //   }
-    // });
-  } else {
-    res.status(400).json({ message: "Invalid session ID" });
+  try{
+    const {
+      firstName,
+      lastName,
+      dateOfBirth,
+      phone,
+      address,
+      cityName,
+      provinceName,
+      postalCode,
+      userId,
+    } = req.body;
+    const updateUserDetail = await UserDetail.findOne({
+      where: {
+        userId: userId,
+      },
+    });
+    updateUserDetail?.update({ firstName, lastName, dateOfBirth, phone, address, cityName, provinceName, postalCode });
+    res.status(200).json({
+      isSuccessfull: true,
+      message: {
+        description: "Details Updated Successfully",
+      },
+    });
+  }catch(e){
+    console.error(e);
+    res.status(500).json({ message: "Internal Server error" });
   }
 };
 

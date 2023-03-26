@@ -121,7 +121,7 @@
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-primary">Submit</button>
+            <button class="btn btn-primary">Update</button>
           </div>
         </div>
       </div>
@@ -134,7 +134,6 @@ import type {
   IGetUserDetails,
   ISelectResponse,
 } from "@/interfaces/seller-registration";
-import router from "@/router";
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
@@ -219,22 +218,22 @@ const InvalidSignup = () => {
 };
 
 const sellerRegister = async (data: any) => {
-  console.log(data);
-
   try {
+    isLoading.value = true;
+    await AuthService.updateCurrentUserDetails(userDetails);
     notify({
       title: "Success!",
-      text: "User Logged In Successfully! Wait for Admins approval",
+      text: "User Details Updated Successfully!",
       type: "success",
     });
-
-    router.push("/");
   } catch (e) {
     notify({
       title: "Failure!",
-      text: "Registration Failed! Please Contact Help Desk.",
+      text: "User Details Updation Failed! Please Contact Help Desk.",
       type: "error",
     });
+  } finally {
+    isLoading.value = false;
   }
 };
 
