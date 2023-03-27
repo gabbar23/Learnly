@@ -11,3 +11,7 @@ export interface ILoggedInUserDetails {
   sessionId: string;
   userId: Number;
 }
+
+export interface ILogOutRequestPayload{
+  sessionId: string;
+}

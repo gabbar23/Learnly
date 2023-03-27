@@ -1,6 +1,9 @@
 import type { IApproveOrDeclineReqPayload } from "@/interfaces/admin";
 import type { IPostBidDetails } from "@/interfaces/auction";
-import type { ILoginDetails } from "@/interfaces/bid-for-good";
+import type {
+  ILoginDetails,
+  ILogOutRequestPayload,
+} from "@/interfaces/bid-for-good";
 import type {
   IGetState,
   IGetUserDetails,
@@ -33,7 +36,10 @@ export default {
   },
 
   checkLogin(loginDetails: ILoginDetails) {
-    return apiClient.post("api/v1/register/checkLoginCredentials", loginDetails);
+    return apiClient.post(
+      "api/v1/register/checkLoginCredentials",
+      loginDetails
+    );
   },
 
   verifiedSellers() {
@@ -55,8 +61,20 @@ export default {
   getBuyerOrderDetails(buyerId: any) {
     return apiClient.get("api/v1/sell/getOrder?buyerId=" + buyerId);
   },
-  fetchDetails(){
+
+  fetchDetails() {
     return apiClient.get("api/bid/fetchDetails");
   },
 
+  logOut(sessionId: ILogOutRequestPayload) {
+    return apiClient.post("api/v1/register/logoutUser", sessionId);
+  },
+
+  getCurrentUserDetails(userId: string) {
+    return apiClient.get("api/v1/register/userDetails?user=" + userId);
+  },
+
+  updateCurrentUserDetails(payload: any) {
+    return apiClient.put("api/v1/register/userDetails", payload);
+  },
 };

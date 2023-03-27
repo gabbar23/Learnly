@@ -184,10 +184,87 @@ const logoutUser = async (req: Request, res: Response) => {
   }
 };
 
+const getCurrentUserDetails = async (req: Request, res: Response) => {
+  const  userId = req.query.user;
+  if (!!userId) {
+    try {
+      console.log(req);
+      const currentUserDetails = await UserDetail.findOne({
+        include: [
+          {
+            model: LoginDetail,
+            attributes: ["email"],
+          },
+        ],
+        attributes: [
+          "userId",
+          "firstName",
+          "lastName",
+          "dateOfBirth",
+          "isBuyer",
+          "isSeller",
+          "phone",
+          "address",
+          "cityName",
+          "provinceName",
+          "postalCode",
+          "govtIdUrl",
+        ],
+        where: {
+          userId: userId,
+        },
+      });
+      if (currentUserDetails) {
+        res.status(200).json(currentUserDetails);
+      } else {
+        res.status(200).json([]);
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server error" });
+    }
+  } else {
+    res.status(400).json({ message: "Invalid User ID" });
+  }
+};
+
+const updateUserDetails = async (req: Request, res: Response) => {
+  try{
+    const {
+      firstName,
+      lastName,
+      dateOfBirth,
+      phone,
+      address,
+      cityName,
+      provinceName,
+      postalCode,
+      userId,
+    } = req.body;
+    const updateUserDetail = await UserDetail.findOne({
+      where: {
+        userId: userId,
+      },
+    });
+    updateUserDetail?.update({ firstName, lastName, dateOfBirth, phone, address, cityName, provinceName, postalCode });
+    res.status(200).json({
+      isSuccessfull: true,
+      message: {
+        description: "Details Updated Successfully",
+      },
+    });
+  }catch(e){
+    console.error(e);
+    res.status(500).json({ message: "Internal Server error" });
+  }
+};
+
 export default {
   registerUser,
   showUser,
   checkUserExists,
   checkLoginCredentials,
   logoutUser,
+  getCurrentUserDetails,
+  updateUserDetails
 };
