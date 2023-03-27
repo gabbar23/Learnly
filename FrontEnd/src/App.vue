@@ -5,19 +5,8 @@
   <RouterView />
 </template>
 
-<script lang="ts">
-import { useRoute } from "vue-router";
-import { computed } from "vue";
-import { defineComponent, onMounted } from "vue";
+<script lang="ts" setup>
 import Navigation from "../src/components/navigation/Navigation.vue";
-export default defineComponent({
-  components: { Navigation },
-  setup() {
-    const route = useRoute();
-    // const path = computed(() =>route.path)
-    return {};
-  },
-});
 </script>
 <style>
 body {

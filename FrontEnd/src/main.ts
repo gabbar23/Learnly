@@ -29,7 +29,6 @@ const vuetify = createVuetify({
 const app = createApp(App);
 
 app.component("font-awesome-icon", FontAwesomeIcon);
-
 app.use(router);
 app.use(plugin, defaultConfig);
 app.use(vuetify);

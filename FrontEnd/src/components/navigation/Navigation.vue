@@ -4,7 +4,11 @@
       <h1>Bid4Good</h1>
     </div>
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
-    <div class="col-sm-4 col-xs-4">
+    <!-- <div class = "d-flex col-8">   2/8/2
+      <a class="nav-link m-2" @click = "navigateTo('blindBid')" href="javascript:void"> Blind Bid </a>
+      <a class="nav-link m-2" href="javascript:void"> Simple Sell </a>
+    </div> -->
+    <div class="col-2">
       <button
         class="btn btn-outline-dark m-2"
         @click="navigateTo('wishlist')"
