@@ -1,19 +1,31 @@
 <template>
-  <nav class="navbar navbar-expand-lg row background mb-4">
-    <div class="col-md-11 col-sm-8 col-xs-8">
+  <nav class="navbar navbar-expand-lg row background mb-4 w-100">
+    <div class="col-10">
       <h1>Bid4Good</h1>
     </div>
+    <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
     <div class="col-sm-4 col-xs-4">
-      <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
-      <div class="col-sm-4 col-xs-4">
-        <button
-          class="btn btn-outline-dark"
-          @click="logout"
-          v-if="!showLogOutIcon"
-        >
-          <font-awesome-icon icon="sign-out-alt" />
-        </button>
-      </div>
+      <button
+        class="btn btn-outline-dark m-2"
+        @click="navigateTo('wishlist')"
+        v-if="!showLogOutIcon"
+      >
+        <font-awesome-icon icon="heart" />
+      </button>
+      <button
+        class="btn btn-outline-dark m-2"
+        @click="navigateTo('user')"
+        v-if="!showLogOutIcon"
+      >
+        <font-awesome-icon icon="user-circle" />
+      </button>
+      <button
+        class="btn btn-outline-dark m-2"
+        @click="logout"
+        v-if="!showLogOutIcon"
+      >
+        <font-awesome-icon icon="sign-out-alt" />
+      </button>
     </div>
   </nav>
 </template>
@@ -29,15 +41,33 @@ const { notify } = useNotification();
 
 const store = useStore();
 
+const navigateTo = (navigation: string) => {
+  if (navigation == "wishlist") {
+    router.push("/wishlist");
+  } else if (navigation == "user") {
+    router.push("/buyer");
+  }
+};
+
 const showLogOutIcon = computed(
   () =>
     store.state.currentRoute != null && store.state.currentRoute.name == "Login"
 );
 
+// const showWishListIcon = computed(
+//   () =>
+//     store.state.currentRoute != null && store.state.currentRoute.name == "Login"
+// );
+
+// const showUserIcon = computed(
+//   () =>
+//     store.state.currentRoute != null && store.state.currentRoute.name == "Login"
+// );
+
 const logout = async () => {
   try {
     const sessionId = store.state.sessionId;
-    await AuthService.logOut({sessionId: sessionId});
+    await AuthService.logOut({ sessionId: sessionId });
     localStorage.clear();
     notify({
       title: "Successfull!",
