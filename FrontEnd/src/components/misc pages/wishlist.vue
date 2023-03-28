@@ -17,7 +17,7 @@
             <tr v-for="item in wishDetails" :key="item.cityName">
               <button id="stuff.item"
         class="wishlist-svg-selected"
-        @click="RemoveWishlist"
+        @click="RemoveWishlist(item)"
       >
     </button>
               <td>{{ item.itemName }}</td>
@@ -59,10 +59,10 @@ import { button } from "@formkit/inputs";
 
 
 
-  const RemoveWishlist = () => {
+  const RemoveWishlist = (item:any) => {
+    console.log(item)
     console.log("wishlist removed");
     console.log(wishDetails.value);
-    console.log(wishDetails.value[0].itemId);
     //console.log(itemId);
     //let response=auctionService.deleteWishlist(itemId,userId);
   };

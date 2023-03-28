@@ -54,22 +54,22 @@
         </button>
       </div>
       <button
-      v-if="isWishlisted==false"
-      class="wishlist-svg" 
+      :class = "isWishlisted ? 'wishlist-svg' : 'wishlisted'"
         @click="wishlist"
       >
     </button> 
-    <button
-      v-else
-      class="wishlisted" 
-        @click="RemoveWishlist"
-      >
-    </button> 
+
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
+/*    <button
+      v-else
+      class="wishlisted" 
+        @click="RemoveWishlist"
+      >
+    </button>  */
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import router from "@/router";
@@ -97,7 +97,9 @@ const details = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
 const item_id=route.query.itemId;
 
-let isWishlisted=false;
+let isWishlisted=ref<boolean>(
+  false 
+);
 onMounted(async () => {
   const { itemId, auctionId, auctionType } = route.query;
   const isWishlistedInDb=await(auctionService.getWishlist(userId));
@@ -106,7 +108,7 @@ onMounted(async () => {
     console.log((isWishlistedInDb).data)
     for(let i=0;i<(isWishlistedInDb).data.length;i++){
       if((isWishlistedInDb).data[i].itemId==item_id){
-        isWishlisted=true;
+        isWishlisted.value=true;
         break;
       }
     }
@@ -132,13 +134,20 @@ const bindClick = (args: any) => {
 
 const wishlist=async ()=>{
   console.log("wishlist");
-  let response=await auctionService.postWishlist(item_id,userId);
-  console.log(response)
+  if(isWishlisted){
+    let response=await auctionService.postWishlist(item_id,userId);
+    isWishlisted.value=false;
+
+  }
+  else{
+    let response=await auctionService.deleteWishlist(item_id,userId);
+   isWishlisted.value=true; 
+  }
+
 }
 
 const RemoveWishlist=async ()=>{
   console.log("RemoveWishlist");
-  let response=await auctionService.deleteWishlist(item_id,userId);
   console.log(response)
 }
 
