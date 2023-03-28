@@ -54,7 +54,7 @@
         </button>
       </div>
       <button
-        :class="isWishlisted ? 'wishlist-svg' : 'wishlisted'"
+        :class="isWishlisted ? 'wishlisted' : 'wishlist-svg'"
         @click="wishlist"
       ></button>
     </template>
@@ -70,6 +70,7 @@ import auctionService from "@/services/auctionService";
 import { useRoute } from "vue-router";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Loader } from "../component";
+import { tr } from "date-fns/locale";
 
 const route = useRoute();
 const isLoading = ref<boolean>(false);
@@ -123,13 +124,15 @@ const bindClick = (args: any) => {
 };
 
 const wishlist = async () => {
+  console.log(isWishlisted.value)
   if (isWishlisted.value) {
-    let response = await auctionService.postWishlist(item_id, userId);
-    isWishlisted.value = false;
-  } else {
     let response = await auctionService.deleteWishlist(item_id, userId);
-    isWishlisted.value = true;
+    //isWishlisted.value = false;
+  } else {
+    let response = await auctionService.postWishlist(item_id, userId);
+    //isWishlisted.value = true;
   }
+  isWishlisted.value = !isWishlisted.value;
 };
 
 const RemoveWishlist = async () => {
