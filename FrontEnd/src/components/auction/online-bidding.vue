@@ -1,72 +1,73 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
-  <div class="main-section w-50 mx-auto m-2 my-hover">
-    <loader v-if="isLoading"></loader>
-    <div v-else>
-      <h3 class="text-center mb-5">Live Bidding</h3>
-      <div class="w-100 m-1">
-        <Carousel :autoplay="2000" :wrap-around="true">
-          <template v-if="sellItemDetail.imageDetails.length > 0">
-            <Slide
-              v-for="(item, index) in sellItemDetail.imageDetails"
-              :key="index"
-            >
-              <img
-                :src="item.imgUrl"
-                class="carousel__item item_size"
-                @click="bindClick(item)"
-              />
-            </Slide>
-          </template>
-          <template v-else>
-            <Slide v-for="slide in 5" :key="slide">
-              <div class="carousel__item" @click="bindClick(slide)">
-                {{ slide }}
-              </div>
-            </Slide>
-          </template>
-          <template #addons>
-            <Navigation />
-            <Pagination />
-          </template>
-        </Carousel>
-      </div>
-      <div class="details">
-        <div class="row p-3">
-          <div class="col-4 p-2 font-weight-bold">Description:</div>
-          <div class="col-8 p-2">{{ description }}</div>
-          <div class="col-4 p-2 font-weight-bold">Starting At:</div>
-          <div class="col-8 p-2">{{ startTime }}</div>
+  <div class="containers">
+    <div class="main-section w-50 mx-auto m-2 my-hover">
+      <loader v-if="isLoading"></loader>
+      <div v-else>
+        <h3 class="text-center mb-5">Live Bidding</h3>
+        <div class="w-100 m-1">
+          <Carousel :autoplay="2000" :wrap-around="true">
+            <template v-if="sellItemDetail.imageDetails.length > 0">
+              <Slide
+                v-for="(item, index) in sellItemDetail.imageDetails"
+                :key="index"
+              >
+                <img
+                  :src="item.imgUrl"
+                  class="carousel__item item_size"
+                  @click="bindClick(item)"
+                />
+              </Slide>
+            </template>
+            <template v-else>
+              <Slide v-for="slide in 5" :key="slide">
+                <div class="carousel__item" @click="bindClick(slide)">
+                  {{ slide }}
+                </div>
+              </Slide>
+            </template>
+            <template #addons>
+              <Navigation />
+              <Pagination />
+            </template>
+          </Carousel>
+        </div>
+        <div class="details">
+          <div class="row p-3">
+            <div class="col-4 p-2 font-weight-bold">Description:</div>
+            <div class="col-8 p-2">{{ description }}</div>
+            <div class="col-4 p-2 font-weight-bold">Starting At:</div>
+            <div class="col-8 p-2">{{ startTime }}</div>
 
-          <div class="col-4 p-2 font-weight-bold">Closing At:</div>
-          <div class="col-8 p-2">{{ endTime }}</div>
+            <div class="col-4 p-2 font-weight-bold">Closing At:</div>
+            <div class="col-8 p-2">{{ endTime }}</div>
 
-          <div class="col-4 p-2 font-weight-bold">Start Price:</div>
-          <div class="col-8 p-2">{{ startVal }}$</div>
+            <div class="col-4 p-2 font-weight-bold">Start Price:</div>
+            <div class="col-8 p-2">{{ startVal }}$</div>
 
-          <div class="col-4 p-2 font-weight-bold">Highest Bid Price:</div>
-          <div class="col-8 p-2">{{ highestBid }}$</div>
+            <div class="col-4 p-2 font-weight-bold">Highest Bid Price:</div>
+            <div class="col-8 p-2">{{ highestBid }}$</div>
 
-          <div class="col-4 p-2 font-weight-bold">Your Bid:$</div>
-          <div class="col-8 p-2">{{ myBid }}$</div>
+            <div class="col-4 p-2 font-weight-bold">Your Bid:$</div>
+            <div class="col-8 p-2">{{ myBid }}$</div>
 
-          <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
-          <div class="col-8 p-2">
-            <FormKit type="text" v-model="bidAmount" />
+            <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
+            <div class="col-8 p-2">
+              <FormKit type="text" v-model="bidAmount" />
+            </div>
           </div>
-        </div>
 
-        <div class="text-center">
-          <button
-            class="btn btn-danger"
-            @click="sendMessage()"
-            :disabled="isBidMade"
-          >
-            Submit Bid
-          </button>
-        </div>
+          <div class="text-center">
+            <button
+              class="btn btn-danger"
+              @click="sendMessage()"
+              :disabled="isBidMade"
+            >
+              Submit Bid
+            </button>
+          </div>
 
-        <!-- <div class="d-flex">
+          <!-- <div class="d-flex">
             <div class="mr-4">Make Bid</div>
             <FormKit
               type="form"
@@ -87,13 +88,38 @@
             </FormKit>
           </div> -->
 
-        <!-- <div>
+          <!-- <div>
             <h1>Auction Ending in:</h1>
             <div>{{ countdown }}</div>
           </div> -->
-        <div>
-          <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
-          <div v-else>Time's up!</div>
+          <div>
+            <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
+            <div v-else>Time's up!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="scrollable-div mt-5">
+      <div v-for="slide in 25" class = "d-flex">
+       <p class = "m-1"> <font-awesome-icon icon="user-circle" /></p> 
+        <p class = "m-1">Harsh Srivastava</p> &nbsp;
+        <p class = "m-1">250 $</p>
+      </div>
+    </div> -->
+    <div class="card scrollable-div">
+      <div class="card-header">
+        <h5>Recent Bids</h5>
+      </div>
+      <div class="card-body p-0">
+        <div
+          v-for="slide in 25"
+          class="d-flex align-items-center px-3 py-2 border-bottom"
+        >
+          <span class="mr-3">
+            <font-awesome-icon icon="user-circle" />
+          </span>
+          <span class="flex-grow-1">Harsh Srivastava</span>
+          <span>250 $</span>
         </div>
       </div>
     </div>
@@ -394,5 +420,17 @@ button:hover {
 
 h3 {
   color: #000000;
+}
+
+.containers {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.scrollable-div {
+  overflow-y: scroll;
+  width: 250px;
+  height: 300px;
 }
 </style>
