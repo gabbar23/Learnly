@@ -5,6 +5,8 @@ import {
   ReportIssue,
 } from "@/components/component";
 import type { ILoggedInUserDetails } from "@/interfaces/bid-for-good";
+import store from "@/store";
+import { onMounted } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -94,9 +96,9 @@ const router = createRouter({
       component: () => import("../components/card-details.vue"),
     },
     {
-      path: "/error",
+      path: "/:pathMatch(.*)",
       name: "error",
-      component: () => import("../components/misc pages/error.vue"),
+      component: () => import("../components/misc pages/not-found.vue"),
     },
     {
       path: "/congratulations",
@@ -110,7 +112,11 @@ router.beforeEach((to, from, next) => {
   const userDetailsObject = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
-  if ((to.name !== "Login" && to.name !== "User Registration") && !isLoggedIn) {
+  if (isLoggedIn) {
+    store.commit("setSessionId", userDetail.sessionId);
+  }
+  store.commit("setCurrentRoute", to);
+  if (to.name !== "Login" && to.name !== "User Registration" && !isLoggedIn) {
     next({ name: "Login" });
   } else {
     next();

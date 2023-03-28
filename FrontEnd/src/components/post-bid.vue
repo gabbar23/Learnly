@@ -1,100 +1,120 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
-  <FormKit type="form" @submit="sellerRegister" enctype="multipart/form-data">
-    <section class="container parent_sect">
+  <div class="card mb-3 w-100 wid">
+    <div class="card-body">
       <FormKit
-        type="text"
-        label="Name Of Offering"
-        v-model="sellerDetails.itemName"
-      />
-
-      <FormKit
-        type="number"
-        label="Estimated Value"
-        v-model="sellerDetails.startPrice"
-      />
-
-      <FormKit
-        type="date"
-        label="Start Date Of Auction"
-        v-model="sellerDetails.startDate"
-      />
-
-      <FormKit
-        type="time"
-        label="Start Time Of Auction"
-        help="What time will the auction start?"
-        v-model="sellerDetails.startTime"
-      />
-
-      <FormKit
-        type="date"
-        label="End Date Of Auction"
-        v-model="sellerDetails.endDate"
-      />
-
-      <FormKit
-        type="time"
-        label="End Time Of Auction"
-        help="What time will the auction end?"
-        v-model="sellerDetails.endTime"
-      />
-
-      <FormKit
-        type="select"
-        label="State"
-        placeholder="Select a State"
-        :options="states"
-        v-model="sellerDetails.provinceName"
-        @change="triggerChange(sellerDetails.provinceName)"
+        type="form"
+        @submit="sellerRegister"
+        enctype="multipart/form-data"
+        :actions="false"
       >
+        <h5 class="card-title">Bid Details</h5>
+        <div class="row">
+          <div class="col-md-6">
+            <FormKit
+              type="text"
+              label="Name Of Offering"
+              v-model="sellerDetails.itemName"
+            />
+
+            <FormKit
+              type="number"
+              label="Estimated Value"
+              v-model="sellerDetails.startPrice"
+            />
+
+            <FormKit
+              type="date"
+              label="Start Date Of Auction"
+              v-model="sellerDetails.startDate"
+            />
+
+            <FormKit
+              type="time"
+              label="Start Time Of Auction"
+              help="What time will the auction start?"
+              v-model="sellerDetails.startTime"
+            />
+
+            <FormKit
+              type="date"
+              label="End Date Of Auction"
+              v-model="sellerDetails.endDate"
+            />
+
+            <FormKit
+              type="time"
+              label="End Time Of Auction"
+              help="What time will the auction end?"
+              v-model="sellerDetails.endTime"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <FormKit
+              type="text"
+              label="Address"
+              v-model="sellerDetails.address"
+            />
+            <FormKit
+              type="select"
+              label="State"
+              placeholder="Select a State"
+              :options="states"
+              v-model="sellerDetails.provinceName"
+              @change="triggerChange(sellerDetails.provinceName)"
+            >
+            </FormKit>
+
+            <FormKit
+              type="select"
+              label="City"
+              placeholder="Select City"
+              v-model="sellerDetails.cityName"
+              :options="cityOptions"
+            >
+            </FormKit>
+
+            <FormKit
+              type="text"
+              label="Postal Zip Code"
+              help="format: a1b-c2d | a1bc2d | a1b c2d"
+              v-model="sellerDetails.postalCode"
+            />
+
+            <FormKit
+              name="bidPhotos"
+              type="file"
+              label="Photo of Items"
+              accept=".jpg,.jpeg,.png"
+              help="Only .pdf,.jpg,.jpeg,.png files allowed"
+              multiple="true"
+              v-model="bidPhotos"
+              @blur="uploadImages(bidPhotos)"
+            />
+
+            <FormKit
+              type="select"
+              label="Bid Type"
+              placeholder="Post Bid as"
+              :options="bidTypeOptions"
+              v-model="sellerDetails.bidType"
+            >
+            </FormKit>
+
+            <FormKit
+              type="textarea"
+              label="Description"
+              v-model="sellerDetails.itemDes"
+            />
+          </div>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary">Submit</button>
+        </div>
       </FormKit>
-
-      <FormKit
-        type="select"
-        label="City"
-        placeholder="Select City"
-        v-model="sellerDetails.cityName"
-        :options="cityOptions"
-      >
-      </FormKit>
-
-      <FormKit
-        type="text"
-        label="Postal Zip Code"
-        help="format: a1b-c2d | a1bc2d | a1b c2d"
-        v-model="sellerDetails.postalCode"
-      />
-
-      <FormKit type="text" label="Address" v-model="sellerDetails.address" />
-
-      <FormKit
-        name="bidPhotos"
-        type="file"
-        label="Photo of Items"
-        accept=".jpg,.jpeg,.png"
-        help="Only .pdf,.jpg,.jpeg,.png files allowed"
-        multiple="true"
-        v-model="bidPhotos"
-        @blur="uploadImages(bidPhotos)"
-      />
-
-      <FormKit
-        type="select"
-        label="Bid Type"
-        placeholder="Post Bid as"
-        :options="bidTypeOptions"
-        v-model="sellerDetails.bidType"
-      >
-      </FormKit>
-
-      <FormKit
-        type="textarea"
-        label="Description"
-        v-model="sellerDetails.itemDes"
-      />
-    </section>
-  </FormKit>
+    </div>
+  </div>
 </template>
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
@@ -200,14 +220,15 @@ const uploadImages = async (data: any) => {
 
 const sellerRegister = async () => {
   sellerDetails.imageDetails = allImages.value;
-  sellerDetails.startTime = sellerDetails.startDate + " " + sellerDetails.startTime;
+  sellerDetails.startTime =
+    sellerDetails.startDate + " " + sellerDetails.startTime;
   sellerDetails.endTime = sellerDetails.endDate + " " + sellerDetails.endTime;
 
   const details = localStorage.getItem("userDetails");
   const { userId } = JSON.parse(details);
   if (userId) {
     sellerDetails.userId = userId;
-  }else{
+  } else {
     notify({
       title: "Failure!",
       text: "Unable to pull user details!",
@@ -251,8 +272,7 @@ const triggerChange = async (val: string) => {
 };
 </script>
 <style scoped>
-.parent_sect {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.wid {
+  max-width: 900px;
 }
 </style>
