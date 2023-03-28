@@ -44,7 +44,34 @@ export const getWishlist = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteWishlistItem = async (req: Request, res: Response) => {
+  const { item_id, user_id } = req.body;
+  try {
+    const deletedItem = await Wishlist.destroy({
+      where: {
+        item_id,
+        user_id,
+      },
+    });
+    if (deletedItem) {
+      res.status(200).json({
+        message: "Item deleted from wishlist",
+      });
+    } else {
+      res.status(404).json({
+        message: "Item not found in wishlist",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err,
+    });
+  }
+};
+
 export default {
   addWishlist,
+  deleteWishlistItem,
   getWishlist,
 };
