@@ -100,10 +100,11 @@
       </div>
     </div>
     <!-- <div class="scrollable-div mt-5">
-      <div v-for="slide in 25" class = "d-flex">
-       <p class = "m-1"> <font-awesome-icon icon="user-circle" /></p> 
-        <p class = "m-1">Harsh Srivastava</p> &nbsp;
-        <p class = "m-1">250 $</p>
+      <div v-for="slide in 25" class="d-flex">
+        <p class="m-1"><font-awesome-icon icon="user-circle" /></p>
+        <p class="m-1">Harsh Srivastava</p>
+        &nbsp;
+        <p class="m-1">250 $</p>
       </div>
     </div> -->
     <div class="card scrollable-div">
@@ -123,7 +124,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="bubble-container">
+    <div class="bubble-container">
       <BubbleAnimation
         v-for="(bubble, index) in bubbles"
         :key="index"
@@ -133,7 +134,7 @@
         :size="bubble.size" 
         :cost="bubble.cost"
       />
-    </div> -->
+    </div>
 
     <div>
       <Timer></Timer>
@@ -145,37 +146,24 @@
 import "vue3-carousel/dist/carousel.css";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 
 import io from "socket.io-client";
 import type { Socket } from "socket.io-client";
-import { message, number } from "@formkit/inputs";
 import auctionService from "./../../services/auctionService";
-import { formatDistance } from "date-fns";
 
 import Loader from "../loader.vue";
-import authentication from "../../../../server/dev/util/authentication";
+import BubbleAnimation from "../bubble-animation.vue";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
-import { BubbleAnimation, Timer } from "../component";
+import { Timer } from "../component";
 
-import router from "@/router";
 import { useRoute } from "vue-router";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
-const minVal = ref<Number>(5);
-const minValidation = ref<any>({ min: 5 });
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
-const countdown = ref<Date>();
 
 let sellItemDetail = reactive<IGetAuctionItemDetails>({
   imageDetails: [],
@@ -191,17 +179,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 });
 
 const userDetails = localStorage.getItem("userDetails");
-const { userId } = JSON.parse(userDetails);
-
-const makeBid = () => {
-  isBidMade.value = true;
-  timer.value = setInterval(() => {
-    timeLeft.value--;
-    if (timeLeft.value === 0) {
-      clearInterval(timer);
-    }
-  }, 1000);
-};
+const { userId, sessionId } = JSON.parse(userDetails);
 
 watch(timeLeft, (newValue, oldValue) => {
   console.log(`Count changed from ${oldValue} to ${newValue}`);
@@ -224,7 +202,7 @@ let myBid = ref<Number>();
 
 let timer = ref<String>();
 const route = useRoute();
-
+const { itemId, auctionId, auctionType } = route.query;
 const bubbles = [
   { name: "Alice", top: 50, left: -100, size: 50, cost: 50 },
   { name: "Bob", top: 20, left: -300, size: 70, cost: 250 },
@@ -235,60 +213,58 @@ const bubbles = [
 onMounted(() => {
   // const userId = user.userId;
   console.log(userId);
-  try{
-    const { itemId, auctionId, auctionType } = route.query;
-  isLoading.value = true;
-  const requestPayload = {
-    itemId,
-    auctionId,
-    auctionType,
-    userId,
-  };
+  try {
+    isLoading.value = true;
+    const requestPayload = {
+      itemId,
+      auctionId,
+      auctionType,
+      userId,
+    };
 
-  auctionService
-    .getAuctionDetails(requestPayload.auctionId)
-    .then((res) => {
-      console.log(res.data);
-      startTime.value = res.data.startTime;
-      endTime.value = res.data.endTime;
-    })
-    .catch(() => {
-      console.log("cant load auction details");
-    });
+    auctionService
+      .getAuctionDetails(requestPayload.auctionId)
+      .then((res) => {
+        console.log(res.data);
+        startTime.value = res.data.startTime;
+        endTime.value = res.data.endTime;
+      })
+      .catch(() => {
+        console.log("cant load auction details");
+      });
 
-  // auctionService.getItemDetails(id).then((res)=> {
+    // auctionService.getItemDetails(id).then((res)=> {
 
-  auctionService
-    .getNewItemDetails(requestPayload)
-    .then((res) => {
-      description.value = res.data.item.itemDes;
-      startVal.value = res.data.item.startPrice;
-      sellItemDetail = res.data.item;
-    })
-    .catch(() => {
-      console.log("cant fetch item details");
-    });
+    auctionService
+      .getNewItemDetails(requestPayload)
+      .then((res) => {
+        description.value = res.data.item.itemDes;
+        startVal.value = res.data.item.startPrice;
+        sellItemDetail = res.data.item;
+      })
+      .catch(() => {
+        console.log("cant fetch item details");
+      });
 
-  auctionService
-    .getCurrentMax(requestPayload.auctionId)
-    .then((res) => {
-      highestBid.value = res.data;
-    })
-    .catch((res) => {
-      console.log("Current Max Failed = " + res);
-    });
+    auctionService
+      .getCurrentMax(requestPayload.auctionId)
+      .then((res) => {
+        highestBid.value = res.data;
+      })
+      .catch((res) => {
+        console.log("Current Max Failed = " + res);
+      });
 
-  auctionService
-    .getCurrentUserBid(userId, requestPayload.auctionId)
-    .then((res) => {
-      myBid.value = res.data;
-    });
-  }catch(e){
+    auctionService
+      .getCurrentUserBid(userId, requestPayload.auctionId)
+      .then((res) => {
+        myBid.value = res.data;
+      });
+  } catch (e) {
     console.error(e);
-  }finally{
+  } finally {
     isLoading.value = false;
   }
-  
 });
 
 // setInterval(() => {
@@ -341,12 +317,16 @@ socket.value.on("disconnect", () => {
 const sendMessage = () => {
   console.log("message sent");
   // Emit a 'chat message' event to the server
-  const seesionId = localStorage.getItem("sessionId");
-  const itemId = 1;
+  // const seesionId = localStorage.getItem("sessionId");
+  // const itemId = 1;
 
-  const bidVal = 100;
+  console.log("Session ID:", sessionId);
+  console.log("itemId ID:", itemId);
+  console.log("userId ID:", userId);
+  console.log("bidAmount ID:", bidAmount.value);
+
   socket.value!.emit("placeBid", {
-    seesionId: seesionId,
+    seesionId: sessionId,
     itemId: itemId,
     userId: userId,
     bidVal: bidAmount.value,
