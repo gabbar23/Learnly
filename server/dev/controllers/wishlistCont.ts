@@ -4,7 +4,7 @@ import { Wishlist } from "../models/wishlistModel";
 import { sequelize } from "../util/database";
 
 export const addWishlist = async (req: Request, res: Response) => {
-  const { item_id, user_id } = req.body;
+  const { item_id, user_id } = req.query;
   try {
     const WishlistDetails = await Wishlist.create({
       item_id,
@@ -24,7 +24,7 @@ export const addWishlist = async (req: Request, res: Response) => {
 };
 
 export const getWishlist = async (req: Request, res: Response) => {
-  const { user_id } = req.body;
+  const { user_id } = req.query;
   try {
     const WishlistDetails = await sequelize.query(
       `SELECT items.*
@@ -45,7 +45,7 @@ export const getWishlist = async (req: Request, res: Response) => {
 };
 
 export const deleteWishlistItem = async (req: Request, res: Response) => {
-  const { item_id, user_id } = req.body;
+  const { item_id, user_id } = req.query;
   try {
     const deletedItem = await Wishlist.destroy({
       where: {
