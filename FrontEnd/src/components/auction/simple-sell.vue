@@ -54,22 +54,14 @@
         </button>
       </div>
       <button
-      :class = "isWishlisted ? 'wishlist-svg' : 'wishlisted'"
+        :class="isWishlisted ? 'wishlist-svg' : 'wishlisted'"
         @click="wishlist"
-      >
-    </button> 
-
+      ></button>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-/*    <button
-      v-else
-      class="wishlisted" 
-        @click="RemoveWishlist"
-      >
-    </button>  */
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import router from "@/router";
@@ -95,20 +87,18 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 });
 const details = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
-const item_id=route.query.itemId;
+const item_id = route.query.itemId;
 
-let isWishlisted=ref<boolean>(
-  false 
-);
+const isWishlisted = ref<boolean>(false);
 onMounted(async () => {
   const { itemId, auctionId, auctionType } = route.query;
-  const isWishlistedInDb=await(auctionService.getWishlist(userId));
+  const isWishlistedInDb = await auctionService.getWishlist(userId);
 
   try {
-    console.log((isWishlistedInDb).data)
-    for(let i=0;i<(isWishlistedInDb).data.length;i++){
-      if((isWishlistedInDb).data[i].itemId==item_id){
-        isWishlisted.value=true;
+    console.log(isWishlistedInDb.data);
+    for (let i = 0; i < isWishlistedInDb.data.length; i++) {
+      if (isWishlistedInDb.data[i].itemId == item_id) {
+        isWishlisted.value = true;
         break;
       }
     }
@@ -132,24 +122,20 @@ const bindClick = (args: any) => {
   console.log("Hello");
 };
 
-const wishlist=async ()=>{
-  console.log("wishlist");
-  if(isWishlisted){
-    let response=await auctionService.postWishlist(item_id,userId);
-    isWishlisted.value=false;
-
+const wishlist = async () => {
+  if (isWishlisted.value) {
+    let response = await auctionService.postWishlist(item_id, userId);
+    isWishlisted.value = false;
+  } else {
+    let response = await auctionService.deleteWishlist(item_id, userId);
+    isWishlisted.value = true;
   }
-  else{
-    let response=await auctionService.deleteWishlist(item_id,userId);
-   isWishlisted.value=true; 
-  }
+};
 
-}
-
-const RemoveWishlist=async ()=>{
+const RemoveWishlist = async () => {
   console.log("RemoveWishlist");
-  console.log(response)
-}
+  console.log(response);
+};
 
 const makePayment = () => {
   router.push({
@@ -181,22 +167,23 @@ const makePayment = () => {
   font-weight: bold;
 }
 
-.wishlist-svg,.wishlisted:visited{
+.wishlist-svg,
+.wishlisted:visited {
   background: url(../../assets/heart-regular.svg) no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
-    display: inline-block;
-    height: 52px;
-    width: 40px;
-
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 52px;
+  width: 40px;
 }
-.wishlisted,.wishlist-svg:visited{
+.wishlisted,
+.wishlist-svg:visited {
   background: url(../../assets/heart-solid.svg) no-repeat top left;
-    background-size: contain;
-    cursor: pointer;
-    display: inline-block;
-    height: 52px;
-    width: 40px;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 52px;
+  width: 40px;
 }
 
 .payButton {
