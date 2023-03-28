@@ -77,9 +77,9 @@ const onSubmit = async () => {
       type: "success",
     });
     const userDetails = JSON.stringify(response.data.message);
-    console.log(userDetails);
     localStorage.setItem("userDetails", userDetails);
-    router.push("/home"); // This needs to be updated
+    store.commit("setSessionId", response.data.message.sessionId);
+    router.push("/home");
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");
     notify({
@@ -220,6 +220,7 @@ import type {
   ILoggedInUserDetails,
   ILoginDetails,
 } from "@/interfaces/bid-for-good";
+import store from "@/store";
 export default defineComponent({
   methods: {
     route() {

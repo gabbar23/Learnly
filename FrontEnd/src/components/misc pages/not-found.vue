@@ -1,32 +1,28 @@
 <template>
   <div class="congrats">
-    <img src="../../assets/congrats_crackers.gif" />
+    <img src="../../assets/error_pc_crash.gif" />
   </div>
-  <h1 class="congrats">Congratulations!</h1>
-
+  <h1 class="congrats" style="font-size: 75px">Oh no!</h1>
+  <h6>The page you requested doesn't exist!</h6>
   <br />
   <br />
   <div class="center">
-    <h3>Redirecting to HomePage in: {{ count }} seconds</h3>
+    <FormKit
+      type="button"
+      label="Go Back"
+      style="background-color: seagreen"
+      @click="goBack"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import router from "@/router";
-import { ref, onMounted } from "vue";
+import { FormKit } from "@formkit/vue";
 
-const count = ref<number>(5);
-
-onMounted(() => {
-  const interval = setInterval(() => {
-    count.value--;
-    if (count.value == 0) {
-      clearInterval(interval);
-      router.push("/home");
-      count.value = 5;
-    }
-  }, 1000);
-});
+const goBack = () => {
+  router.push("/");
+};
 </script>
 
 <style scoped>
@@ -48,9 +44,16 @@ onMounted(() => {
   height: 200px;
   font-size: 50px;
 }
+h6 {
+  color: salmon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: smaller;
+}
 
 .parent_sect {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 </style>

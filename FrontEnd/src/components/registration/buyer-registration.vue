@@ -5,29 +5,40 @@
       <nav class="col-md-2 d-none d-md-block sidebar mt-5">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">
-                <router-link to="/buyer">Details</router-link>
+            <li class="nav-item" @click="navigateTo('details')">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer' }"
+                href="javascript:void"
+              >
+                Details
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <router-link to="/buyer/orders">Orders</router-link>
+            <li class="nav-item" @click="navigateTo('orders')">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer/orders' }"
+                href="javascript:void"
+              >
+                Orders
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <router-link to="/buyer/report-issue"
-                  >Report an Issue</router-link
-                >
+            <li class="nav-item" @click="navigateTo('report')">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer/report-issue' }"
+                href="javascript:void"
+              >
+                Report an Issue
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
+            <!-- <li class="nav-item">
+              <a class="nav-link"  :class="{ active: currentRoute.path == '/buyer' }"
+                href="javascript:void">
                 <i class="fas fa-cog"></i>
                 Settings
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </nav>
@@ -39,6 +50,22 @@
   </div>
 </template>
 <script lang="ts" setup>
+import router from "@/router";
+import { computed } from "vue";
+
+const currentRoute = computed(() => {
+  return router.currentRoute.value;
+});
+
+const navigateTo = (buttonClicked: String) => {
+  if (buttonClicked == "details") {
+    router.push("/buyer");
+  } else if (buttonClicked == "orders") {
+    router.push("/buyer/orders");
+  } else if (buttonClicked == "report") {
+    router.push("/buyer/report-issue");
+  }
+};
 </script>
 <style>
 /* Sidebar */
@@ -84,11 +111,6 @@
   font-size: 0.75rem;
   text-transform: uppercase;
 }
-
-/* Main content */
-/* [role="main"] {
-  padding-top: 48px; 
-} */
 
 /* Navbar */
 .navbar {
@@ -147,6 +169,11 @@
 .btn-group-vertical > .btn-group:focus > .btn,
 .btn-group-vertical > .btn-group:hover > .btn {
   z-index: 1;
+}
+
+.nav-link.active {
+  background-color: #b9eedc;
+  color: #fff;
 }
 
 /* Grid breakpoints */
