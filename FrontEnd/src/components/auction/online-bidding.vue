@@ -106,7 +106,7 @@
         <p class = "m-1">250 $</p>
       </div>
     </div> -->
-    <!-- <div class="card scrollable-div">
+    <div class="card scrollable-div">
       <div class="card-header">
         <h5>Recent Bids</h5>
       </div>
@@ -122,8 +122,8 @@
           <span>250 $</span>
         </div>
       </div>
-    </div> -->
-    <div class="bubble-container">
+    </div>
+    <!-- <div class="bubble-container">
       <BubbleAnimation
         v-for="(bubble, index) in bubbles"
         :key="index"
@@ -133,6 +133,10 @@
         :size="bubble.size" 
         :cost="bubble.cost"
       />
+    </div> -->
+
+    <div>
+        <Timer></Timer>
     </div>
   </div>
 </template>
@@ -159,7 +163,8 @@ import { formatDistance } from "date-fns";
 import Loader from "../loader.vue";
 import authentication from "../../../../server/dev/util/authentication";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
-import { BubbleAnimation } from "../component";
+import { BubbleAnimation, Timer } from "../component";
+
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds

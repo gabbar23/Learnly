@@ -21,4 +21,5 @@ export { default as CardDetails } from "../components/card-details.vue";
 export { default as Loader } from "../components/loader.vue";
 export { default as Footer } from "../components/footer.vue";
 export { default as BubbleAnimation } from "../components/bubble-animation.vue";
+export { default as Timer } from "../components/timer.vue";
 
