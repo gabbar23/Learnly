@@ -46,14 +46,25 @@
       </div>
       <div class="text-center mt-5">
         <button
-          class="btn btn-danger"
+          class="btn btn-danger payButton"
           @click="makePayment"
           :disabled="sellItemDetail.isSold"
         >
           Pay
         </button>
       </div>
-      <button class="wishlist-svg" @click="wishlist"></button>
+      <button
+      v-if="isWishlisted==false"
+      class="wishlist-svg" 
+        @click="wishlist"
+      >
+    </button> 
+    <button
+      v-else
+      class="wishlisted" 
+        @click="RemoveWishlist"
+      >
+    </button> 
     </template>
   </div>
 </template>
@@ -84,10 +95,21 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 });
 const details = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
+const item_id=route.query.itemId;
 
+let isWishlisted=false;
 onMounted(async () => {
   const { itemId, auctionId, auctionType } = route.query;
+  const isWishlistedInDb=await(auctionService.getWishlist(userId));
+
   try {
+    console.log((isWishlistedInDb).data)
+    for(let i=0;i<(isWishlistedInDb).data.length;i++){
+      if((isWishlistedInDb).data[i].itemId==item_id){
+        isWishlisted=true;
+        break;
+      }
+    }
     isLoading.value = true;
     const requestPayload = {
       itemId,
@@ -108,8 +130,16 @@ const bindClick = (args: any) => {
   console.log("Hello");
 };
 
-const wishlist=()=>{
+const wishlist=async ()=>{
   console.log("wishlist");
+  let response=await auctionService.postWishlist(item_id,userId);
+  console.log(response)
+}
+
+const RemoveWishlist=async ()=>{
+  console.log("RemoveWishlist");
+  let response=await auctionService.deleteWishlist(item_id,userId);
+  console.log(response)
 }
 
 const makePayment = () => {
@@ -142,8 +172,17 @@ const makePayment = () => {
   font-weight: bold;
 }
 
-.wishlist-svg{
-  background: url(../../assets/heart-fill-svgrepo-com.svg) no-repeat top left;
+.wishlist-svg,.wishlisted:visited{
+  background: url(../../assets/heart-regular.svg) no-repeat top left;
+    background-size: contain;
+    cursor: pointer;
+    display: inline-block;
+    height: 52px;
+    width: 40px;
+
+}
+.wishlisted,.wishlist-svg:visited{
+  background: url(../../assets/heart-solid.svg) no-repeat top left;
     background-size: contain;
     cursor: pointer;
     display: inline-block;
@@ -151,14 +190,14 @@ const makePayment = () => {
     width: 40px;
 }
 
-button {
+.payButton {
   padding: 10px 20px;
   font-size: 1.2rem;
   border-radius: 5px;
   transition: all 0.3s ease-in-out;
 }
 
-button:hover {
+.payButton:hover {
   background-color: #ff4c4c;
   color: #fff;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
