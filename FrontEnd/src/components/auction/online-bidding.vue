@@ -106,7 +106,7 @@
         <p class = "m-1">250 $</p>
       </div>
     </div> -->
-    <div class="card scrollable-div">
+    <!-- <div class="card scrollable-div">
       <div class="card-header">
         <h5>Recent Bids</h5>
       </div>
@@ -122,6 +122,17 @@
           <span>250 $</span>
         </div>
       </div>
+    </div> -->
+    <div class="bubble-container">
+      <BubbleAnimation
+        v-for="(bubble, index) in bubbles"
+        :key="index"
+        :name="bubble.name"
+        :top="bubble.top"
+        :left="bubble.left"
+        :size="bubble.size" 
+        :cost="bubble.cost"
+      />
     </div>
   </div>
 </template>
@@ -148,6 +159,7 @@ import { formatDistance } from "date-fns";
 import Loader from "../loader.vue";
 import authentication from "../../../../server/dev/util/authentication";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
+import { BubbleAnimation } from "../component";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -206,6 +218,12 @@ const description = ref<String>();
 let myBid = ref<Number>();
 
 let timer = ref<String>();
+const bubbles = [
+  { name: "Alice", top: 50, left: -100, size: 50, cost: 50 },
+  { name: "Bob", top: 20, left: -300, size: 70, cost: 250 },
+  { name: "Charlie", top: 10, left: -500, size: 60, cost: 150 },
+  // add more bubbles here
+];
 
 onMounted(() => {
   // let userId = user.userId
@@ -433,4 +451,18 @@ h3 {
   width: 250px;
   height: 300px;
 }
+
+.bubble-container {
+  position: relative;
+  height: 400px;
+}
+
+/* .bubble-container {
+  position: fixed;
+  top: -150px;
+  right: -350px;
+  width: 300px;
+  height: 500px;
+  overflow-y: auto;
+} */
 </style>
