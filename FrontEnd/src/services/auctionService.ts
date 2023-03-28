@@ -5,7 +5,7 @@ export default {
     return apiClient.post("api/auction/auctionEndTime", { auction });
   },
 
-  getAuctionDetails(auction: Number) {
+  getAuctionDetails(auction: Number | String) {
     return apiClient.post("api/auction/auctionDetails", { bidId: auction });
   },
 

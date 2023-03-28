@@ -136,7 +136,7 @@
     </div> -->
 
     <div>
-        <Timer></Timer>
+      <Timer></Timer>
     </div>
   </div>
 </template>
@@ -165,6 +165,8 @@ import authentication from "../../../../server/dev/util/authentication";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { BubbleAnimation, Timer } from "../component";
 
+import router from "@/router";
+import { useRoute } from "vue-router";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -189,9 +191,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 });
 
 const userDetails = localStorage.getItem("userDetails");
-
-let user = JSON.parse(userDetails!);
-const userId = ref<Number>(user.userId);
+const { userId } = JSON.parse(userDetails);
 
 const makeBid = () => {
   isBidMade.value = true;
@@ -223,6 +223,8 @@ const description = ref<String>();
 let myBid = ref<Number>();
 
 let timer = ref<String>();
+const route = useRoute();
+
 const bubbles = [
   { name: "Alice", top: 50, left: -100, size: 50, cost: 50 },
   { name: "Bob", top: 20, left: -300, size: 70, cost: 250 },
@@ -231,28 +233,20 @@ const bubbles = [
 ];
 
 onMounted(() => {
-  // let userId = user.userId
-
-  let id = 1;
-
-  // auctionService
-  //   .getAuctionDetails(id)
-  //   .then((res) => {
-  // auctionService.getAuctionEndTime(id).then((res)=>{
-  //   timer = res.data;
-  // }).catch((res)=>{
-  //   console.log("time not fetched");
-  // });
-
-  // const images = auctionService.getImages(id).then((res)=> {
-  //   console.log(res);
-  //   return res;
-  // }).catch(()=>{
-  //   console.log("cant load auction details");
-  // })
+  // const userId = user.userId;
+  console.log(userId);
+  try{
+    const { itemId, auctionId, auctionType } = route.query;
+  isLoading.value = true;
+  const requestPayload = {
+    itemId,
+    auctionId,
+    auctionType,
+    userId,
+  };
 
   auctionService
-    .getAuctionDetails(id)
+    .getAuctionDetails(requestPayload.auctionId)
     .then((res) => {
       console.log(res.data);
       startTime.value = res.data.startTime;
@@ -263,12 +257,7 @@ onMounted(() => {
     });
 
   // auctionService.getItemDetails(id).then((res)=> {
-  const requestPayload = {
-    itemId: 1,
-    auctionId: 1,
-    auctionType: "live",
-    userId: 3,
-  };
+
   auctionService
     .getNewItemDetails(requestPayload)
     .then((res) => {
@@ -281,7 +270,7 @@ onMounted(() => {
     });
 
   auctionService
-    .getCurrentMax(id)
+    .getCurrentMax(requestPayload.auctionId)
     .then((res) => {
       highestBid.value = res.data;
     })
@@ -289,9 +278,17 @@ onMounted(() => {
       console.log("Current Max Failed = " + res);
     });
 
-  auctionService.getCurrentUserBid(userId.value, id).then((res) => {
-    myBid.value = res.data;
-  });
+  auctionService
+    .getCurrentUserBid(userId, requestPayload.auctionId)
+    .then((res) => {
+      myBid.value = res.data;
+    });
+  }catch(e){
+    console.error(e);
+  }finally{
+    isLoading.value = false;
+  }
+  
 });
 
 // setInterval(() => {
@@ -351,7 +348,7 @@ const sendMessage = () => {
   socket.value!.emit("placeBid", {
     seesionId: seesionId,
     itemId: itemId,
-    userId: userId.value,
+    userId: userId,
     bidVal: bidAmount.value,
   });
 };

@@ -11,7 +11,7 @@
 export default {
   data() {
     return {
-      timeLeft: 30, 
+      timeLeft: 60, 
       timerInterval: null,
       progress: 0,
     };
