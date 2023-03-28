@@ -14,10 +14,9 @@
         </thead>
         <tbody>
           <template v-if="wishDetails.length > 0">
-            <tr v-for="item in wishDetails" :key="item.cityName">
-              <button id="stuff.item"
-        class="wishlist-svg-selected"
-        @click="RemoveWishlist(item)"
+            <tr v-for="item in wishDetails">
+              <button class="wishlist-svg-selected"
+        @click="removeFromWishlist(item)"
       >
     </button>
               <td>{{ item.itemName }}</td>
@@ -42,31 +41,27 @@ import { button } from "@formkit/inputs";
   const wishDetails=ref<any>([]);
   const details = localStorage.getItem("userDetails");
   const { userId } = JSON.parse(details);
- // let item=0;
- let stuff=reactive<any>({
-  item:0
- })
- // const itemId=wishDetails.value[item].itemId;
+ const isWishlisted = ref<boolean>(false);
   onMounted(async () => {
-    try {
-        console.log(userId);
-      const response =await auctionService.getWishlist(userId);
-      wishDetails.value = response.data;
-    } catch (e) {
-      console.error("Error in fetching states", e);
-    }
-  });
+  await loadWishlist();
+});
 
+async function loadWishlist() {
+  try {
+    const response = await auctionService.getWishlist(userId);
+    wishDetails.value = response.data;
+  } catch (e) {
+    console.error("Error in fetching wishlist", e);
+  }
+}
 
-
-  const RemoveWishlist = (item:any) => {
-    console.log(item)
-    console.log("wishlist removed");
-    console.log(wishDetails.value);
-    //console.log(itemId);
-    //let response=auctionService.deleteWishlist(itemId,userId);
-  };
-  </script>
+async function removeFromWishlist(item: any) {
+  console.log(item.itemId);
+  console.log("wishlist removed");
+  await auctionService.deleteWishlist(item.itemId, userId);
+  await loadWishlist();
+}
+</script>
   <style scoped>
   .side-bar > div {
     cursor: pointer;

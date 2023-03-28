@@ -70,7 +70,6 @@ import auctionService from "@/services/auctionService";
 import { useRoute } from "vue-router";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Loader } from "../component";
-import { tr } from "date-fns/locale";
 
 const route = useRoute();
 const isLoading = ref<boolean>(false);
@@ -96,7 +95,7 @@ onMounted(async () => {
   const isWishlistedInDb = await auctionService.getWishlist(userId);
 
   try {
-    console.log(isWishlistedInDb.data);
+    //console.log(isWishlistedInDb.data);
     for (let i = 0; i < isWishlistedInDb.data.length; i++) {
       if (isWishlistedInDb.data[i].itemId == item_id) {
         isWishlisted.value = true;
@@ -133,11 +132,6 @@ const wishlist = async () => {
     //isWishlisted.value = true;
   }
   isWishlisted.value = !isWishlisted.value;
-};
-
-const RemoveWishlist = async () => {
-  console.log("RemoveWishlist");
-  console.log(response);
 };
 
 const makePayment = () => {
