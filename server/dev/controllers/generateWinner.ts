@@ -39,17 +39,18 @@ const generateWinner = async (req: Request, res: Response) => {
     }
     const results = await sequelize.query(
       `
-      SELECT u.firstName, u.lastName, u.userId,maxBid
+      SELECT u.firstName, u.lastName, l.email
       FROM UserDetails u
       INNER JOIN (
-        SELECT userId, MAX(bidAmount) AS maxBid
+        SELECT userId, userBidId, MAX(bidAmount) AS maxBid
         FROM userBidDetails
-        WHERE auctionId = :auctionId
+        WHERE auctionId = 1
         GROUP BY userId
       ) b ON u.userId = b.userId
-      INNER JOIN items i ON i.auctionId = :auctionId
-      WHERE b.maxBid = (SELECT MAX(bidAmount) FROM userBidDetails WHERE auctionId = :auctionId)
-      AND b.maxBid > i.startPrice  
+      INNER JOIN items i ON i.auctionId = 1
+      INNER JOIN loginDetails l ON l.user_id = u.userId 
+      WHERE b.maxBid = (SELECT MAX(bidAmount) FROM userBidDetails WHERE auctionId = 1)
+      AND b.maxBid > i.startPrice;
       `,
       {
         type: QueryTypes.SELECT,
