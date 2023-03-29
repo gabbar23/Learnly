@@ -53,11 +53,12 @@ export default {
     return apiClient.delete("api/wishlist/deleteWishlist?item_id="+item_id+"&user_id="+user_id);
   },
   
-  getReport(){
-    return apiClient.get("api/report/getReport");
+  getReport(user_id=Number){
+    console.log(user_id);
+    return apiClient.get("api/report/getReport?user_id="+user_id);
   },
-  postReport(){
-    return apiClient.post("api/report/addReport");
+  postReport(user_id=Number, issue=String, concern=String,status=String){
+    return apiClient.post("api/report/addReport?user_id="+user_id+"&issueType="+issue+"&description="+concern+"&status="+status);
   },
 
 };
