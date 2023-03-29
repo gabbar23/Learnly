@@ -2,13 +2,14 @@ import { Request, Response } from "express";
 import { Report } from "../models/reportsModel";
 
 const addReport = async (req: Request, res: Response) => {
-  const { user_id, description } = req.body;
+  const { user_id, description, issueType } = req.body;
   console.log(user_id);
 
   try {
     const report = await Report.create({
       user_id,
       description,
+      issueType,
     });
     res.status(200).json(report);
   } catch (error) {
