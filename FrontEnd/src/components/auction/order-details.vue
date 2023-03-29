@@ -28,12 +28,13 @@
   </section>
 </template>
 <script lang="ts" setup>
+import type { IGetUserDetails } from "@/interfaces/seller-registration";
 import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
 import NoContent from "../no-content.vue";
 
 const orderDetails = ref<any>([]);
-const details = localStorage.getItem("userDetails");
+const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
 
 onMounted(async () => {
