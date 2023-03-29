@@ -111,6 +111,7 @@
         <div
           v-for="slide in 25"
           class="d-flex align-items-center px-3 py-2 border-bottom"
+          :key="slide"
         >
           <span class="mr-3">
             <font-awesome-icon icon="user-circle" />
@@ -196,7 +197,7 @@ let socket = ref<Socket>();
 const description = ref<String>();
 let myBid = ref<Number>();
 
-let timer = ref<number>();
+let timer: number;
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = [
