@@ -174,7 +174,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
 });
 
-const userDetails = localStorage.getItem("userDetails");
+const userDetails: any = localStorage.getItem("userDetails");
 const { userId, sessionId } = JSON.parse(userDetails);
 
 watch(timeLeft, (newValue, oldValue) => {
@@ -196,7 +196,7 @@ let socket = ref<Socket>();
 const description = ref<String>();
 let myBid = ref<Number>();
 
-let timer = ref<String>();
+let timer = ref<number>();
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = [
@@ -211,7 +211,7 @@ onMounted(() => {
   console.log(userId);
   try {
     isLoading.value = true;
-    const requestPayload = {
+    const requestPayload: any = {
       itemId,
       auctionId,
       auctionType,
