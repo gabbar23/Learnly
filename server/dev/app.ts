@@ -115,15 +115,14 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", origin!);
   }
 
-app.use((_, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  // res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
-        "Access-Control-Allow-Methods",
-        "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-      );
-      res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-      next();
-    });
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 //api middlewares
 app.use("/api/v1/register", registerRoutes);

@@ -11,7 +11,10 @@ const fetchBidTime = async (req: Request, res: Response) => {
             const auction = await Auction.findOne({
                 attributes: [
                     [sequelize.literal("TIMEDIFF(endTime,startTime) "), "duration"],
+                    [sequelize.fn('TIMESTAMPDIFF', sequelize.literal('SECOND'), sequelize.col('startTime'), sequelize.col('endTime')), 'seconds_duration']
+   
                 ],
+
                 where: { auctionId: auctionId },
             });
             res.status(200).json(auction);
