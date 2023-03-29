@@ -12,16 +12,12 @@
                 v-for="(item, index) in sellItemDetail.imageDetails"
                 :key="index"
               >
-                <img
-                  :src="item.imgUrl"
-                  class="carousel__item item_size"
-                  @click="bindClick(item)"
-                />
+                <img :src="item.imgUrl" class="carousel__item item_size" />
               </Slide>
             </template>
             <template v-else>
               <Slide v-for="slide in 5" :key="slide">
-                <div class="carousel__item" @click="bindClick(slide)">
+                <div class="carousel__item">
                   {{ slide }}
                 </div>
               </Slide>
@@ -131,7 +127,7 @@
         :name="bubble.name"
         :top="bubble.top"
         :left="bubble.left"
-        :size="bubble.size" 
+        :size="bubble.size"
         :cost="bubble.cost"
       />
     </div>
