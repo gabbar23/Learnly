@@ -88,10 +88,10 @@
             <h1>Auction Ending in:</h1>
             <div>{{ countdown }}</div>
           </div> -->
-          <div>
+          <!-- <div>
             <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
             <div v-else>Time's up!</div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
