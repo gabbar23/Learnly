@@ -5,7 +5,7 @@ export default {
     return apiClient.post("api/auction/auctionEndTime", { auction });
   },
 
-  getAuctionDetails(auction: Number) {
+  getAuctionDetails(auction: Number | String) {
     return apiClient.post("api/auction/auctionDetails", { bidId: auction });
   },
 
@@ -23,11 +23,11 @@ export default {
     return apiClient.post("api/auction/auctionImages", { itemId: auction });
   },
 
-  getCurrentMax(auction: Number) {
+  getCurrentMax(auction: Number | String) {
     return apiClient.post("api/auction/highestPrice", { auctionId: auction });
   },
 
-  getCurrentUserBid(userId: Number, auction: Number) {
+  getCurrentUserBid(userId: Number, auction: Number | String) {
     return apiClient.post("api/auction/myBidValue", {
       userId: userId,
       auctionId: auction,
