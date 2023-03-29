@@ -5,6 +5,7 @@ import { userBidDetailsModel } from "../models/userBidDetails";
 import { Item } from "../models/itemModel";
 import { sequelize } from "../util/database";
 import { DataTypes, QueryTypes } from "sequelize";
+import { sendEmail } from "../util/emailSender";
 
 const Winner = sequelize.define('winner', {
     
@@ -14,6 +15,11 @@ const Winner = sequelize.define('winner', {
      },
      lastName:{
         field: 'lastname',
+        type: DataTypes.STRING
+     },
+
+     email:{
+        field: 'email',
         type: DataTypes.STRING
      },
      userId:
@@ -39,18 +45,18 @@ const generateWinner = async (req: Request, res: Response) => {
     }
     const results = await sequelize.query(
       `
-      SELECT u.firstName, u.lastName, l.email
-      FROM UserDetails u
-      INNER JOIN (
+      SELECT u.firstName, u.lastName, l.email, maxBid,u.userId
+        FROM UserDetails u
+        INNER JOIN (
         SELECT userId, userBidId, MAX(bidAmount) AS maxBid
         FROM userBidDetails
         WHERE auctionId = 1
         GROUP BY userId
-      ) b ON u.userId = b.userId
-      INNER JOIN items i ON i.auctionId = 1
-      INNER JOIN loginDetails l ON l.user_id = u.userId 
-      WHERE b.maxBid = (SELECT MAX(bidAmount) FROM userBidDetails WHERE auctionId = 1)
-      AND b.maxBid > i.startPrice;
+        ) b ON u.userId = b.userId
+        INNER JOIN items i ON i.auctionId = 1
+        INNER JOIN loginDetails l ON l.user_id = u.userId 
+        WHERE b.maxBid = (SELECT MAX(bidAmount) FROM userBidDetails WHERE auctionId = 1)
+        AND b.maxBid > i.startPrice;
       `,
       {
         type: QueryTypes.SELECT,
@@ -65,7 +71,8 @@ const generateWinner = async (req: Request, res: Response) => {
         firstName: result.getDataValue('firstName'),
         lastName: result.getDataValue('lastName'),
         userId: result.getDataValue('userId'),
-        bidAmount : result.getDataValue('maxBid')
+        bidAmount : result.getDataValue('maxBid'),
+        email:result.getDataValue("email")
       }));
       
     //console.log(winners);
@@ -74,6 +81,7 @@ const generateWinner = async (req: Request, res: Response) => {
     const lastName=  winners[0].lastName;
     const bidAmount = winners[0].bidAmount;
     const userId = winners[0].userId;
+    const email = winners[0].email;
 
     console.log(firstname,lastName)
     
@@ -96,7 +104,7 @@ const generateWinner = async (req: Request, res: Response) => {
 
     // Update the Item's isSold field to true
     await Item.update({ isSold: true }, { where: { auctionId } });
-
+    sendEmail("Congratulations!!"+firstname+lastName+"you have won the auction",email );
     console.log("Winner declared!");
     return res.status(200).json({ message: "Winner declared!" });
 

@@ -29,9 +29,8 @@ import { userBidDetailsModel } from "./models/userBidDetails";
 
 import { initSocket } from "./util/socket";
 
-import { CorsOptions } from "cors";
-import { wishListRoutes } from "./routes/wishListRoutes";
-import { Wishlist } from "./models/wishlistModel";
+//import { CorsOptions} from "cors"
+
 
 declare module "express-session" {
   interface Session {
@@ -92,28 +91,46 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const corsOptions: CorsOptions = {
-  origin: (origin, callback) => {
-    if (
-      origin === "http://localhost:5173" ||
-      origin === "http://127.0.0.1:5173"
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
 
-app.use(cors(corsOptions));
+// const corsOptions: CorsOptions = {
+//   origin: (origin, callback) => {
+//     if (origin === 'http://localhost:5173' || origin === 'http://127.0.0.1:5173') {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true
+// }
 
-app.use((req, res, next) => {
-  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin!)) {
-    res.setHeader("Access-Control-Allow-Origin", origin!);
-  }
+app.use(
+  // cors(corsOptions)
+  // app.use((_, res, next) => {
+  //   res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  cors({
+    origin: "http://127.0.0.1:5173",
+    credentials: true,
+  })
+
+  
+);
+
+// app.use((req, res, next) => {
+
+//   const allowedOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+//   const origin = req.headers.origin;
+//   if (allowedOrigins.includes(origin!)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin!);
+//   }
+
+//   // res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+//   );
+//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 app.use((_, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
@@ -132,7 +149,6 @@ app.use("/api/bid", bidRoutes);
 app.use("/api/v1/sell", orderRoutes);
 app.use("/api/auction/", auctionRoutes);
 app.use("/api/report/", reportRoutes);
-app.use("/api/wishlist/", wishListRoutes);
 
 UserDetail.hasMany(Report, { foreignKey: "user_id" });
 Report.belongsTo(UserDetail, { foreignKey: "user_id" });
@@ -172,9 +188,6 @@ ImageDetailModel.belongsTo(Item, { foreignKey: "itemId" });
 
 UserDetail.hasMany(userBidDetailsModel, { foreignKey: "userId" });
 userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
-
-UserDetail.hasMany(Wishlist, { foreignKey: "user_id" });
-Wishlist.belongsTo(UserDetail, { foreignKey: "user_id" });
 
 // syncing models
 // userBidDetailsModel.sync({force:true}).then((_:any)=>{
