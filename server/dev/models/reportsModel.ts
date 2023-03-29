@@ -1,12 +1,19 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../util/database";
 
-const ReportModel = sequelize.define("report", {
+const ReportModel = sequelize.define("reports", {
   ticketId: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
+  },
+  isResolved: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  isssueType: {
+    type: DataTypes.ENUM("return", "refund", "cancellation"),
   },
   description: {
     type: DataTypes.STRING,
