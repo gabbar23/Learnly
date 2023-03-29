@@ -12,7 +12,7 @@ const ReportModel = sequelize.define("reports", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  isssueType: {
+  issueType: {
     type: DataTypes.ENUM("return", "refund", "cancellation"),
   },
   description: {
