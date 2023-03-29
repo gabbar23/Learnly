@@ -85,9 +85,9 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   user_id: 0,
   bidAmount: null,
 });
-const details = localStorage.getItem("userDetails");
+const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
-const item_id = route.query.itemId;
+const item_id:any = route.query.itemId;
 
 const isWishlisted = ref<boolean>(false);
 onMounted(async () => {

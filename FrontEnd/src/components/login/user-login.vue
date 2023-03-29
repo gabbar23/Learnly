@@ -50,6 +50,9 @@
 import AuthService from "@/services/AuthService";
 import { reactive } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import type { ILoginDetails } from "@/interfaces/bid-for-good";
+import router from "@/router";
+import store from "@/store";
 
 let loginDetails = reactive<ILoginDetails>({
   email: "",
@@ -57,9 +60,6 @@ let loginDetails = reactive<ILoginDetails>({
 });
 const { notify } = useNotification();
 
-if (localStorage.getItem("sessionId")) {
-  //router.push('/homepage');
-}
 
 const loginError = async () => {
   notify({
@@ -212,20 +212,3 @@ div#app div#login div#form button:hover {
   }
 }
 </style>
-<script lang="ts">
-import router from "@/router";
-import { errorHandler, FormKit } from "@formkit/vue";
-import { defineComponent } from "vue";
-import type {
-  ILoggedInUserDetails,
-  ILoginDetails,
-} from "@/interfaces/bid-for-good";
-import store from "@/store";
-export default defineComponent({
-  methods: {
-    route() {
-      router.push("/homepage");
-    },
-  },
-});
-</script>
