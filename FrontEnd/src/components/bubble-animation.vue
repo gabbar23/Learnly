@@ -54,7 +54,7 @@ const props = defineProps({
 .bubble {
   position: absolute;
   border-radius: 50%;
-  background-color: #ff7f50;
+  background-color: #d24b3a;
   color: white;
   font-size: 1.2rem;
   text-align: center;
