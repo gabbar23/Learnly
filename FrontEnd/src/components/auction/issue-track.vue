@@ -2,28 +2,35 @@
     <section>
       <h1>Report issue</h1>
     </section>
-    <div class="parent_sect">
+    <div>
       <div class="text-center">
         <v-table>
+          <thead>
+            <tr>
+          <th class="text-center">Issue ID</th>
+          <th class="text-center">Issue Type</th>
+          <th class="text-center">Description</th>
+          <th class="text-center">Status</th>
+        </tr>
+          </thead>
           <tbody>
             <template v-if="issueList.length > 0">
               <tr v-for="item in issueList">
-                <td>
+                <td class="text-center">
+                  {{ item.issue }}
+                  
+                </td>
+                <td class="text-left">
+                  {{ item.issueType.toUpperCase() }}
+                  </td>
+                  <td class="text-left">
+                    {{ item.concern }}
+ 
+                </td>
+                <td class="text-center">
                   <FormKit
+                  class="text-center"
                     type="text"
-                    label="Issue ID"
-                    :disabled="true"
-                    v-model="item.issue"
-                  />
-                  <FormKit
-                    type="text"
-                    label="Issue Type"
-                    :disabled="true"
-                    v-model="item.issueType"
-                  />
-                  <FormKit
-                    type="text"
-                    label="Status"
                     placeholder="Status"
                     :disabled="true"
                     :options="[
@@ -31,16 +38,9 @@
                       { label: 'resolved', value: 'resolved' }
                     ]"
                     v-model="item.status"
-                  />
-
-                  <FormKit
-                    type="textarea"
-                    label="Concern"
-                    :disabled="true"
-                    placeholder="Please explain your concern in detail..."
-                    v-model="item.concern"
-                  />
+                    />
                 </td>
+
 
               </tr>
             </template>

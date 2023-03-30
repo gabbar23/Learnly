@@ -83,7 +83,7 @@ const navigateTo = (buttonClicked: String) => {
 .sidebar {
   position: fixed;
   top: 0;
-  bottom: 0;
+  bottom: 150px;
   left: 0;
   z-index: 100;
   padding: 48px 0 0;
