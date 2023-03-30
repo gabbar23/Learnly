@@ -237,6 +237,8 @@ onMounted(() => {
         description.value = res.data.item.itemDes;
         startVal.value = res.data.item.startPrice;
         sellItemDetail = res.data.item;
+        startTime.value = new Date(res.data.item.createdAt);
+        endTime.value = new Date(res.data.item.updatedAt);
       })
       .catch(() => {
         console.log("cant fetch item details");

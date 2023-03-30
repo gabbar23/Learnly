@@ -34,7 +34,7 @@
       </Slide>
     </Carousel>
 
-    <h3>Blind Bid</h3>
+    <h3 style="display: flex; justify-content:center;">Blind Bid</h3>
     <Carousel>
       <Slide v-for="(item, index) in blindAuctionDetails" :key="index">
         <img
@@ -50,7 +50,7 @@
       </template>
     </Carousel>
 
-    <h3>Simple sell</h3>
+    <h3 style="display: flex; justify-content:center;">Simple sell</h3>
 
     <Carousel>
       <Slide v-for="(item, index) in simpleSellAuctionDetails" :key="index">
