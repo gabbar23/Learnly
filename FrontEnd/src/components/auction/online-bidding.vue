@@ -12,7 +12,10 @@
                 v-for="(item, index) in sellItemDetail.imageDetails"
                 :key="index"
               >
-                <img :src="item.imgUrl" class="carousel__item item_size" />
+                <img :src="item.imgUrl" class="carousel__item item_size"
+                onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+               />
+                
               </Slide>
             </template>
             <template v-else>
@@ -32,12 +35,13 @@
           <div class="row p-3">
             <div class="col-4 p-2 font-weight-bold">Description:</div>
             <div class="col-8 p-2">{{ description }}</div>
-            <div class="col-4 p-2 font-weight-bold">Starting At:</div>
-            <div class="col-8 p-2">{{ startTime }}</div>
 
-            <div class="col-4 p-2 font-weight-bold">Closing At:</div>
-            <div class="col-8 p-2">{{ endTime }}</div>
+            <div class="col-4 p-2 font-weight-bold">Starting At Time:</div>
+            <div class="col-8 p-2">{{ timeParse(startTime) }}</div>
 
+            <div class="col-4 p-2 font-weight-bold">Closing At Time:</div>
+            <div class="col-8 p-2">{{ timeParse(endTime) }}</div>
+  
             <div class="col-4 p-2 font-weight-bold">Start Price:</div>
             <div class="col-8 p-2">{{ startVal }}$</div>
 
@@ -61,6 +65,7 @@
             >
               Submit Bid
             </button>
+
           </div>
 
           <!-- <div class="d-flex">
@@ -153,7 +158,6 @@ import Loader from "../loader.vue";
 import BubbleAnimation from "../bubble-animation.vue";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Timer } from "../component";
-
 import { useRoute } from "vue-router";
 
 const isBidMade = ref<boolean>(false);
@@ -161,7 +165,6 @@ const timeLeft = ref(10); // 60 seconds
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
-
 let sellItemDetail = reactive<IGetAuctionItemDetails>({
   imageDetails: [],
   createdAt: "",
@@ -174,6 +177,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   user_id: 0,
   bidAmount: null,
 });
+
 
 const userDetails: any = localStorage.getItem("userDetails");
 const { userId, sessionId } = JSON.parse(userDetails);
@@ -311,6 +315,11 @@ socket.value.on("disconnect", () => {
   console.log("user disconnected");
 });
 
+const timeParse=(startTime: string) =>{
+  let Time=getTime(startTime);
+  console.log(Time)
+  return Time
+}
 const sendMessage = () => {
   console.log("message sent");
   // Emit a 'chat message' event to the server
@@ -329,7 +338,19 @@ const sendMessage = () => {
     bidVal: bidAmount.value,
   });
 };
+const getTime = (datetimeString: string) => {
+  const datetime = new Date(datetimeString);
+  const time = datetime
+    .toLocaleTimeString(undefined, { hour12: false })
+    .slice(0, -3);
+  return time;
+};
 
+const getDate = (datetimeString: string) => {
+  const datetime = new Date(datetimeString);
+  const date = datetime.toISOString().slice(0, 10);
+  return date;
+};
 const formatTime = (time: any) => {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
