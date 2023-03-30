@@ -7,6 +7,9 @@ import { Item } from "../../models/itemModel";
 import { userBidDetailsModel } from "../../models/userBidDetails";
 import { QueryTypes } from "sequelize";
 import { sequelize } from "../../util/database";
+
+// import * as model from "../../models";
+import { UserDetail } from "../../models/userDetailModel";
 // import { Socket,Server } from "socket.io";
 
 const makeBid = (req: Request, res: Response) => {
@@ -144,13 +147,39 @@ const findMyBidAmount = (req : Request , res : Response) => {
   .catch((res)=>{
     console.log(res);
   });
-
-
 }
 
 const validateAmount = () => {
   console.log();
 };
+
+const topFiveUsers = (req:Request , res: Response) =>{
+  
+  const auctionId = req.body.auctionId;
+
+  userBidDetailsModel.findAll({
+    where: {
+      auctionId: auctionId,
+    },
+    include:{
+      model:UserDetail,
+      attributes:["firstName","lastName"]
+    },
+    attributes:["bidAmount"],
+    order: [["bidAmount", "DESC"]],
+    limit: 5
+  })
+  .then((result) => {
+    
+    console.log("5 User send to Client.");
+    res.status(200).send(result);
+
+  })
+  .catch((result)=>{
+    console.log("topFiveUsers in auctionHandler Failed." + result);
+    res.status(401).send({message: "Top Five user can not be fetched for this auction." });
+  })
+}
 
 export default {
   makeBid,
@@ -162,7 +191,8 @@ export default {
   validateAmount,
   findMaxBidAmount,
   findMyBidAmount,
-  checkForUser
+  checkForUser,
+  topFiveUsers,
 };
 
 

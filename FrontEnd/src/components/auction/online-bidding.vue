@@ -109,15 +109,14 @@
       </div>
       <div class="card-body p-0">
         <div
-          v-for="slide in 25"
+          v-for="user in topUserList"
           class="d-flex align-items-center px-3 py-2 border-bottom"
-          :key="slide"
         >
           <span class="mr-3">
             <font-awesome-icon icon="user-circle" />
           </span>
-          <span class="flex-grow-1">Harsh Srivastava</span>
-          <span>250 $</span>
+          <span class="flex-grow-1">{{ user.UserDetail.firstName + " " +user.UserDetail.lastName }} </span>
+          <span>{{ user.bidAmount }}</span>
         </div>
       </div>
     </div>
@@ -161,6 +160,8 @@ const timeLeft = ref(10); // 60 seconds
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
+
+const topUserList = ref<String>();
 
 let sellItemDetail = reactive<IGetAuctionItemDetails>({
   imageDetails: [],
@@ -207,6 +208,8 @@ const bubbles = [
   // add more bubbles here
 ];
 
+socket.value = io("http://localhost:3000/");
+
 onMounted(() => {
   // const userId = user.userId;
   console.log(userId);
@@ -219,16 +222,47 @@ onMounted(() => {
       userId,
     };
 
-    auctionService
-      .getAuctionDetails(requestPayload.auctionId)
-      .then((res) => {
-        console.log(res.data);
-        startTime.value = res.data.startTime;
-        endTime.value = res.data.endTime;
+    console.log("Top users");
+    auctionService.getTopFiveUser(requestPayload.auctionId)
+    .then((result) => {
+       topUserList.value = result.data;
+      //  console.log(topUserList.value);
+    })
+    .catch((result) => {
+      console.log("top User List failed.");
+      // console.log(result)
+    });
+
+    const updateUserList = ()=>{
+      auctionService.getTopFiveUser(requestPayload.auctionId)
+      .then((result) => {
+        topUserList.value = result.data;
+        //  console.log(topUserList.value);
       })
-      .catch(() => {
-        console.log("cant load auction details");
-      });
+      .catch((result) => {
+        console.log("top User List failed.");
+        // console.log(result)
+     })
+
+    }
+
+    updateUserList();
+
+    socket.value?.on("updateTopUserList", (data) =>{
+        updateUserList();
+    });
+    
+
+    // auctionService
+    //   .getAuctionDetails(requestPayload.auctionId)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     startTime.value = res.data.startTime;
+    //     endTime.value = res.data.endTime;
+    //   })
+    //   .catch(() => {
+    //     console.log("cant load auction details");
+    //   });
 
     // auctionService.getItemDetails(id).then((res)=> {
 
@@ -264,22 +298,8 @@ onMounted(() => {
   }
 });
 
-// setInterval(() => {
-//   const now:Date = new Date();
-//   let remainingTime:number = endTime.value - now
-//   const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-//   const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-//   const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-//   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-//       timer.value = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-// }, 1000);
-
 // Connection to socket at server
-socket.value = io("http://localhost:3000/");
 
-// Listen for 'chat message' events from the server
 
 socket.value.on("connection", (message: string) => {
   console.log(message);
