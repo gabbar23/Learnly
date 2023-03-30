@@ -12,16 +12,12 @@
                 v-for="(item, index) in sellItemDetail.imageDetails"
                 :key="index"
               >
-                <img
-                  :src="item.imgUrl"
-                  class="carousel__item item_size"
-                  @click="bindClick(item)"
-                />
+                <img :src="item.imgUrl" class="carousel__item item_size" />
               </Slide>
             </template>
             <template v-else>
               <Slide v-for="slide in 5" :key="slide">
-                <div class="carousel__item" @click="bindClick(slide)">
+                <div class="carousel__item">
                   {{ slide }}
                 </div>
               </Slide>
@@ -92,10 +88,10 @@
             <h1>Auction Ending in:</h1>
             <div>{{ countdown }}</div>
           </div> -->
-          <div>
+          <!-- <div>
             <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
             <div v-else>Time's up!</div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -115,6 +111,7 @@
         <div
           v-for="slide in 25"
           class="d-flex align-items-center px-3 py-2 border-bottom"
+          :key="slide"
         >
           <span class="mr-3">
             <font-awesome-icon icon="user-circle" />
@@ -131,7 +128,7 @@
         :name="bubble.name"
         :top="bubble.top"
         :left="bubble.left"
-        :size="bubble.size" 
+        :size="bubble.size"
         :cost="bubble.cost"
       />
     </div>
@@ -178,7 +175,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
 });
 
-const userDetails = localStorage.getItem("userDetails");
+const userDetails: any = localStorage.getItem("userDetails");
 const { userId, sessionId } = JSON.parse(userDetails);
 
 watch(timeLeft, (newValue, oldValue) => {
@@ -200,7 +197,7 @@ let socket = ref<Socket>();
 const description = ref<String>();
 let myBid = ref<Number>();
 
-let timer = ref<String>();
+let timer: number;
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = [
@@ -215,7 +212,7 @@ onMounted(() => {
   console.log(userId);
   try {
     isLoading.value = true;
-    const requestPayload = {
+    const requestPayload: any = {
       itemId,
       auctionId,
       auctionType,

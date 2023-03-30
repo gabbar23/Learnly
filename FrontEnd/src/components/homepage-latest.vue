@@ -72,7 +72,7 @@ import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
 import router from "@/router";
 
-const currentSlide = ref<Number>(0);
+const currentSlide = ref<number>(0);
 
 const slideTo = (val: any) => {
   currentSlide.value = val;
@@ -113,7 +113,7 @@ onMounted(async () => {
   try {
     isLoading.value = true;
     const response = await auctionService.getAllBidDetails();
-    let allAuctionDetails = response.data.details.map((auction) => {
+    let allAuctionDetails = response.data.details.map((auction:any) => {
       return {
         auctionId: auction.auctionId,
         auctionType: auction.auctionType,
@@ -123,13 +123,13 @@ onMounted(async () => {
     });
 
     blindAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == "blind"
+      (auction:any) => auction.auctionType == "blind"
     );
     simpleSellAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == null// update it to simple get it fixed with BE
+      (auction:any) => auction.auctionType == null// update it to simple get it fixed with BE
     );
     liveAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == "live"
+      (auction:any) => auction.auctionType == "live"
     );
   } catch (e) {
     console.log("Error occured");
