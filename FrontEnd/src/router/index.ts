@@ -41,15 +41,20 @@ const router = createRouter({
       name: "Home",
       component: () => import("../components/homepage-latest.vue"),
     },
-    {
-      path: "/interim-home",
-      name: "Interim-Homepage",
-      component: () => import("../components/intermediate-homepage.vue"),
-    },
+    // {
+    //   path: "/interim-home",
+    //   name: "Interim-Homepage",
+    //   component: () => import("../components/intermediate-homepage.vue"),
+    // },
     {
       path: "/admin-dashboard",
       name: "Admin Dashboard",
       component: () => import("../components/admin-dashboard.vue"),
+    },
+    {
+      path: "/admin-issue-details",
+      name: "Admin Issues",
+      component: () => import("../../src/components/admin-issue-details.vue"),
     },
     {
       path: "/make-bid",
@@ -61,11 +66,11 @@ const router = createRouter({
       name: "Sell Item",
       component: () => import("../components/auction/sell-item-landing.vue"),
     },
-    {
-      path: "/homepage",
-      name: "Homepage",
-      component: () => import("../components/homepage-new.vue"),
-    },
+    // {
+    //   path: "/homepage",
+    //   name: "Homepage",
+    //   component: () => import("../components/homepage-new.vue"),
+    // },
     {
       path: "/make-blind-auction",
       name: "Blind Auction",
@@ -76,11 +81,11 @@ const router = createRouter({
       name: "Simply Sell",
       component: () => import("../components/auction/simple-sell.vue"),
     },
-    {
-      path: "/reg-buyer",
-      name: "Buyer Registration",
-      component: () => import("../components/registration/buyer-details.vue"),
-    },
+    // {
+    //   path: "/reg-buyer",
+    //   name: "Buyer Registration",
+    //   component: () => import("../components/registration/buyer-details.vue"),
+    // },
     {
       path: "/reg-seller",
       name: "User Registration",
@@ -116,7 +121,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const userDetailsObject = localStorage.getItem("userDetails");
+  const userDetailsObject: any = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
   if (isLoggedIn) {

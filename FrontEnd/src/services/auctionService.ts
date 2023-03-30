@@ -5,7 +5,7 @@ export default {
     return apiClient.post("api/auction/auctionEndTime", { auction });
   },
 
-  getAuctionDetails(auction: Number) {
+  getAuctionDetails(auction: Number | String) {
     return apiClient.post("api/auction/auctionDetails", { bidId: auction });
   },
 
@@ -23,11 +23,11 @@ export default {
     return apiClient.post("api/auction/auctionImages", { itemId: auction });
   },
 
-  getCurrentMax(auction: Number) {
+  getCurrentMax(auction: Number | String) {
     return apiClient.post("api/auction/highestPrice", { auctionId: auction });
   },
 
-  getCurrentUserBid(userId: Number, auction: Number) {
+  getCurrentUserBid(userId: Number, auction: Number | String) {
     return apiClient.post("api/auction/myBidValue", {
       userId: userId,
       auctionId: auction,
@@ -60,5 +60,8 @@ export default {
   postReport(user_id=Number, issue=String, concern=String,status=String){
     return apiClient.post("api/report/addReport?user_id="+user_id+"&issueType="+issue+"&description="+concern+"&status="+status);
   },
-
+  updateReport(ticketId=Number, isResolved=Boolean){
+    console.log(ticketId, isResolved);
+    return apiClient.put("api/report/updateReport?ticketId="+ticketId+"&isResolved="+isResolved);
+  }
 };

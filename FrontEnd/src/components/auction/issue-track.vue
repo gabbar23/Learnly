@@ -76,20 +76,12 @@
     const response = await auctionService.getReport(userId);
     issueList.value = response.data.map((item: any) => ({
       issue: item.ticketId,
-      status: "active",
+      status: item.isResolved ? "resolved" : "active",
       concern: item.description,
       issueType: item.issueType,
     }));
   });
-  
-  async function issueSubmit(item) {
-    try {
-      // Send the issue details to the backend API to update the issue status
-      console.log(item);
-    } catch (e) {
-      console.error("Error in updating issue status", e);
-    }
-  }
+
   </script>
   
   <style scoped>

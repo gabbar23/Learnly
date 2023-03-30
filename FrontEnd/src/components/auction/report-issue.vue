@@ -49,7 +49,6 @@ import "vue3-carousel/dist/carousel.css";
 import { onMounted, ref, reactive } from "vue";
 import { useRoute } from "vue-router";
 import type { IGetIssueDetails } from "@/interfaces/report-issue";
-import AuthService from "@/services/AuthService";
 import auctionService from "@/services/auctionService";
 const details = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
@@ -65,19 +64,21 @@ let issueDetails =reactive<IGetIssueDetails>({
 
 
 onMounted(async () => {
-  const { itemId, auctionId, auctionType } = route.query;
-  let response= await auctionService.getReport(userId);
+  await auctionService.getReport(userId);
 
 });
 
-const issueSubmit = (args: any) => {
-  let response= auctionService.postReport(userId,issueDetails.issue,issueDetails.concern);
+const issueSubmit = () => {
+  auctionService.postReport(userId,issueDetails.issue,issueDetails.concern);
 
-  console.log(response);
+  //console.log(response);
   issueDetails.status="active";
-  console.log(issueDetails.concern);
-  console.log("issue submitted");
-
+  //console.log(issueDetails.concern);
+  //console.log("issue submitted");
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
+  console.log("reload")
 };
 
 

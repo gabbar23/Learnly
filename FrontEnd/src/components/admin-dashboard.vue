@@ -18,7 +18,7 @@
           <td>{{ item.loginDetail?.email }}</td>
           <td>{{ item.phone }}</td>
           <td>
-            <div v-if="!item.editInProgress">
+            <!-- <div v-if="!item.editInProgress">
               <button @click="item.editInProgress = !item.editInProgress">
                 Show ID
               </button>
@@ -28,7 +28,7 @@
                 Hide ID
               </button>
               <img src="{{ item.govtIdUrl }}" />
-            </div>
+            </div> -->
           </td>
           <td>
             <button class="btn btn-primary" @click="approve(item)">
@@ -47,7 +47,7 @@
     </tbody>
   </v-table>
   <div>
-    <v-pagination v-model="page" :length="pageCount"></v-pagination>
+    <!-- <v-pagination v-model="page" :length="pageCount"></v-pagination> -->
   </div>
 </template>
 <script lang="ts" setup>

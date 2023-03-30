@@ -73,7 +73,7 @@ import { ref, onMounted, reactive } from "vue";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import auctionService from "@/services/auctionService";
-import { useRoute } from "vue-router";
+import { useRoute, type LocationQueryValue } from "vue-router";
 import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Loader } from "../component";
 import { useNotification } from "@kyvg/vue3-notification";
@@ -96,9 +96,9 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   createdTime: "",
 });
 const isBidAlreadyMade = ref<boolean>(true);
-const itemId = ref<string>("");
-const auctionId = ref<string>("");
-const details = localStorage.getItem("userDetails");
+const itemId = ref<any>("");
+const auctionId = ref<any>("");
+const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
 
 onMounted(async () => {

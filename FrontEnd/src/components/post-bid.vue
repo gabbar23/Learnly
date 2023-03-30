@@ -224,7 +224,7 @@ const sellerRegister = async () => {
     sellerDetails.startDate + " " + sellerDetails.startTime;
   sellerDetails.endTime = sellerDetails.endDate + " " + sellerDetails.endTime;
 
-  const details = localStorage.getItem("userDetails");
+  const details: any = localStorage.getItem("userDetails");
   const { userId } = JSON.parse(details);
   if (userId) {
     sellerDetails.userId = userId;
