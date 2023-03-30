@@ -15,6 +15,12 @@ export default {
     });
   },
 
+  getTopFiveUser(auction: Number | string){
+    return apiClient.post("api/auction/topFiveUsers",{
+      auctionId:auction
+    });
+  },
+
   getNewItemDetails(requestPayload:any){
     return apiClient.post("api/auction/auctionItemDetails", requestPayload);
   },
