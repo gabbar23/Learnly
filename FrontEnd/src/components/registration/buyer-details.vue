@@ -10,7 +10,7 @@
     >
       <div class="card mb-3 w-100 wid">
         <div class="card-body">
-          <h5 class="card-title">Registration {{ userDetails.firstName }}</h5>
+          <h5 class="card-title">Hello: {{ userDetails.firstName }}</h5>
           <div class="row">
             <div class="col-md-6">
               <FormKit

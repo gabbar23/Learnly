@@ -41,6 +41,10 @@
      ></FormKit>
 
     </FormKit>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
   </div>
 </template>
 
@@ -54,7 +58,6 @@ const details = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
 
 
-const route = useRoute();
 
 let issueDetails =reactive<IGetIssueDetails>({
   issue:"",

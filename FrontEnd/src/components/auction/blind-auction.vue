@@ -10,7 +10,9 @@
             v-for="(item, index) in sellItemDetail.imageDetails"
             :key="index"
           >
-            <img :src="item.imgUrl" class="carousel__item item_size" />
+            <img :src="item.imgUrl" class="carousel__item item_size" 
+            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+/>
           </Slide>
         </template>
         <template v-else>
