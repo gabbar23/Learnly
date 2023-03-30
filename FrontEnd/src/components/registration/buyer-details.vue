@@ -170,7 +170,7 @@ const { notify } = useNotification();
 const isLoading = ref<boolean>(true);
 
 let buyerSeller = reactive<any>(["", ""]);
-const userDetailsObject = localStorage.getItem("userDetails");
+const userDetailsObject:any = localStorage.getItem("userDetails");
 const userDetail = JSON.parse(userDetailsObject);
 
 onMounted(async () => {
