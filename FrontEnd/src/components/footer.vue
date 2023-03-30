@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <footer class="footer visibility">
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 mb-md-0">
@@ -25,7 +25,8 @@
         <div class="col-md-4 col-sm-12">
           <h4>About Us</h4>
           <p>
-            Bid For Good is a non profit Online Auction portal, we make selling easier.
+            Bid For Good is a non profit Online Auction portal, we make selling
+            easier.
           </p>
         </div>
       </div>
@@ -72,5 +73,10 @@
   .footer ul li a {
     font-size: 14px;
   }
+}
+
+.visibility {
+  z-index: 100 !important;
+  position: relative;
 }
 </style>
