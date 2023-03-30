@@ -62,61 +62,29 @@
               Submit Bid
             </button>
           </div>
-
-          <!-- <div class="d-flex">
-            <div class="mr-4">Make Bid</div>
-            <FormKit
-              type="form"
-              submit-label="Make Bid"
-              :actions="false"
-              @submit="makeBid"
-            >
-              <p style="color: red">{{ bidStatus }}</p>
-              <FormKit type="text" v-model="bidAmount" />
-              <button
-                class="btn btn-danger ml-5"
-                @click="sendMessage()"
-                :disabled="isBidMade"
-              >
-                Submit Bid{{ minVal }}
-              </button>
-
-            </FormKit>
-          </div> -->
-
-          <!-- <div>
-            <h1>Auction Ending in:</h1>
-            <div>{{ countdown }}</div>
-          </div> -->
-          <!-- <div>
-            <div v-if="+timer < 0">{{ formatTime(timer) }}</div>
-            <div v-else>Time's up!</div>
-          </div> -->
         </div>
       </div>
     </div>
-    <!-- <div class="scrollable-div mt-5">
-      <div v-for="slide in 25" class="d-flex">
-        <p class="m-1"><font-awesome-icon icon="user-circle" /></p>
-        <p class="m-1">Harsh Srivastava</p>
-        &nbsp;
-        <p class="m-1">250 $</p>
-      </div>
-    </div> -->
+    <div class="pos">
+      <Timer></Timer>
+    </div>
     <div class="card scrollable-div">
       <div class="card-header">
         <h5>Recent Bids</h5>
       </div>
       <div class="card-body p-0">
         <div
-          v-for="user in topUserList"
           class="d-flex align-items-center px-3 py-2 border-bottom"
+          v-for="(user, index) in topUserList"
+          :key="index"
         >
           <span class="mr-3">
             <font-awesome-icon icon="user-circle" />
           </span>
-          <span class="flex-grow-1">{{ user.UserDetail.firstName + " " +user.UserDetail.lastName }} </span>
-          <span>{{ user.bidAmount }}</span>
+          <span class="flex-grow-1"
+            >{{ user.firstName + " " + user.lastName }}
+          </span>
+          <span>{{ user.bidAmount > 0 ? user.bidAmount + "$" : "N/A" }}</span>
         </div>
       </div>
     </div>
@@ -130,10 +98,6 @@
         :size="bubble.size"
         :cost="bubble.cost"
       />
-    </div>
-
-    <div>
-      <Timer></Timer>
     </div>
   </div>
 </template>
@@ -154,6 +118,7 @@ import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Timer } from "../component";
 
 import { useRoute } from "vue-router";
+import type { IRecentBidder } from "@/interfaces/bid-for-good";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -161,7 +126,7 @@ const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
 
-const topUserList = ref<String>();
+const topUserList = ref<IRecentBidder[]>([]);
 
 let sellItemDetail = reactive<IGetAuctionItemDetails>({
   imageDetails: [],
@@ -190,7 +155,6 @@ watch(timeLeft, (newValue, oldValue) => {
 
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
-// let myVal = ref<Number>(0);
 
 let startTime = ref<Date>();
 let endTime = ref<Date>();
@@ -201,18 +165,12 @@ let myBid = ref<Number>();
 let timer: number;
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
-const bubbles = [
-  { name: "Alice", top: 50, left: -100, size: 50, cost: 50 },
-  { name: "Bob", top: 20, left: -300, size: 70, cost: 250 },
-  { name: "Charlie", top: 10, left: -500, size: 60, cost: 150 },
-  // add more bubbles here
-];
+const bubbles = ref<any>([]);
 
 socket.value = io("http://localhost:3000/");
 
 onMounted(() => {
   // const userId = user.userId;
-  console.log(userId);
   try {
     isLoading.value = true;
     const requestPayload: any = {
@@ -223,48 +181,50 @@ onMounted(() => {
     };
 
     console.log("Top users");
-    auctionService.getTopFiveUser(requestPayload.auctionId)
-    .then((result) => {
-       topUserList.value = result.data;
-      //  console.log(topUserList.value);
-    })
-    .catch((result) => {
-      console.log("top User List failed.");
-      // console.log(result)
-    });
-
-    const updateUserList = ()=>{
-      auctionService.getTopFiveUser(requestPayload.auctionId)
+    auctionService
+      .getTopFiveUser(requestPayload.auctionId)
       .then((result) => {
-        topUserList.value = result.data;
-        //  console.log(topUserList.value);
+        const tempResult = result.data.map((bid: any) => {
+          return {
+            firstName: bid.UserDetail.firstName,
+            lastName: bid.UserDetail.lastName,
+            bidAmount: bid.bidAmount,
+            userId: bid.UserDetail.userId,
+          };
+        });
+        topUserList.value = tempResult;
+        console.log(topUserList.value);
       })
       .catch((result) => {
         console.log("top User List failed.");
         // console.log(result)
-     })
+      });
 
-    }
+    const updateUserList = () => {
+      auctionService
+        .getTopFiveUser(requestPayload.auctionId)
+        .then((result) => {
+          const tempResult = result.data.map((bid: any) => {
+            return {
+              firstName: bid.UserDetail.firstName,
+              lastName: bid.UserDetail.lastName,
+              bidAmount: bid.bidAmount,
+            };
+          });
+          topUserList.value = tempResult;
+          //  console.log(topUserList.value);
+        })
+        .catch((result) => {
+          console.log("top User List failed.");
+          // console.log(result)
+        });
+    };
 
     updateUserList();
 
-    socket.value?.on("updateTopUserList", (data) =>{
-        updateUserList();
+    socket.value?.on("updateTopUserList", (data) => {
+      updateUserList();
     });
-    
-
-    // auctionService
-    //   .getAuctionDetails(requestPayload.auctionId)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     startTime.value = res.data.startTime;
-    //     endTime.value = res.data.endTime;
-    //   })
-    //   .catch(() => {
-    //     console.log("cant load auction details");
-    //   });
-
-    // auctionService.getItemDetails(id).then((res)=> {
 
     auctionService
       .getNewItemDetails(requestPayload)
@@ -300,7 +260,6 @@ onMounted(() => {
 
 // Connection to socket at server
 
-
 socket.value.on("connection", (message: string) => {
   console.log(message);
 });
@@ -308,6 +267,15 @@ socket.value.on("connection", (message: string) => {
 socket.value.on("bidUpdate", (info) => {
   bidStatus.value = undefined;
   highestBid.value = info.highestBid;
+  console.warn(info);
+  bubbles.value = [];
+  bubbles.value = [
+    { name: "Alice", top: 300, left: -600, size: 50, cost: +highestBid.value },
+  ];
+  // const timer = setTimeout(() => {
+  //   bubbles.value = [];
+  //   clearTimeout(timer);
+  // }, 4000);
 });
 
 socket.value.on("login", (data) => {
@@ -349,60 +317,7 @@ const sendMessage = () => {
     bidVal: bidAmount.value,
   });
 };
-
-const formatTime = (time: any) => {
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
 </script>
-
-<!-- <style>
-.in {
-  display: inline-block;
-}
-
-.details > div {
-  padding: 2em;
-}
-
-.main-section {
-  border: 1px solid;
-}
-.carousel__item {
-  min-height: 200px;
-  width: 100%;
-  background-color: green;
-  color: white;
-  font-size: 20px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel__slide {
-  padding: 10px;
-}
-
-.carousel__prev,
-.carousel__next {
-  box-sizing: content-box;
-  border: 5px solid white;
-}
-
-/* .my-hover{
-  background-color: white;
-  border:1px lightblue
-}
-
-.my-hover:hover{
-  transition: 1s;
-  box-shadow: 0px 0px 20px 20px gray;
-} */
-</style> -->
 <style scoped>
 .main-section {
   background-color: #f7f7f7;
@@ -464,4 +379,13 @@ h3 {
   height: 500px;
   overflow-y: auto;
 } */
+
+.pos {
+  position: relative;
+  top: 180px;
+  left: 280px;
+}
+.tb-bg {
+  background-color: #a5dfcb;
+}
 </style>

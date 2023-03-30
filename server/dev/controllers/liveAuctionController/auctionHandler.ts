@@ -163,7 +163,7 @@ const topFiveUsers = (req:Request , res: Response) =>{
     },
     include:{
       model:UserDetail,
-      attributes:["firstName","lastName"]
+      attributes:["firstName","lastName","userId"]
     },
     attributes:["bidAmount"],
     order: [["bidAmount", "DESC"]],

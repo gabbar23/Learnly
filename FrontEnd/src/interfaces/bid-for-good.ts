@@ -12,6 +12,13 @@ export interface ILoggedInUserDetails {
   userId: Number;
 }
 
-export interface ILogOutRequestPayload{
+export interface ILogOutRequestPayload {
   sessionId: string;
+}
+
+export interface IRecentBidder {
+  firstName: string;
+  lastName: string;
+  bidAmount: number;
+  userId: number;
 }
