@@ -1,4 +1,8 @@
 <template>
+    <div style="display: flex; justify-content: flex-end ;margin-right: 100px;">
+    <button class="dashboardButton" @click="dashboard">
+    </button>
+    </div>
     <v-table>
       <thead>
         <tr>
@@ -33,18 +37,12 @@
   </template>
  
   <script lang="ts" setup>
-  import type {
-    IApproveOrDeclineReqPayload,
-    IVerfiedSeller,
-  } from "@/interfaces/admin";
-  import AuthService from "@/services/AuthService";
   import { onMounted, ref } from "vue";
   import NoContent from "../components/no-content.vue";
   import { useNotification } from "@kyvg/vue3-notification";
 import auctionService from "@/services/auctionService";
-  
-  const page = 2;
-  const pageCount = 10;
+import router from "@/router";
+
   const issueDetails = ref<any>([]);
   const { notify } = useNotification();
   const details: any = localStorage.getItem("userDetails");
@@ -76,7 +74,10 @@ let buttonDisable=ref<String>();
     }
   }
   
-  
+  const dashboard = () => {
+  router.push("/admin-dashboard");
+};
+
   const decline = async (item:any) => {
     console.log("clicked");
     item.isResolved=true;
@@ -91,5 +92,13 @@ let buttonDisable=ref<String>();
     display: grid;
     grid-template-columns: 1fr 1fr;
   }
+  .dashboardButton {
+  background: url(../../src/assets/layer-group-solid.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 52px;
+  width: 40px;
+}
   </style>
   
