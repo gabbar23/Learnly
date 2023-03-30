@@ -162,18 +162,21 @@ const topFiveUsers = (req:Request , res: Response) =>{
       auctionId: auctionId,
     },
     include:{
-      model:UserDetail
+      model:UserDetail,
+      attributes:["firstName","lastName"]
     },
-    attributes:["firstName","lastName","bidAmount"]
+    attributes:["bidAmount"],
+    order: [["bidAmount", "DESC"]],
+    limit: 5
   })
   .then((result) => {
     
-    console.log("5 User send to Client." + result);
+    console.log("5 User send to Client.");
     res.status(200).send(result);
 
   })
-  .catch(()=>{
-    console.log("topFiveUsers in auctionHandler Failed.");
+  .catch((result)=>{
+    console.log("topFiveUsers in auctionHandler Failed." + result);
     res.status(401).send({message: "Top Five user can not be fetched for this auction." });
   })
 }
