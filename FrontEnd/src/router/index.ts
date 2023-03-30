@@ -112,11 +112,21 @@ const router = createRouter({
       name: "congratulations",
       component: () => import("../components/misc pages/congratulations.vue"),
     },
-  {
-      path: "/wishlist",
-      name: "wishlist",
-      component: () => import("../components/misc pages/wishlist.vue"),
-  },
+    {
+      path: "/nav-bar",
+      name: "nav",
+      component: () => import("../components/navigation-bar.vue"),
+    },
+    {
+      path: "/filter",
+      name: "auctionFilter",
+      component: () => import("../components/auction-filter.vue"),
+    },
+    {
+        path: "/wishlist",
+        name: "wishlist",
+        component: () => import("../components/misc pages/wishlist.vue"),
+    },
   ],
 });
 

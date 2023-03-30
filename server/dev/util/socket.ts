@@ -70,6 +70,7 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
         // return 1;
         socket.emit('yourBidUpdate',info);
         socket.broadcast.emit("out","out bid");
+  
       }
       else{
         console.log("new Value is smaller.");
@@ -109,7 +110,7 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
             }
 
             io.emit('bidUpdate', info);
-            io.emit('bidUpdate', info);
+            // io.emit('bidUpdate', info);
         
             socket.emit('yourBidUpdate',info);
             socket.broadcast.emit("out","out bid");
@@ -128,11 +129,11 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
         console.log("fail"); 
         return 0;       
       })
-    }   
+    }
+    io.emit("updateTopUserList");   
     console.log("successfull");
   })
 
-  
 }
 
 
@@ -172,7 +173,6 @@ export function initSocket(server: any): void {
         }
     
       });
-    
     
       socket.on('disconnect', () => {
         console.log('User disconnected');

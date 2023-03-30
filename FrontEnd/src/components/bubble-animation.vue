@@ -9,7 +9,7 @@
     }"
   >
     <div class="bubble-content">
-      <p class="name">{{ name }}</p>
+      <!-- <p class="name">{{ name }}</p> -->
       <p class="cost">{{ cost }} $</p>
     </div>
   </div>
@@ -19,7 +19,6 @@
 const props = defineProps({
   name: {
     type: String,
-    required: true,
   },
   cost: {
     type: Number,
