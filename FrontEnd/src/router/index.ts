@@ -3,6 +3,7 @@ import {
   DonationDetails,
   OrderDetails,
   ReportIssue,
+  IssueTrack,
 } from "@/components/component";
 import type { ILoggedInUserDetails } from "@/interfaces/bid-for-good";
 import store from "@/store";
@@ -32,6 +33,7 @@ const router = createRouter({
         // { path: "/donations", component: DonationDetails },
         { path: "/buyer/orders", component: OrderDetails },
         { path: "/buyer/report-issue", component: ReportIssue },
+        { path: "/buyer/issues",component: IssueTrack },
       ],
     },
     {
@@ -48,6 +50,11 @@ const router = createRouter({
       path: "/admin-dashboard",
       name: "Admin Dashboard",
       component: () => import("../components/admin-dashboard.vue"),
+    },
+    {
+      path: "/admin-issue-details",
+      name: "Admin Issues",
+      component: () => import("../../src/components/admin-issue-details.vue"),
     },
     {
       path: "/make-bid",
