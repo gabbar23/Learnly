@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <div class="container-fluid">
     <div class="row">
@@ -30,6 +29,15 @@
                 href="javascript:void"
               >
                 Report an Issue
+              </a>
+            </li>
+            <li class="nav-item" @click="navigateTo('issues')">
+              <a
+                class="nav-link"
+                :class="{ active: currentRoute.path == '/buyer/issues' }"
+                href="javascript:void"
+              >
+                Issue History
               </a>
             </li>
             <!-- <li class="nav-item">
@@ -64,6 +72,9 @@ const navigateTo = (buttonClicked: String) => {
     router.push("/buyer/orders");
   } else if (buttonClicked == "report") {
     router.push("/buyer/report-issue");
+  }
+  else if (buttonClicked=="issues"){
+    router.push("/buyer/issues");
   }
 };
 </script>

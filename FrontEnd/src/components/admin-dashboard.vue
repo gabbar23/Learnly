@@ -1,4 +1,8 @@
 <template>
+    <div style="display: flex; justify-content: flex-end ;margin-right: 100px;">
+    <button class="issueListButton" @click="issueList">
+    </button>
+  </div>
   <v-table>
     <thead>
       <tr>
@@ -59,6 +63,7 @@ import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
 import NoContent from "../components/no-content.vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import router from "@/router";
 
 const page = 2;
 const pageCount = 10;
@@ -92,6 +97,9 @@ onMounted(async () => {
   getRegisteredSellers();
 });
 
+const issueList = () => {
+  router.push("/admin-issue-details");
+};
 const approveOrDecline = async (payload: IApproveOrDeclineReqPayload) => {
   try {
     await AuthService.approveOrDeclineSeller(payload);
@@ -134,5 +142,13 @@ const decline = async (seller: IVerfiedSeller) => {
 .parent_sect {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+.issueListButton {
+  background: url(../../src/assets/triangle-exclamation-solid.svg) no-repeat top left;
+  background-size: contain;
+  cursor: pointer;
+  display: inline-block;
+  height: 52px;
+  width: 40px;
 }
 </style>

@@ -38,7 +38,6 @@ import NoContent from "../no-content.vue";
 const wishDetails = ref<any>([]);
 const details: any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
-const isWishlisted = ref<boolean>(false);
 onMounted(async () => {
   await loadWishlist();
 });

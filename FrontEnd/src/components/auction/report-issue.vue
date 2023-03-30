@@ -5,7 +5,7 @@
   <div class="text-center">
     <FormKit
         type="form"
-      
+      @submit="issueSubmit"
       >
       <FormKit
         type="select"
@@ -14,6 +14,8 @@
         :options="[{label:'Return',value:'return'}, 
         {label:'Refund',value:'refund'},
         {label:'Cancellation',value:'cancellation'}]"
+        v-model="issueDetails.issue"
+        validation="required"
       >
       </FormKit>
 
@@ -21,9 +23,12 @@
         type="select"
         label="Status"
         placeholder="Status"
+        :disabled="true"
         :options="[{label:'active',value:'active'},
       {label:'resolved',value:'resolved'}
       ]"
+      
+        v-model="issueDetails.status"
       >
       </FormKit>
     
@@ -31,41 +36,55 @@
     type="textarea" 
     label="Concern" 
     placeholder="Please explain your concern in detail..."
+    v-model="issueDetails.concern"
+    validation="required"
      ></FormKit>
 
     </FormKit>
   </div>
 </template>
-<script lang="ts">
-import router from "@/router";
-import { defineComponent } from "vue";
-export default defineComponent({
-  components: {},
-  data() {
-    return {};
-  },
-  props: {
-    headerText: {
-      type: String,
-      default: "header",
-    },
-    list: {
-      type: Array,
-      default: () => {
-        return [];
-      },
-    },
-    options: {
-      type: Object,
-      default: () => {
-        return null;
-      },
-    },
-  },
-  setup(props) {},
-  methods: {},
+
+<script lang="ts" setup>
+import "vue3-carousel/dist/carousel.css";
+import { onMounted, ref, reactive } from "vue";
+import { useRoute } from "vue-router";
+import type { IGetIssueDetails } from "@/interfaces/report-issue";
+import auctionService from "@/services/auctionService";
+const details = localStorage.getItem("userDetails");
+const { userId } = JSON.parse(details);
+
+
+const route = useRoute();
+
+let issueDetails =reactive<IGetIssueDetails>({
+  issue:"",
+  status:"",
+  concern:"",
 });
+
+
+onMounted(async () => {
+  await auctionService.getReport(userId);
+
+});
+
+const issueSubmit = () => {
+  auctionService.postReport(userId,issueDetails.issue,issueDetails.concern);
+
+  //console.log(response);
+  issueDetails.status="active";
+  //console.log(issueDetails.concern);
+  //console.log("issue submitted");
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
+  console.log("reload")
+};
+
+
 </script>
+
+
 <style scoped>
 .side-bar > div {
   cursor: pointer;
@@ -81,3 +100,4 @@ export default defineComponent({
   grid-template-columns: 20% 80%;
 }
 </style>
+
