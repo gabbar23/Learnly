@@ -2,7 +2,7 @@
     <div class="navbar">
       <div class="navbar-container">
         <div class="navbar-logo">
-          <img src="logo.png" alt="Logo" />
+          <img src="" alt="Logo" />
         </div>
         <div class="navbar-links">
           <ul>

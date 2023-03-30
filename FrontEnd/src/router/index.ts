@@ -116,15 +116,10 @@ const router = createRouter({
       component: () => import("../components/auction-filter.vue"),
     },
     {
-      path:"/timer",
-      name:"timer",
-      component: () => import("../components/auction/auction-timer.vue"),
+        path: "/wishlist",
+        name: "wishlist",
+        component: () => import("../components/misc pages/wishlist.vue"),
     },
-  {
-      path: "/wishlist",
-      name: "wishlist",
-      component: () => import("../components/misc pages/wishlist.vue"),
-  },
   ],
 });
 
