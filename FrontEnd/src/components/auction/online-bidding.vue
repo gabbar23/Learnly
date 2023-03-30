@@ -208,7 +208,7 @@ const bubbles = [
   // add more bubbles here
 ];
 
-
+socket.value = io("http://localhost:3000/");
 
 onMounted(() => {
   // const userId = user.userId;
@@ -231,19 +231,38 @@ onMounted(() => {
     .catch((result) => {
       console.log("top User List failed.");
       // console.log(result)
-    })
+    });
 
-
-    auctionService
-      .getAuctionDetails(requestPayload.auctionId)
-      .then((res) => {
-        console.log(res.data);
-        startTime.value = res.data.startTime;
-        endTime.value = res.data.endTime;
+    const updateUserList = ()=>{
+      auctionService.getTopFiveUser(requestPayload.auctionId)
+      .then((result) => {
+        topUserList.value = result.data;
+        //  console.log(topUserList.value);
       })
-      .catch(() => {
-        console.log("cant load auction details");
-      });
+      .catch((result) => {
+        console.log("top User List failed.");
+        // console.log(result)
+     })
+
+    }
+
+    updateUserList();
+
+    socket.value?.on("updateTopUserList", (data) =>{
+        updateUserList();
+    });
+    
+
+    // auctionService
+    //   .getAuctionDetails(requestPayload.auctionId)
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     startTime.value = res.data.startTime;
+    //     endTime.value = res.data.endTime;
+    //   })
+    //   .catch(() => {
+    //     console.log("cant load auction details");
+    //   });
 
     // auctionService.getItemDetails(id).then((res)=> {
 
@@ -280,7 +299,7 @@ onMounted(() => {
 });
 
 // Connection to socket at server
-socket.value = io("http://localhost:3000/");
+
 
 socket.value.on("connection", (message: string) => {
   console.log(message);
