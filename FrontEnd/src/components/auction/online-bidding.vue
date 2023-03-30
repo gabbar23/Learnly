@@ -272,10 +272,10 @@ socket.value.on("bidUpdate", (info) => {
   bubbles.value = [
     { name: "Alice", top: 300, left: -600, size: 50, cost: +highestBid.value },
   ];
-  // const timer = setTimeout(() => {
-  //   bubbles.value = [];
-  //   clearTimeout(timer);
-  // }, 4000);
+  const timer = setTimeout(() => {
+    bubbles.value = [];
+    clearTimeout(timer);
+  }, 4000);
 });
 
 socket.value.on("login", (data) => {
