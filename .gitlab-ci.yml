@@ -10,6 +10,8 @@ cache:
 
 frontend:
   stage: build
+  tags:
+    - dalfcs_docker_autoscale
   script:
     - cd client
     - npm install
