@@ -1,21 +1,20 @@
+
+
+import { Request, Response } from "express";
+
+
 import cron from 'node-cron';
-import { Op } from 'sequelize';
-//import generateWinner from '../controllers/generateWinner';
-import { Auction } from '../dev/models/aunctionModel';
+import generateWinner from '../dev/controllers/generateWinner';
 
-// schedule a cron job to run every minute
-cron.schedule('* * * * *', async () => {
-  try {
-    // Find all auctions that have ended
-    const auctions = await Auction.findAll({ where: { endTime: { [Op.lt]: new Date() } } });
-
-    for (const auction of auctions) {
-      console.log(`Auction ${auction.getDataValue("auctionId")} has ended. Generating winner...`);
-
-      // call the generateWinner function for each ended auction
-     // await generateWinner.generateWinner({ body: { auctionId: auction.getDataValue("auctionId") } }, { status: () => {}, json: () => {} });
+cron.schedule('*/3 * * * *', async () => {
+    try {
+      // Call the generateWinner function here
+      let req :Request = {} as Request;
+      var res :Response= {} as Response;
+      await generateWinner.generateWinner(req,res);
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
-});
+  });
+
+
