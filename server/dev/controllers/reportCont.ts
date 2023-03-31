@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { Report } from "../models/reportsModel";
 
 const addReport = async (req: Request, res: Response) => {
-  const { user_id, description, issueType } = req.body;
+  const { user_id, description, issueType } = req.query;
   console.log(user_id);
-
+  console.log(description);
+  console.log(issueType)
   try {
     const report = await Report.create({
       user_id,
@@ -20,7 +21,8 @@ const addReport = async (req: Request, res: Response) => {
 
 const getReport = async (req: Request, res: Response) => {
   try {
-    const { user_id } = req.body;
+    console.log(req.query);
+    const { user_id } = req.query;
     const report = await Report.findAll({ where: { user_id: user_id } });
     if (!report) {
       res.status(404).json({ message: "Report not found" });
@@ -35,7 +37,7 @@ const getReport = async (req: Request, res: Response) => {
 
 const updateReport = async (req: Request, res: Response) => {
   try {
-    const { ticketId, isResolved } = req.body;
+    const { ticketId, isResolved } = req.query;
     const report = await Report.update(
       { isResolved: isResolved },
       { where: { ticketId: ticketId } }
