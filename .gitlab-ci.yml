@@ -39,8 +39,8 @@ deploy:
   script:
     - apt-get update -yq
     - apt-get install -yq git
-    - git config --global user.email "deploy@heroku.com"
-    - git config --global user.name "Heroku Deploy"
+    - git config --global user.email "darshilp599@gmail.com"
+    - git config --global user.name "Group 5"
     - git clone https://git.heroku.com/bidforgoodauction.git
     - cd bidforgoodauction
     - rm -rf *
