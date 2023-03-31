@@ -10,7 +10,9 @@
       <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
         <img
           :src="item.imgUrl"
+          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
           class="carousel__item item_size"
+          style="object-fit: contain;"
           @click="liveAuctionClicked(item)"
         />
       </Slide>
@@ -25,17 +27,19 @@
       <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
         <img
           :src="item.imgUrl"
-          class="carousel__item item_size"
+          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+          class="carousel__item item_size img_resolution"
           @click="slideTo(index - 1)"
         />
       </Slide>
     </Carousel>
 
-    <h3>Blind Bid</h3>
+    <h3 style="display: flex; justify-content:center;">Blind Bid</h3>
     <Carousel>
       <Slide v-for="(item, index) in blindAuctionDetails" :key="index">
         <img
           :src="item.imgUrl"
+          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
           class="carousel__item item_size"
           @click="blindAuctionClicked(item)"
         />
@@ -46,12 +50,13 @@
       </template>
     </Carousel>
 
-    <h3>Simple sell</h3>
+    <h3 style="display: flex; justify-content:center;">Simple sell</h3>
 
     <Carousel>
       <Slide v-for="(item, index) in simpleSellAuctionDetails" :key="index">
         <img
           :src="item.imgUrl"
+          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
           class="carousel__item item_size"
           @click="simpleSellClicked(item)"
         />
@@ -72,8 +77,7 @@ import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
 import router from "@/router";
 
-const currentSlide = ref<Number>(0);
-
+const currentSlide = ref<number>(0);
 const slideTo = (val: any) => {
   currentSlide.value = val;
 };
@@ -113,7 +117,7 @@ onMounted(async () => {
   try {
     isLoading.value = true;
     const response = await auctionService.getAllBidDetails();
-    let allAuctionDetails = response.data.details.map((auction) => {
+    let allAuctionDetails = response.data.details.map((auction:any) => {
       return {
         auctionId: auction.auctionId,
         auctionType: auction.auctionType,
@@ -123,13 +127,13 @@ onMounted(async () => {
     });
 
     blindAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == "blind"
+      (auction:any) => auction.auctionType == "blind"
     );
     simpleSellAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == null// update it to simple get it fixed with BE
+      (auction:any) => auction.auctionType == null// update it to simple get it fixed with BE
     );
     liveAuctionDetails.value = allAuctionDetails.filter(
-      (auction) => auction.auctionType == "live"
+      (auction:any) => auction.auctionType == "live"
     );
   } catch (e) {
     console.log("Error occured");
@@ -140,9 +144,12 @@ onMounted(async () => {
 </script>
 <style>
 .carousel__item {
+  overflow: hidden;
+  object-fit: contain;
   min-height: 200px;
-  width: 100%;
-  background-color: green;
+  max-height: 600px;
+  width: 80%;
+  background-color: black;
   color: white;
   font-size: 20px;
   border-radius: 8px;
@@ -150,8 +157,13 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
 }
+.img_resolution{
+  width: 500px;
+  height: 200px;
+}
 
 .carousel__slide {
+  height: fit-content;
   padding: 10px;
 }
 

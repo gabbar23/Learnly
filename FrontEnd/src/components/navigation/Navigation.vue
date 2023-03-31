@@ -18,6 +18,13 @@
       </button>
       <button
         class="btn btn-outline-dark m-2"
+        @click="navigateTo('admin')"
+        v-if="isAdmin && !showLogOutIcon"
+      >
+        <font-awesome-icon icon="user-secret" />
+      </button>
+      <button
+        class="btn btn-outline-dark m-2"
         @click="navigateTo('user')"
         v-if="!showLogOutIcon"
       >
@@ -37,13 +44,16 @@
 <script lang="ts" setup>
 import router from "@/router";
 import AuthService from "@/services/AuthService";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { mapGetters, useStore } from "vuex";
 import { useNotification } from "@kyvg/vue3-notification";
 
 const { notify } = useNotification();
 
 const store = useStore();
+const details: any = localStorage.getItem("userDetails");
+const isAdmin = ref<boolean>(false);
+const { isAdminPermission } = JSON.parse(details);
 
 const navigateTo = (navigation: string) => {
   if (navigation == "wishlist") {
@@ -57,6 +67,10 @@ const showLogOutIcon = computed(
   () =>
     store.state.currentRoute != null && store.state.currentRoute.name == "Login"
 );
+
+const isUserAdmin = computed(() => {
+  return isAdmin;
+});
 
 // const showWishListIcon = computed(
 //   () =>
