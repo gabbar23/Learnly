@@ -6,4 +6,5 @@ const router = express.Router();
 router.post("/addReport", reportCont.addReport);
 router.get("/getReport", reportCont.getReport);
 router.put("/updateReport", reportCont.updateReport);
+router.get("/getAllReports", reportCont.getAllReports);
 export const reportRoutes = router;
