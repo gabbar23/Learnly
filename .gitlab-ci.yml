@@ -73,7 +73,7 @@ frontend-publish-deploy:
     - zip -r FrontEnd.zip FrontEnd
     - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
     - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_frontend.sh"
- only:
+only:
     refs:
       - deployment
 
