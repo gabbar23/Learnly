@@ -29,38 +29,38 @@ backend-build:
     paths:
       - $TARGET_FOLDER_NAME
 
-# backend-test:
-#   stage: test
-#   tags:
-#     - grad
-#   image: node:latest
-#   script:
-#     - ls
-#     - echo "Backend application test started."
-#     - cd server
-#     - npm run test
-#     - echo "Backend application Tested successfully."
-#   rules:
-#     - changes:
-#         - server/**/*
+backend-test:
+  stage: test
+  tags:
+    - grad
+  image: node:latest
+  script:
+    - ls
+    - echo "Backend application test started."
+    - cd server
+    - npm run test
+    - echo "Backend application Tested successfully."
+  rules:
+    - changes:
+        - server/**/*
 
-# backend-publish-deploy:
-#   stage: deploy
-#   image: node:latest
-#   tags:
-#     - grad
-#   script:
-#     - ls
-#     - cd server
-#     - npm start
-#     - chmod og-rwx ${VM_PRIVATE_KEY}
-#     - ls
-#     - zip -r server.zip server
-#     - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
-#     - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_backend.sh"
-#   only:
-#     refs:
-#       - deployment
+backend-publish-deploy:
+  stage: deploy
+  image: node:latest
+  tags:
+    - grad
+  script:
+    - ls
+    - cd server
+    - npm start
+    - chmod og-rwx ${VM_PRIVATE_KEY}
+    - ls
+    - zip -r server.zip server
+    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
+    - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_backend.sh"
+  only:
+    refs:
+      - deployment
 
 # frontend-publish-deploy:
 #   stage: deploy
