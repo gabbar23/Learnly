@@ -12,7 +12,7 @@ stages:
 backend-build:
   stage: build
   tags:
-    - ugrad
+    - dalfcs_docker_autoscale
   image: node:latest
   script:
     - ls
@@ -32,7 +32,7 @@ backend-build:
 backend-test:
   stage: test
   tags:
-    - ugrad
+    - dalfcs_docker_autoscale
   image: node:latest
   script:
     - ls
@@ -48,7 +48,7 @@ backend-publish-deploy:
   stage: deploy
   image: node:latest
   tags:
-    - ugrad
+    - dalfcs_docker_autoscale
   before_script:
     - sudo apt-get update && apt-get install -y zip
     - sudo apt-get install sshpass
@@ -75,7 +75,7 @@ frontend-publish-deploy:
   before_script:
     - apt-get update && apt-get install -y zip
   tags:
-    - ugrad
+    - dalfcs_docker_autoscale
   script:
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - zip -r FrontEnd.zip FrontEnd
@@ -94,7 +94,7 @@ frontend-publish-deploy:
 # build:       # This job runs in the build stage, which runs first.
 #   stage: build
 #   tags:
-#   - ugrad
+#   - dalfcs_docker_autoscale
 #   script:
 #   - cd ./server/
 #   - npm install
