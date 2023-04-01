@@ -50,8 +50,8 @@ backend-publish-deploy:
   tags:
     - ugrad
   before_script:
-    - apt-get update && apt-get install -y zip
-    - apt-get install sshpass
+    - sudo apt-get update && apt-get install -y zip
+    - sudo apt-get install sshpass
   script:
     - ls
     - cd server
