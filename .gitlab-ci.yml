@@ -20,6 +20,7 @@ backend-build:
     - cd server
     - npm install
     - npm run build
+    - ls
     - echo "Backend application has been built successfully."
   # rules:
   #   - changes:
@@ -67,25 +68,25 @@ backend-publish-deploy:
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca  "./start_backend.sh"
+    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "./start_backend.sh"
   only:
     refs:
       - deployment
-
-
 
 
 frontend-publish-deploy:
   stage: deploy
   before_script:
     - apt-get update && apt-get install -y zip
+    - apt-get install sshpass
   tags:
     - dalfcs_docker_autoscale
   script:
     - chmod og-rwx ${VM_PRIVATE_KEY}
-    - zip -r FrontEnd.zip FrontEnd
-    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
-    - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_frontend.sh"
+    - sshpass -V    
+    - export SSHPASS=${VM_PASS}
+    - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
+    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_frontend.sh"
   only:
     refs:
       - deployment
