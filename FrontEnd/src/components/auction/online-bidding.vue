@@ -1,5 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <template>
+  {{ realTimeAPI }}
   <div class="containers">
     <div class="main-section w-50 mx-auto m-2 my-hover">
       <loader v-if="isLoading"></loader>
@@ -128,6 +129,7 @@ import { Timer } from "../component";
 import { useRoute } from "vue-router";
 import type { IRecentBidder } from "@/interfaces/bid-for-good";
 import { getTime } from "@/utility";
+import axios from "axios";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -162,6 +164,8 @@ watch(timeLeft, (newValue, oldValue) => {
   }
 });
 
+let realTimeAPI=auctionService.getRealTime();
+
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
 
@@ -178,7 +182,14 @@ const bubbles = ref<any>([]);
 
 socket.value = io("http://localhost:3000/");
 
+const created=async () => {
+  const response = await axios.get('https://www.timeapi.io/api/TimeZone/zone?timeZone=Europe/Amsterdam');
+  realTimeAPI = response.data.date;
+};
+
 onMounted(() => {
+  created();
+  console.log(realTimeAPI)
   // const userId = user.userId;
   try {
     isLoading.value = true;

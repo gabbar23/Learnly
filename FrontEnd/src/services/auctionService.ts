@@ -1,3 +1,4 @@
+import axios from "axios";
 import apiClient from "../axios";
 
 export default {
@@ -19,6 +20,10 @@ export default {
     return apiClient.post("api/auction/topFiveUsers", {
       auctionId: auction,
     });
+  },
+
+  getRealTime(){
+    return axios.get('https://www.timeapi.io/api/TimeZone/zone?timeZone=Europe/Amsterdam');
   },
 
   getNewItemDetails(requestPayload: any) {
