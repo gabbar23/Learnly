@@ -54,7 +54,6 @@ backend-publish-deploy:
     - cd server
     - npm install
     - npm run build
-    - npm start
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - ls
     - zip -r server.zip server
