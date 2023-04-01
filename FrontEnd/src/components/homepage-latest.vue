@@ -1,6 +1,26 @@
 <template>
   <loader v-if="isLoading"></loader>
   <template v-else>
+    <button @click="isHidden=!isHidden"><h5>Filter</h5></button>
+    <div v-show="isHidden">
+    <h6 style="display: flex; justify-content:center;">Date between</h6>
+    <div class="parent_sect">
+    <FormKit
+  type="date"
+  name="StartDate"
+  label="Start Date"
+  validation="required"
+  validation-visibility="live"
+  v-model="startDate"
+/>
+<br />
+<FormKit
+  type="date"
+  label="End Date"
+  :validation="[['date_after', startDate]]"
+/>
+</div>
+</div>
     <Carousel
       id="gallery"
       :items-to-show="1"
@@ -76,11 +96,14 @@ import { onMounted, ref } from "vue";
 import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
 import router from "@/router";
+import { date } from "@formkit/i18n";
 
+const startDate = ref<Date>(new Date());
 const currentSlide = ref<number>(0);
 const slideTo = (val: any) => {
   currentSlide.value = val;
 };
+
 
 const liveAuctionClicked = (args: any) => {
   let queryURL = {
@@ -113,6 +136,8 @@ const blindAuctionDetails = ref<IGeneralAuctionDetails[]>([]);
 const simpleSellAuctionDetails = ref<IGeneralAuctionDetails[]>([]);
 const isLoading = ref<boolean>(true);
 const liveAuctionDetails = ref<IGeneralAuctionDetails[]>([]);
+let isHidden = ref<boolean>(false);
+
 onMounted(async () => {
   try {
     isLoading.value = true;
@@ -172,4 +197,9 @@ onMounted(async () => {
   box-sizing: content-box;
   border: 5px solid white;
 }
+
+.parent_sect {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 </style>
