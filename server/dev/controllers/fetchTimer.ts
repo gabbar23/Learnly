@@ -6,15 +6,13 @@ import { sequelize } from "../util/database";
 const fetchBidTime = async (req: Request, res: Response) => {
     const auctionId = req.body.auctionId;
     try {
-        // fetches the time details
+        // fetches the time details of the specified auction
         if (auctionId != null) {
             const auction = await Auction.findOne({
                 attributes: [
                     [sequelize.literal("TIMEDIFF(endTime,startTime) "), "duration"],
                     [sequelize.fn('TIMESTAMPDIFF', sequelize.literal('SECOND'), sequelize.col('startTime'), sequelize.col('endTime')), 'seconds_duration']
-   
                 ],
-
                 where: { auctionId: auctionId },
             });
             res.status(200).json(auction);
