@@ -55,8 +55,9 @@ backend-publish-deploy:
     - npm install
     - npm run build
     - chmod og-rwx ${VM_PRIVATE_KEY}
-    - ls
+    - cd ../
     - zip -r server.zip server
+    - ls
     - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
     - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_backend.sh"
   only:
@@ -68,7 +69,7 @@ frontend-publish-deploy:
   before_script:
     - apt-get update && apt-get install -y zip
   tags:
-    - grad
+    - dalfcs_docker_autoscale
   script:
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - zip -r FrontEnd.zip FrontEnd
