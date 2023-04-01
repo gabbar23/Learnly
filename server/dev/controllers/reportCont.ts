@@ -5,7 +5,7 @@ const addReport = async (req: Request, res: Response) => {
   const { user_id, description, issueType } = req.query;
   console.log(user_id);
   console.log(description);
-  console.log(issueType)
+  console.log(issueType);
   try {
     const report = await Report.create({
       user_id,
@@ -53,10 +53,24 @@ const updateReport = async (req: Request, res: Response) => {
   }
 };
 
+const getAllReports = async (_: Request, res: Response) => {
+  try {
+    const reports = await Report.findAll();
+    if (!reports) {
+      res.status(404).json({ message: "Reports not found" });
+      return;
+    }
+    res.status(200).json(reports);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 export default {
   addReport,
   getReport,
   updateReport,
+  getAllReports,
 };
 
 // //# sourceMappingURL=fetchBidItems.js.map
