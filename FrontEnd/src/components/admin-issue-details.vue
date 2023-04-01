@@ -60,7 +60,7 @@ let buttonDisable=ref<String>();
     try {
       issueDetails.value = [];
       isLoading.value = true;
-      const response = await auctionService.getReport(userId);
+      const response = await auctionService.getAllReports();
       issueDetails.value = response.data;
       
     } catch (e) {

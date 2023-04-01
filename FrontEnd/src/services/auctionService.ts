@@ -67,6 +67,10 @@ export default {
     console.log(user_id);
     return apiClient.get("api/report/getReport?user_id=" + user_id);
   },
+
+  getAllReports() {
+    return apiClient.get("api/report/getAllReports");
+  },
   postReport(user_id: Number, issue: String, concern: String, status: String) {
     return apiClient.post(
       "api/report/addReport?user_id=" +
@@ -79,6 +83,7 @@ export default {
         status
     );
   },
+
   updateReport(ticketId: Number, isResolved: Boolean) {
     console.log(ticketId, isResolved);
     return apiClient.put(
