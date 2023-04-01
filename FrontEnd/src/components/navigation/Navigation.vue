@@ -53,7 +53,7 @@ const { notify } = useNotification();
 const store = useStore();
 const details: any = localStorage.getItem("userDetails");
 const isAdmin = ref<boolean>(false);
-const { isAdminPermission } = JSON.parse(details);
+//const { isAdminPermission } = JSON.parse(details);
 
 const navigateTo = (navigation: string) => {
   if (navigation == "wishlist") {
