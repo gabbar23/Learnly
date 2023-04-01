@@ -54,8 +54,7 @@ backend-publish-deploy:
   script:
     - ls
     - cd server
-    - npm install
-    - npm run build
+    - ls
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - zip -r server.zip ../server
     - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
