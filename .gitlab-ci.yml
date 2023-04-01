@@ -51,6 +51,7 @@ backend-publish-deploy:
     - ugrad
   before_script:
     - apt-get update && apt-get install -y zip
+    - apt-get install sshpass
   script:
     - ls
     - cd server
@@ -58,7 +59,12 @@ backend-publish-deploy:
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - cd ../
     - zip -r server.zip server
-    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
+    - sshpass -V    
+    - export SSHPASS=${VM_PASS}
+    - sshpass -e scp -o StrictHostKeyChecking=no 
+    - sshpass -e scp -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
+
+    # - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
     # - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${BACKEND_FOLDER_NAME}; ./start_backend.sh"
   only:
     refs:
