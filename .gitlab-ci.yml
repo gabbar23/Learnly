@@ -52,6 +52,7 @@ backend-publish-deploy:
   script:
     - ls
     - cd server
+    - npm install
     - npm start
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - ls
