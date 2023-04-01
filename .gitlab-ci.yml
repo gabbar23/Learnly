@@ -43,6 +43,10 @@ backend-test:
   # rules:
   #   - changes:
   #       - server/**/*
+  artifacts:
+    when: on_success
+    paths:
+      - $TARGET_FOLDER_NAME
 
 backend-publish-deploy:
   stage: deploy
@@ -63,6 +67,7 @@ backend-publish-deploy:
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca  "./start_backend.sh"
   only:
     refs:
       - deployment
