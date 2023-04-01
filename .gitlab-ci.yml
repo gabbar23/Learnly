@@ -12,7 +12,7 @@ stages:
 backend-build:
   stage: build
   tags:
-    - grad
+    - dalfcs_docker_autoscale
   image: node:latest
   script:
     - ls
@@ -32,7 +32,7 @@ backend-build:
 backend-test:
   stage: test
   tags:
-    - grad
+    - dalfcs_docker_autoscale
   image: node:latest
   script:
     - ls
@@ -48,7 +48,7 @@ backend-publish-deploy:
   stage: deploy
   image: node:latest
   tags:
-    - grad
+    - dalfcs_docker_autoscale
   script:
     - ls
     - cd server
