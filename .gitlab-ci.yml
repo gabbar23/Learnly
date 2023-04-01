@@ -49,6 +49,8 @@ backend-publish-deploy:
   image: node:latest
   tags:
     - dalfcs_docker_autoscale
+  before_script:
+    - apt-get update && apt-get install -y zip
   script:
     - ls
     - cd server
