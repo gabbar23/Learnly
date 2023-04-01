@@ -50,6 +50,7 @@
               accept=".jpg,.jpeg,.png"
               help="Upload a goverment approved ID such as Driving License or Passport. 
               Only .pdf,.jpg,.jpeg,.png files allowed"
+              validation="required"
             />
           </div>
 
