@@ -13,7 +13,7 @@ backend-build:
   stage: build
   tags:
     - grad
-  image: node|latest
+  image: node:latest
   script:
     - ls
     - echo "Started building backend application."
