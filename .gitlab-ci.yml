@@ -48,7 +48,7 @@ backend-publish-deploy:
   stage: deploy
   image: node:latest
   tags:
-    - ugrad
+    - dalfcs_docker_autoscale
   before_script:
     - apt-get update && apt-get install -y zip
     - apt-get install sshpass
