@@ -58,7 +58,7 @@ backend-publish-deploy:
     - cd ../
     - zip -r server.zip server
     - ls
-    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
+    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/server.zip
     - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_backend.sh"
   only:
     refs:
