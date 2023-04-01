@@ -1,56 +1,82 @@
-image: node:latest
+variables:
+  # Act as a varibale to be used further in YML file.
+  TARGET_FOLDER_NAME: "target"
+  BACKEND_FOLDER_NAME: "server"
+  FRONTEND_FOLDER_NAME: "FrontEnd"
 
 stages:
   - build
+  - test
   - deploy
 
-cache:
-  paths:
-    - node_modules/
-
-frontend:
+backend-build:
   stage: build
   tags:
-    - dalfcs_docker_autoscale
+    - grad
+  image: node|latest
   script:
-    - cd client
+    - ls
+    - echo "Started building backend application."
+    - cd server
     - npm install
     - npm run build
+    - echo "Backend application has been built successfully."
+  rules:
+    - changes:
+        - server/**/*
   artifacts:
+    when: on_success
     paths:
-      - client/dist/
-  only:
-    - master
+      - $TARGET_FOLDER_NAME
 
-backend:
-  stage: build
+backend-test:
+  stage: test
+  tags:
+    - grad
+  image: node:latest
   script:
-    - cd backend
-    - npm install
-    - npm run build
-  artifacts:
-    paths:
-      - backend/dist/
-  only:
-    - master
+    - ls
+    - echo "Backend application test started."
+    - cd server
+    - npm run test
+    - echo "Backend application Tested successfully."
+  rules:
+    - changes:
+        - server/**/*
 
-deploy:
+backend-publish-deploy:
   stage: deploy
+  image: node:latest
+  tags:
+    - grad
   script:
-    - apt-get update -yq
-    - apt-get install -yq git
-    - git config --global user.email "darshilp599@gmail.com"
-    - git config --global user.name "Group 5"
-    - git clone https://git.heroku.com/bidforgoodauction.git
-    - cd bidforgoodauction
-    - rm -rf *
-    - cp -r ../client/dist/* .
-    - cp -r ../backend/dist/* .
-    - git add .
-    - git commit -m "Deploy to Heroku"
-    - git push heroku master
+    - ls
+    - cd server
+    - npm start
+    - chmod og-rwx ${VM_PRIVATE_KEY}
+    - ls
+    - zip -r server.zip server
+    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
+    - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_backend.sh"
   only:
-    - deployment
+    refs:
+      - deployment
+
+frontend-publish-deploy:
+  stage: deploy
+  before_script:
+    - apt-get update && apt-get install -y zip
+  tags:
+    - grad
+  script:
+    - chmod og-rwx ${VM_PRIVATE_KEY}
+    - zip -r FrontEnd.zip FrontEnd
+    - scp -r -o StrictHostKeyChecking=no -i ${VM_PRIVATE_KEY} FrontEnd.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${FRONTEND_FOLDER_NAME}/FrontEnd.zip
+    - ssh -i ${VM_PRIVATE_KEY} csci5308vm5@csci5308vm5.research.cs.dal.ca "cd ${FRONTEND_FOLDER_NAME}; ./start_frontend.sh"
+  only:
+    refs:
+      - deployment
+
 
 
 
