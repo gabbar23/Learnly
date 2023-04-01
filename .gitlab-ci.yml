@@ -21,9 +21,9 @@ backend-build:
     - npm install
     - npm run build
     - echo "Backend application has been built successfully."
-  rules:
-    - changes:
-        - server/**/*
+  # rules:
+  #   - changes:
+  #       - server/**/*
   artifacts:
     when: on_success
     paths:
@@ -40,9 +40,9 @@ backend-test:
     - cd server
     - npm run test
     - echo "Backend application Tested successfully."
-  rules:
-    - changes:
-        - server/**/*
+  # rules:
+  #   - changes:
+  #       - server/**/*
 
 backend-publish-deploy:
   stage: deploy
