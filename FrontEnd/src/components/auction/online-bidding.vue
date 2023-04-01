@@ -65,7 +65,7 @@
         </div>
       </div>
     </div>
-    <div class="pos">
+    <div class="pos" v-if = "globalTimer > 0">
       <Timer :timeLeft="globalTimer" @time="updateGlobalTime"></Timer>
     </div>
     <div class="card scrollable-div">
@@ -166,15 +166,12 @@ let timer: number;
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
+const globalTimer = ref<number>(0);
+
 
 const startDate = new Date();
 startDate.setHours(startDate.getHours() - 1);
-
-const globalTimer = ref<number>(0);
-
-let startHour, startMin, startSec, endHour, endMin, endSec;
-
-const endDate = new Date();
+const endDate = new Date("Sat Apr 01 2023 16:32:58 GMT-0300 (Atlantic Daylight Time)");
 endDate.setHours(endDate.getHours() + 1);
 
 // Add an hour to the date
@@ -182,30 +179,16 @@ endDate.setHours(endDate.getHours() + 1);
 socket.value = io("http://localhost:3000/");
 
 const calculateTimer = () => {
-  // startHour = startDate.getHours();
-  // startMin = startDate.getMinutes();
-  // startSec = startDate.getSeconds();
-
-  // endHour = endDate.getHours();
-  // endMin = endDate.getMinutes();
-  // endSec = endDate.getSeconds();
-  console.log(startDate);
-  console.log(endDate);
   const timeRemaining = endDate.getTime() - Date.now();
-  console.warn(endDate.getTime());
-  console.warn(Date.now());
   if (timeRemaining < 0) {
     console.log("auction ended sorry");
   }
-
   const timeInSeconds = Math.floor(timeRemaining / 1000);
-  console.warn(timeInSeconds);
   globalTimer.value = timeInSeconds;
 };
 
 const updateGlobalTime = (time: any) => {
-  // console.log(time, "hello");
-  // globalTimer.value = time;
+  globalTimer.value = time;
 };
 
 onMounted(async () => {

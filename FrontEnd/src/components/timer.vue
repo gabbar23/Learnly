@@ -35,14 +35,12 @@ const startTimer = () => {
   if (props.timeLeft > 0) {
     const propValue = ref<number>(props.timeLeft);
     timerInterval.value = setInterval(() => {
-      console.log(propValue.value);
       propValue.value--;
-      // emit("time", propValue.value);
+      emit("time", propValue.value);
       progress.value = ((3600 - propValue.value) / 3600) * 100;
       if (propValue.value == 0) {
         clearInterval(timerInterval.value);
         console.warn("Timer ended");
-        // Handle timer completion here
       }
     }, 1000);
   }
@@ -53,8 +51,10 @@ const pad = (value: number) => {
 };
 
 onMounted(() => {
+  console.warn(props.timeLeft);
   startTimer();
 });
+
 </script>
 
 <style>
