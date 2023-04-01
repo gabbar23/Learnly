@@ -38,6 +38,7 @@ const startTimer = () => {
       propValue.value--;
       emit("time", propValue.value);
       progress.value = ((3600 - propValue.value) / 3600) * 100;
+      progress.value *= -1;
       if (propValue.value == 0) {
         clearInterval(timerInterval.value);
         console.warn("Timer ended");
@@ -54,7 +55,6 @@ onMounted(() => {
   console.warn(props.timeLeft);
   startTimer();
 });
-
 </script>
 
 <style>
@@ -85,69 +85,3 @@ onMounted(() => {
   transition: width 1s linear;
 }
 </style>
-<!-- <template>
-  <div class="timer-container">
-    <div class="timer-progress" :style="{ width: timerProgress + '%' }"></div>
-    <div class="timer">
-      {{ formatTime(timeLeft) }}
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      timeLeft: 10, // time in seconds
-      timerProgress: 100, // progress bar width in percentage
-      timerInterval: null,
-    };
-  },
-  created() {
-    this.timerInterval = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-        this.timerProgress = (this.timeLeft / 60) * 100;
-      } else {
-        clearInterval(this.timerInterval);
-      }
-    }, 1000);
-  },
-  methods: {
-    formatTime(seconds) {
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const remainingSeconds = seconds % 60;
-
-      return `${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-    },
-  },
-};
-</script>
-
-<style>
-.timer-container {
-  width: 300px;
-  height: 40px;
-  position: relative;
-}
-
-.timer-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background-color: #4caf50;
-  transition: width 1s linear;
-}
-
-.timer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-}
-</style> -->
