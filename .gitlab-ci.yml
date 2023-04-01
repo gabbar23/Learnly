@@ -59,9 +59,10 @@ backend-publish-deploy:
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - cd ../
     - zip -r server.zip server
+    - ls
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
-    - sshpass -e scp -o StrictHostKeyChecking=no  server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
+    - sshpass -e scp -o StrictHostKeyChecking=no server.zip csci5308vm5@csci5308vm5.research.cs.dal.ca:${BACKEND_FOLDER_NAME}/server.zip
   only:
     refs:
       - deployment
