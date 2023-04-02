@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="pos" v-if = "globalTimer > 0">
-      <Timer :timeLeft="globalTimer" @time="updateGlobalTime"></Timer>
+      <Timer :timeLeft="globalTimer"></Timer>
     </div>
     <div class="card scrollable-div">
       <div class="card-header">
@@ -347,6 +347,7 @@ socket.value.on("out", (data) => {
 
 socket.value.on("disconnect", () => {
   console.log("user disconnected");
+});
 });
 
 const timeParse = (startTime: string | Date) => {
