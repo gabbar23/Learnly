@@ -101,7 +101,7 @@ frontend-publish-deploy:
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
     - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_frontend.sh" 
   dependencies:
-    - build
+    - frontend-build
 
   only:
     refs:
