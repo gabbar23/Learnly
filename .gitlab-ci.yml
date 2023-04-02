@@ -35,7 +35,7 @@ frontend-build:
   script:
     - ls
     - echo "Started building backend application."
-    - cd Frontend
+    - cd FrontEnd
     - npm install
     - npm run prod
     - echo "Backend application has been built successfully."
