@@ -207,6 +207,7 @@ const calculateTimer = () => {
   const timeInSeconds = Math.floor(timeRemaining / 1000);
   globalTimer.value = timeInSeconds;
 };
+});
 
 const updateGlobalTime = (time: any) => {
   globalTimer.value = time;
@@ -347,7 +348,6 @@ socket.value.on("out", (data) => {
 
 socket.value.on("disconnect", () => {
   console.log("user disconnected");
-});
 });
 
 const timeParse = (startTime: string | Date) => {
