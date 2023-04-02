@@ -89,8 +89,8 @@ frontend-publish-deploy:
     - dalfcs_docker_autoscale
   script:
     - ls
-    - cd FrontEnd
     # - cd dist
+    - zip -r FrontEnd.zip FrontEnd
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
