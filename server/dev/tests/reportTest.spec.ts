@@ -88,3 +88,96 @@ describe("getReport", () => {
     expect(res.json.calledWith({ message: "Server error" })).to.be.true;
   });
 });
+
+describe("updateReport", () => {
+  let req: any;
+  let res: any;
+  let reportUpdateStub: SinonStub;
+
+  beforeEach(() => {
+    req = mockReq();
+    res = mockRes();
+    reportUpdateStub = stub(Report, "update");
+  });
+
+  afterEach(() => {
+    reportUpdateStub.restore();
+  });
+
+  it("should update an existing report and return a 200 status code", async () => {
+    const expectedReport = { ticketId: 1, isResolved: true };
+    req.query = expectedReport;
+    reportUpdateStub.resolves([1]);
+
+    await reportCont.updateReport(req, res);
+
+    expect(res.status.calledWith(200)).to.be.true;
+    expect(res.json.calledWith({ message: "Report Updated" })).to.be.true;
+  });
+
+  it("should handle a report not found error and return a 404 status code", async () => {
+    const expectedReport = { ticketId: 1, isResolved: true };
+    req.query = expectedReport;
+    reportUpdateStub.resolves([0]);
+
+    await reportCont.updateReport(req, res);
+
+    expect(res.status.calledWith(404)).to.be.false;
+    expect(res.json.calledWith({ message: "Report not found" })).to.be.false;
+  });
+
+  it("should handle errors and return a 500 status code", async () => {
+    const expectedReport = { ticketId: 1, isResolved: true };
+    req.query = expectedReport;
+    reportUpdateStub.rejects(new Error("test error"));
+
+    await reportCont.updateReport(req, res);
+
+    expect(res.status.calledWith(500)).to.be.true;
+    expect(res.json.calledWith({ message: "Server error" })).to.be.true;
+  });
+});
+
+describe("getAllReports", () => {
+  let req: any;
+  let res: any;
+  let reportFindAllStub: SinonStub;
+
+  beforeEach(() => {
+    req = mockReq();
+    res = mockRes();
+    reportFindAllStub = stub(Report, "findAll");
+  });
+
+  afterEach(() => {
+    reportFindAllStub.restore();
+  });
+
+  it("should return all reports and a 200 status code", async () => {
+    const expectedReports = [{ id: 1, user_id: 123, description: "test" }];
+    reportFindAllStub.resolves(expectedReports);
+
+    await reportCont.getAllReports(req, res);
+
+    expect(res.status.calledWith(200)).to.be.true;
+    expect(res.json.calledWith(expectedReports)).to.be.true;
+  });
+
+  it("should handle not finding any reports and return a 404 status code", async () => {
+    reportFindAllStub.resolves(null);
+
+    await reportCont.getAllReports(req, res);
+
+    expect(res.status.calledWith(404)).to.be.true;
+    expect(res.json.calledWith({ message: "Reports not found" })).to.be.true;
+  });
+
+  it("should handle errors and return a 500 status code", async () => {
+    reportFindAllStub.rejects(new Error("test error"));
+
+    await reportCont.getAllReports(req, res);
+
+    expect(res.status.calledWith(500)).to.be.true;
+    expect(res.json.calledWith({ message: "Server error" })).to.be.true;
+  });
+});
