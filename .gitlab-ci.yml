@@ -38,7 +38,7 @@ frontend-build:
     - npm install
     - npm run build
     - ls
-    - mv ./build/dist/* ./dist/
+    - mv ./dist/* ./dist/
     - echo "Backend application has been built successfully."
   artifacts:
     when: on_success
