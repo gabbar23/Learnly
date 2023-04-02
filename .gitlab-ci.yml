@@ -90,7 +90,7 @@ frontend-publish-deploy:
   script:
     - ls
     - cd FrontEnd
-    - cd dist
+    # - cd dist
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
