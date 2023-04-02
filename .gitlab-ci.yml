@@ -1,6 +1,5 @@
 variables:
   # Act as a varibale to be used further in YML file.
-  TARGET_FOLDER_NAME: "target"
   BACKEND_FOLDER_NAME: "server"
 
 stages:
@@ -24,7 +23,7 @@ backend-build:
   artifacts:
     when: on_success
     paths:
-      - $TARGET_FOLDER_NAME
+      - prod
 
 frontend-build:
   stage: build
@@ -37,8 +36,6 @@ frontend-build:
     - cd FrontEnd
     - npm install
     - npm run build
-    - ls
-    - mv ./dist/* ./dist/
     - echo "Backend application has been built successfully."
   artifacts:
     when: on_success
