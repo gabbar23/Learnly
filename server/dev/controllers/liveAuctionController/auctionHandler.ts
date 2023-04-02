@@ -36,33 +36,47 @@ const getAuctionDetails = async (req: Request, res: Response) => {
 };
 
 const getAuctionItemDetails = async (req: Request, res: Response) => {
+  let responseSent = false; // initialize flag
   try {
     const userCount = await checkForUser(req, res);
-    
+
     await Item.findOne({
       where: {
         itemId: req.body.itemId,
       },
-      include:[{
-        model:ImageDetailModel
-      }]
+      include: [
+        {
+          model: ImageDetailModel,
+        },
+        {
+          model: Auction,
+        },
+      ],
     }).then((result) => {
-      res.status(200).json({
-        item: result,
-        userCount: userCount // add the userCount to the response object
-      });
+      if (!responseSent) {
+        // check if response has already been sent
+        res.status(200).json({
+          item: result,
+          userCount: userCount, // add the userCount to the response object
+        });
+        responseSent = true; // set flag to true
+      }
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    if (!responseSent) {
+      // check if response has already been sent
+      res.status(500).json({ message: "Server Error" });
+      responseSent = true; // set flag to true
+    }
   }
 };
 
 interface CountResult {
-  'COUNT(userId)': number;
+  "COUNT(userId)": number;
 }
 
-const checkForUser = async (req: Request, res: Response) => {
+const checkForUser = async (req: Request, _: Response) => {
   var userId = req.body.userId;
   var auctionId = req.body.auctionId;
   var itemId = req.body.itemId;
@@ -70,40 +84,41 @@ const checkForUser = async (req: Request, res: Response) => {
     const results: CountResult[] = await sequelize.query(
       `
       select count(userId) as "COUNT(userId)" from userBidDetails 
-      where itemId = ` + itemId + ` and auctionId = ` + auctionId + ` and userId = ` + userId + `;
+      where itemId = ` +
+        itemId +
+        ` and auctionId = ` +
+        auctionId +
+        ` and userId = ` +
+        userId +
+        `;
       `,
       {
         type: QueryTypes.SELECT,
       }
     );
-    const count = results[0]['COUNT(userId)'];
+    const count = results[0]["COUNT(userId)"];
     console.log("No of users", count);
     return count;
-    
   } catch (error) {
     // console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    // res.status(500).json({ message: "Server Error" });
   }
 };
 
-
-
-const getImages =async (req:Request, res: Response) => {
-  
-    await ImageDetailModel.findAll({
-      where:{
-        itemId: req.body.itemId,
-      }
-    })
-    .then((result)=>{
+const getImages = async (req: Request, res: Response) => {
+  await ImageDetailModel.findAll({
+    where: {
+      itemId: req.body.itemId,
+    },
+  })
+    .then((result) => {
       // console.log(result)
       res.status(200).json(result);
     })
-    .catch((result)=>{
+    .catch((result) => {
       res.status(500).send(result);
     });
-
-}
+};
 
 const endTime = (_req: Request, res: Response) => {
   console.log("timer");
@@ -115,71 +130,68 @@ const endTime = (_req: Request, res: Response) => {
   });
 };
 
-
-const findMaxBidAmount = (req : Request, res : Response) => {
-
-    userBidDetailsModel.max("bidAmount",{
-      where:{
-        itemId : req.body.auctionId
-      }
+const findMaxBidAmount = (req: Request, res: Response) => {
+  userBidDetailsModel
+    .max("bidAmount", {
+      where: {
+        itemId: req.body.auctionId,
+      },
     })
-    .then((result)=>{
+    .then((result) => {
       res.status(200).json(result);
     })
-    .catch((res)=>{
+    .catch((res) => {
       console.log(res);
     });
+};
 
-}
-
-
-const findMyBidAmount = (req : Request , res : Response) => {
-  
-  userBidDetailsModel.max("bidAmount",{
-    where:{
-      itemId : req.body.auctionId,
-      userId : req.body.userId
-    }
-  })
-  .then((result)=>{
-    res.status(200).json(result);
-  })
-  .catch((res)=>{
-    console.log(res);
-  });
-}
+const findMyBidAmount = (req: Request, res: Response) => {
+  userBidDetailsModel
+    .max("bidAmount", {
+      where: {
+        itemId: req.body.auctionId,
+        userId: req.body.userId,
+      },
+    })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((res) => {
+      console.log(res);
+    });
+};
 
 const validateAmount = () => {
   console.log();
 };
 
-const topFiveUsers = (req:Request , res: Response) =>{
-  
+const topFiveUsers = (req: Request, res: Response) => {
   const auctionId = req.body.auctionId;
 
-  userBidDetailsModel.findAll({
-    where: {
-      auctionId: auctionId,
-    },
-    include:{
-      model:UserDetail,
-      attributes:["firstName","lastName","userId"]
-    },
-    attributes:["bidAmount"],
-    order: [["bidAmount", "DESC"]],
-    limit: 5
-  })
-  .then((result) => {
-    
-    console.log("5 User send to Client.");
-    res.status(200).send(result);
-
-  })
-  .catch((result)=>{
-    console.log("topFiveUsers in auctionHandler Failed." + result);
-    res.status(401).send({message: "Top Five user can not be fetched for this auction." });
-  })
-}
+  userBidDetailsModel
+    .findAll({
+      where: {
+        auctionId: auctionId,
+      },
+      include: {
+        model: UserDetail,
+        attributes: ["firstName", "lastName", "userId"],
+      },
+      attributes: ["bidAmount"],
+      order: [["bidAmount", "DESC"]],
+      limit: 5,
+    })
+    .then((result) => {
+      console.log("5 User send to Client.");
+      res.status(200).send(result);
+    })
+    .catch((result) => {
+      console.log("topFiveUsers in auctionHandler Failed." + result);
+      res.status(401).send({
+        message: "Top Five user can not be fetched for this auction.",
+      });
+    });
+};
 
 export default {
   makeBid,
@@ -195,8 +207,6 @@ export default {
   topFiveUsers,
 };
 
-
-
 //dont remove the code
 
 // await Auction.findAll({
@@ -210,7 +220,7 @@ export default {
 //     },
 //     include:[{
 //       model:ImageDetailModel,
-      
+
 //     }],
-  
+
 //   }],
