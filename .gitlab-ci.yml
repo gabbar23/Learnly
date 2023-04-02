@@ -68,7 +68,7 @@ backend-publish-deploy:
     - dalfcs_docker_autoscale
   before_script:
     - apt-get update && apt-get install -y zip
-    - apt-get install sshpass
+    - apt-get install -y sshpass
   script:
     - ls
     - cd server
@@ -89,15 +89,20 @@ frontend-publish-deploy:
   stage: deploy
   before_script:
     - apt-get update && apt-get install -y zip
-    - apt-get install sshpass
+    - apt-get install -y sshpass
   tags:
     - dalfcs_docker_autoscale
   script:
+    - ls
+    - cd dist
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_frontend.sh"
+    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_frontend.sh" 
+  dependencies:
+    - build
+
   only:
     refs:
       - deployment
