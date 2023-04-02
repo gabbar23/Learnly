@@ -37,7 +37,7 @@ frontend-build:
     - echo "Started building backend application."
     - cd FrontEnd
     - npm install
-    - npm run prod
+    - npm run build
     - echo "Backend application has been built successfully."
   artifacts:
     when: on_success
