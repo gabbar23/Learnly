@@ -2,7 +2,7 @@ variables:
   # Act as a varibale to be used further in YML file.
   TARGET_FOLDER_NAME: "target"
   BACKEND_FOLDER_NAME: "server"
-  FRONTEND_FOLDER_NAME: "FrontEnd"
+  FRONTEND_FOLDER_NAME: "dist"
 
 stages:
   - build
@@ -22,13 +22,28 @@ backend-build:
     - npm run build
     - ls
     - echo "Backend application has been built successfully."
-  # rules:
-  #   - changes:
-  #       - server/**/*
   artifacts:
     when: on_success
     paths:
       - $TARGET_FOLDER_NAME
+
+frontend-build:
+  stage: build
+  tags:
+    - dalfcs_docker_autoscale
+  image: node:latest
+  script:
+    - ls
+    - echo "Started building backend application."
+    - cd Frontend
+    - npm install
+    - npm run prod
+    - echo "Backend application has been built successfully."
+  artifacts:
+    when: on_success
+    paths:
+      - $FRONTEND_FOLDER_NAME
+
 
 backend-test:
   stage: test
@@ -41,13 +56,10 @@ backend-test:
     - cd server
     - npm run test
     - echo "Backend application Tested successfully."
-  # rules:
-  #   - changes:
-  #       - server/**/*
   artifacts:
     when: on_success
     paths:
-      - $TARGET_FOLDER_NAME
+      - $BACKEND_FOLDER_NAME
 
 backend-publish-deploy:
   stage: deploy
@@ -60,7 +72,6 @@ backend-publish-deploy:
   script:
     - ls
     - cd server
-    - ls
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - cd ../
     - zip -r server.zip server
@@ -68,7 +79,7 @@ backend-publish-deploy:
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  ".sh ./start_backend.sh"
+    - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_backend.sh"
   only:
     refs:
       - deployment
@@ -90,25 +101,3 @@ frontend-publish-deploy:
   only:
     refs:
       - deployment
-
-
-# image: node:latest
-# stages:          # List of stages for jobs, and their order of execution
-#   - build
-#   - test
-
-# build:       # This job runs in the build stage, which runs first.
-#   stage: build
-#   tags:
-#   - dalfcs_docker_autoscale
-#   script:
-#   - cd ./server/
-#   - npm install
-#   - npm run build
-
-
-# test:   # This job runs in the test stage.
-#   stage: test    # It only starts when the job in the build stage completes successfully.
-#   script:
-#   - cd ./server/  
-#   - npm run test
