@@ -2,7 +2,6 @@ variables:
   # Act as a varibale to be used further in YML file.
   TARGET_FOLDER_NAME: "target"
   BACKEND_FOLDER_NAME: "server"
-  FRONTEND_FOLDER_NAME: "dist"
 
 stages:
   - build
@@ -39,12 +38,12 @@ frontend-build:
     - npm install
     - npm run build
     - ls
-    # - mv ./build/* ./dist/
+    - mv ./build/dist/* ./dist/
     - echo "Backend application has been built successfully."
   artifacts:
     when: on_success
     paths:
-      - $FRONTEND_FOLDER_NAME
+      - dist
 
 
 backend-test:
@@ -104,7 +103,6 @@ frontend-publish-deploy:
     - sshpass -e ssh -e csci5308vm5@csci5308vm5.research.cs.dal.ca  "sh ./start_frontend.sh" 
   dependencies:
     - frontend-build
-
   only:
     refs:
       - deployment
