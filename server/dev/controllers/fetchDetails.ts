@@ -6,10 +6,11 @@ export const fetchDetails = async (_: Request, res: Response) => {
   try {
     const results = await sequelize.query(
       `
-        SELECT auctions.*, items.*, imageDetails.*
-        FROM auctions
-        INNER JOIN items ON items.auctionId = auctions.auctionId
-        INNER JOIN imageDetails ON imageDetails.itemId = items.itemId
+      SELECT auctions.*, items.*, imageDetails.*
+      FROM auctions
+      INNER JOIN items ON items.auctionId = auctions.auctionId
+      INNER JOIN imageDetails ON imageDetails.itemId = items.itemId
+      WHERE auctions.isSold = false;
       `,
       {
         type: QueryTypes.SELECT,
