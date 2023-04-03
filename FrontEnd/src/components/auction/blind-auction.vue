@@ -3,6 +3,7 @@
   <div class="main-section w-50 mx-auto m-2">
     <loader v-if="isLoading"></loader>
     <template v-else>
+
       <h3 class="text-center mb-5">Blind Auction</h3>
       <Carousel>
         <template v-if="sellItemDetail.imageDetails.length > 0">
@@ -50,7 +51,8 @@
               </div>
               <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
               <div class="col-8 p-2">
-                <FormKit type="text" v-model="sellItemDetail.bidAmount" />
+                <FormKit type="text" v-model="sellItemDetail.bidAmount" 
+                :disabled="isBidAlreadyMade"/>
               </div>
             </div>
             <div class="text-center">
@@ -61,7 +63,8 @@
               >
                 Submit Bid
               </button>
-              <p v-if="isBidAlreadyMade">Bid Already Made.</p>
+              <p v-if="isBidAlreadyMade">Bid has been made.
+              All the best!</p>
             </div>
           </div>
         </div>
@@ -97,16 +100,16 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
   createdTime: "",
 });
-const isBidAlreadyMade = ref<boolean>(true);
+const isBidAlreadyMade = ref<boolean>(false);
 const itemId = ref<any>("");
 const auctionId = ref<any>("");
 const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
+const print="hello"
 
 onMounted(async () => {
   itemId.value = route.query.itemId;
   auctionId.value = route.query.auctionId;
-
   try {
     isLoading.value = true;
     const requestPayload = {
@@ -131,6 +134,8 @@ onMounted(async () => {
 
 const makePayment = async () => {
   try {
+    console.log("hello")
+    isBidAlreadyMade.value = true;
     const requestPayload = {
       itemId: itemId.value,
       bidAmount: sellItemDetail.bidAmount,
@@ -153,9 +158,7 @@ const makePayment = async () => {
   }
 };
 
-const bindClick = (args: any) => {
-  console.log("Hello");
-};
+
 </script>
 <style scoped>
 .main-section {

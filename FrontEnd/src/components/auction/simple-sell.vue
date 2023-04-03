@@ -13,13 +13,12 @@
               :src="item.imgUrl"
               onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
               class="carousel__item item_size"
-              @click="bindClick(item)"
             />
           </Slide>
         </template>
         <template v-else>
           <Slide v-for="slide in 5" :key="slide">
-            <div class="carousel__item" @click="bindClick(slide)">
+            <div class="carousel__item">
               {{ slide }}
             </div>
           </Slide>
@@ -119,17 +118,14 @@ onMounted(async () => {
   }
 });
 
-const bindClick = (args: any) => {
-  console.log("Hello");
-};
 
 const wishlist = async () => {
-  console.log(isWishlisted.value)
+  //console.log(isWishlisted.value)
   if (isWishlisted.value) {
-    let response = await auctionService.deleteWishlist(item_id, userId);
+    await auctionService.deleteWishlist(item_id, userId);
     //isWishlisted.value = false;
   } else {
-    let response = await auctionService.postWishlist(item_id, userId);
+    await auctionService.postWishlist(item_id, userId);
     //isWishlisted.value = true;
   }
   isWishlisted.value = !isWishlisted.value;

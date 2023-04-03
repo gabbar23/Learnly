@@ -74,8 +74,8 @@
         </div>
       </div>
     </div>
-    <div class="pos">
-      <Timer></Timer>
+    <div class="pos" v-if = "globalTimer > 0">
+      <Timer :timeLeft="globalTimer" @time="updateGlobalTime"></Timer>
     </div>
     <div class="card scrollable-div">
       <div class="card-header">
@@ -175,10 +175,33 @@ let timer: number;
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
+const globalTimer = ref<number>(0);
+
+
+const startDate = new Date();
+startDate.setHours(startDate.getHours() - 1);
+const endDate = new Date("Sat Apr 01 2023 16:32:58 GMT-0300 (Atlantic Daylight Time)");
+endDate.setHours(endDate.getHours() + 1);
+
+// Add an hour to the date
 
 socket.value = io("http://localhost:3000/");
 
-onMounted(() => {
+const calculateTimer = () => {
+  const timeRemaining = endDate.getTime() - Date.now();
+  if (timeRemaining < 0) {
+    console.log("auction ended sorry");
+  }
+  const timeInSeconds = Math.floor(timeRemaining / 1000);
+  globalTimer.value = timeInSeconds;
+};
+
+const updateGlobalTime = (time: any) => {
+  globalTimer.value = time;
+};
+
+onMounted(async () => {
+  calculateTimer();
   // const userId = user.userId;
   try {
     isLoading.value = true;
@@ -188,6 +211,10 @@ onMounted(() => {
       auctionType,
       userId,
     };
+
+    let auctionDetails = await auctionService.getAuctionDetails(
+      requestPayload.auctionId
+    );
 
     console.log("Top users");
     auctionService
