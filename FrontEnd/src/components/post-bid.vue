@@ -98,7 +98,7 @@
               label="Bid Type"
               placeholder="Post Bid as"
               :options="bidTypeOptions"
-              v-model="sellerDetails.bidType"
+              v-model="sellerDetails.auctionType"
             >
             </FormKit>
 
@@ -126,6 +126,7 @@ import type {
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import { getDate } from "@/utility";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -158,6 +159,7 @@ let sellerDetails = reactive<IGetSellerBidDetails>({
   startDate: "",
   endDate: "",
   userId: null,
+  auctionType: "",
 });
 
 const bidTypeOptions: ISelectResponse<string>[] = [

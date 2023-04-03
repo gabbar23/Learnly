@@ -10,7 +10,7 @@ export const fetchDetails = async (_: Request, res: Response) => {
       FROM auctions
       INNER JOIN items ON items.auctionId = auctions.auctionId
       INNER JOIN imageDetails ON imageDetails.itemId = items.itemId
-      WHERE auctions.isSold = false;
+      WHERE items.isSold = false;
       `,
       {
         type: QueryTypes.SELECT,

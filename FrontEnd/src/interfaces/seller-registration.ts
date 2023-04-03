@@ -58,6 +58,7 @@ export interface IGetSellerBidDetails {
   startDate:Date|string;
   endDate: Date|string;
   userId: Number | null;
+  auctionType?: string;
 }
 
 export interface IBidImageDetails {

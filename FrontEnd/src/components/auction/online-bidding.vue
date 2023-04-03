@@ -39,12 +39,18 @@
 
             <div class="col-4 p-2 font-weight-bold">Starting At Time:</div>
             <div class="col-8 p-2">
-              {{ startTime ? timeParse(startTime) : "N/A" }}
+              {{
+                startTime
+                  ? dateParse(startTime) + " " + timeParse(startTime)
+                  : "N/A"
+              }}
             </div>
 
             <div class="col-4 p-2 font-weight-bold">Closing At Time:</div>
             <div class="col-8 p-2">
-              {{ endTime ? timeParse(endTime) : "N/A" }}
+              {{
+                endTime ? dateParse(endTime) + " " + timeParse(endTime) : "N/A"
+              }}
             </div>
 
             <div class="col-4 p-2 font-weight-bold">Start Price:</div>
@@ -74,7 +80,7 @@
         </div>
       </div>
     </div>
-    <div class="pos" v-if = "globalTimer > 0">
+    <div class="pos" v-if="globalTimer > 0">
       <Timer :timeLeft="globalTimer" @time="updateGlobalTime"></Timer>
     </div>
     <div class="card scrollable-div">
@@ -127,7 +133,7 @@ import type { IGetAuctionItemDetails } from "@/interfaces/auction";
 import { Timer } from "../component";
 import { useRoute } from "vue-router";
 import type { IRecentBidder } from "@/interfaces/bid-for-good";
-import { getTime } from "@/utility";
+import { getDate, getTime } from "@/utility";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
@@ -150,6 +156,10 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
 });
 
+const bidCalculatedEndTime = ref<Date|string>("");
+const bidCalculatedStartTime = ref<Date|string>("");
+
+
 const userDetails: any = localStorage.getItem("userDetails");
 const { userId, sessionId } = JSON.parse(userDetails);
 
@@ -165,8 +175,8 @@ watch(timeLeft, (newValue, oldValue) => {
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
 
-let startTime = ref<Date | string>();
-let endTime = ref<Date>();
+let startTime = ref<Date | string>("");
+let endTime = ref<Date | string>("");
 let socket = ref<Socket>();
 const description = ref<String>();
 let myBid = ref<Number>();
@@ -177,10 +187,11 @@ const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
 const globalTimer = ref<number>(0);
 
-
 const startDate = new Date();
 startDate.setHours(startDate.getHours() - 1);
-const endDate = new Date("Sat Apr 01 2023 16:32:58 GMT-0300 (Atlantic Daylight Time)");
+const endDate = new Date(
+  "Sat Apr 01 2023 16:32:58 GMT-0300 (Atlantic Daylight Time)"
+);
 endDate.setHours(endDate.getHours() + 1);
 
 // Add an hour to the date
@@ -188,7 +199,8 @@ endDate.setHours(endDate.getHours() + 1);
 socket.value = io("http://localhost:3000/");
 
 const calculateTimer = () => {
-  const timeRemaining = endDate.getTime() - Date.now();
+  const dateObj = new Date(bidCalculatedEndTime.value);
+  const timeRemaining = dateObj.getTime() - Date.now();
   if (timeRemaining < 0) {
     console.log("auction ended sorry");
   }
@@ -201,7 +213,6 @@ const updateGlobalTime = (time: any) => {
 };
 
 onMounted(async () => {
-  calculateTimer();
   // const userId = user.userId;
   try {
     isLoading.value = true;
@@ -212,9 +223,9 @@ onMounted(async () => {
       userId,
     };
 
-    let auctionDetails = await auctionService.getAuctionDetails(
-      requestPayload.auctionId
-    );
+    // let auctionDetails = await auctionService.getAuctionDetails(
+    //   requestPayload.auctionId
+    // );
 
     console.log("Top users");
     auctionService
@@ -265,11 +276,16 @@ onMounted(async () => {
     auctionService
       .getNewItemDetails(requestPayload)
       .then((res) => {
+        console.warn(res);
         description.value = res.data.item.itemDes;
         startVal.value = res.data.item.startPrice;
         sellItemDetail = res.data.item;
-        startTime.value = new Date(res.data.item.createdAt);
-        endTime.value = new Date(res.data.item.updatedAt);
+        startTime.value = res.data.item.auction.startTime;
+        endTime.value = res.data.item.auction.endTime;
+        bidCalculatedStartTime.value = getDate(startTime.value) + " " + getTime(startTime.value);
+        bidCalculatedEndTime.value = getDate(endTime.value) + " " + getTime(endTime.value);
+
+        calculateTimer();
       })
       .catch(() => {
         console.log("cant fetch item details");
@@ -340,6 +356,11 @@ socket.value.on("disconnect", () => {
 const timeParse = (startTime: string | Date) => {
   const Time = getTime(startTime);
   return Time;
+};
+
+const dateParse = (time: string | Date) => {
+  const date = getDate(time);
+  return date;
 };
 const sendMessage = () => {
   console.log("message sent");
