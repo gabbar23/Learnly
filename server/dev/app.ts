@@ -109,7 +109,11 @@ const corsOptions: CorsOptions = {
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+
+  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:44833/"];
+
+
+  // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin!)) {
     res.setHeader("Access-Control-Allow-Origin", origin!);
