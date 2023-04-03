@@ -96,7 +96,8 @@ const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     if (
       origin === "http://localhost:5173" ||
-      origin === "http://127.0.0.1:5173"
+      origin === "http://127.0.0.1:5173" ||
+      origin === "http://csci5308vm5.research.cs.dal.ca:44833"
     ) {
       callback(null, true);
     } else {
@@ -110,7 +111,7 @@ app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
 
-  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:44833/"];
+  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:44833"];
 
 
   // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
@@ -199,4 +200,8 @@ sequelize
     console.log(error);
   });
 
-server.listen(3000);
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
