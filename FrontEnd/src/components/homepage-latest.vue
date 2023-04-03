@@ -24,7 +24,7 @@
 <div style="display: flex; justify-content: center;">
 <FormKit 
 type="button"
-label="Filter"
+label="Search"
 @click="filterByDate"
 />
 </div>
