@@ -13,11 +13,19 @@
   validation-visibility="live"
   v-model="startDate"
 />
-<br />
 <FormKit
   type="date"
   label="End Date"
   :validation="[['date_after', startDate]]"
+  v-model="endDate"
+/>
+
+</div>
+<div style="display: flex; justify-content: center;">
+<FormKit 
+type="button"
+label="Filter"
+@click="filterByDate"
 />
 </div>
 </div>
@@ -96,15 +104,43 @@ import { onMounted, ref } from "vue";
 import auctionService from "@/services/auctionService";
 import Loader from "../components/loader.vue";
 import router from "@/router";
-import { date } from "@formkit/i18n";
+import { getDate } from "@/utility";
 
 const startDate = ref<Date>(new Date());
+const endDate = ref<Date>(new Date());
 const currentSlide = ref<number>(0);
 const slideTo = (val: any) => {
   currentSlide.value = val;
 };
 
+const filterByDate = async (auctions: IGeneralAuctionDetails[]) => {
+    let response=await auctionService.getAllBidDetails();
 
+    let allAuctionDetails = response.data.details.map((auction:any) => {
+      return {
+        auctionId: auction.auctionId,
+        auctionType: auction.auctionType,
+        startTime: auction.startTime,
+        endTime: auction.endTime,
+        ...auction.items[0],
+        imgUrl: auction.items[0].imageDetails[0].imgUrl,
+      };
+    });
+    blindAuctionDetails.value = allAuctionDetails.filter(
+      (auction:any) => getDate(auction.startTime) >= getDate(startDate.value) && getDate(auction.endTime) <= getDate(endDate.value) &&
+      auction.auctionType == "blind",
+    );
+    simpleSellAuctionDetails.value = allAuctionDetails.filter(
+      (auction:any) => auction.auctionType == null // update it to simple get it fixed with BE
+&& getDate(auction.startTime) >= getDate(startDate.value) && getDate(auction.endTime) <= getDate(endDate.value),
+
+      );
+    liveAuctionDetails.value = allAuctionDetails.filter(
+      (auction:any) => auction.auctionType == "live"
+&& getDate(auction.startTime) >= getDate(startDate.value) && getDate(auction.endTime) <= getDate(endDate.value),
+    );
+
+};
 const liveAuctionClicked = (args: any) => {
   let queryURL = {
     itemId: args.itemId,
@@ -140,8 +176,10 @@ let isHidden = ref<boolean>(false);
 
 onMounted(async () => {
   try {
+   // console.log(liveAuctionDetails);
     isLoading.value = true;
     const response = await auctionService.getAllBidDetails();
+    //console.log(response.data.details);
     let allAuctionDetails = response.data.details.map((auction:any) => {
       return {
         auctionId: auction.auctionId,
@@ -152,13 +190,16 @@ onMounted(async () => {
     });
 
     blindAuctionDetails.value = allAuctionDetails.filter(
-      (auction:any) => auction.auctionType == "blind"
+      (auction:any) => auction.auctionType == "blind",
     );
     simpleSellAuctionDetails.value = allAuctionDetails.filter(
-      (auction:any) => auction.auctionType == null// update it to simple get it fixed with BE
-    );
+      (auction:any) => auction.auctionType == null,// update it to simple get it fixed with BE
+
+
+      );
     liveAuctionDetails.value = allAuctionDetails.filter(
-      (auction:any) => auction.auctionType == "live"
+      (auction:any) => auction.auctionType == "live",
+
     );
   } catch (e) {
     console.log("Error occured");
@@ -200,6 +241,6 @@ onMounted(async () => {
 
 .parent_sect {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 </style>
