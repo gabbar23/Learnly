@@ -1,7 +1,7 @@
 import express from "express";
-import bodyParser from "body-parser";
+// import bodyParser from "body-parser";
 
-import cors from "cors";
+// import cors from "cors";
 import http from "http";
 import session from "express-session";
 
@@ -29,7 +29,7 @@ import { userBidDetailsModel } from "./models/userBidDetails";
 
 import { initSocket } from "./util/socket";
 
-import { CorsOptions } from "cors";
+// import { CorsOptions } from "cors";
 import { wishListRoutes } from "./routes/wishListRoutes";
 import { Wishlist } from "./models/wishlistModel";
 
