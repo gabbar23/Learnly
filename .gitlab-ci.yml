@@ -74,8 +74,6 @@ backend-publish-deploy:
     - ls
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "rm -f server.zip"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "rm -r server"
     - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
     - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./start_backend.sh"
   only:
