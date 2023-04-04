@@ -109,7 +109,7 @@ app.use(
 
 // app.use(cors(corsOptions));
 
-// app.use((req, res, next) => {
+app.use((_req, res, next) => {
 
 //   const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080"];
 
@@ -120,14 +120,14 @@ app.use(
 //     res.setHeader("Access-Control-Allow-Origin", origin!);
 //   }
 
-//   // res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
-//   );
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   next();
-// });
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "OPTIONS, GET, POST, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  next();
+});
 
 //api middlewares
 app.use("/api/v1/register", registerRoutes);
