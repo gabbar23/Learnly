@@ -1,3 +1,4 @@
+
 <template>
   <loader v-if="isLoading"></loader>
   <template v-else>
@@ -119,7 +120,7 @@ const slideTo = (val: any) => {
   currentSlide.value = val;
 };
 
-const close = () => {
+const close =  () => {
   isHidden.value = false;
 };
 
@@ -142,13 +143,13 @@ const filterByDate = async (auctions: IGeneralAuctionDetails[]) => {
   });
   blindAuctionDetails.value = allAuctionDetails.filter(
     (auction: any) =>
+    auction.auctionType == "blind" &&
       getDate(auction.startTime) >= getDate(startDate.value) &&
-      getDate(auction.endTime) <= getDate(endDate.value) &&
-      auction.auctionType == "blind"
+      getDate(auction.endTime) <= getDate(endDate.value)
   );
   simpleSellAuctionDetails.value = allAuctionDetails.filter(
     (auction: any) =>
-      auction.auctionType == null && // update it to simple get it fixed with BE
+      auction.auctionType == null || auction.auctionType == "simple" && // update it to simple get it fixed with BE
       getDate(auction.startTime) >= getDate(startDate.value) &&
       getDate(auction.endTime) <= getDate(endDate.value)
   );
@@ -197,7 +198,7 @@ onMounted(async () => {
     // console.log(liveAuctionDetails);
     isLoading.value = true;
     const response = await auctionService.getAllBidDetails();
-    //console.log(response.data.details);
+    console.log(response.data.details);
     let allAuctionDetails = response.data.details.map((auction: any) => {
       return {
         auctionId: auction.auctionId,
@@ -211,7 +212,9 @@ onMounted(async () => {
       (auction: any) => auction.auctionType == "blind"
     );
     simpleSellAuctionDetails.value = allAuctionDetails.filter(
-      (auction: any) => auction.auctionType == null // update it to simple get it fixed with BE
+      (auction: any) => auction.auctionType == null ||
+      auction.auctionType == "simple"
+      // update it to simple get it fixed with BE
     );
     liveAuctionDetails.value = allAuctionDetails.filter(
       (auction: any) => auction.auctionType == "live"
@@ -306,3 +309,4 @@ onMounted(async () => {
   margin-right: 1rem;
 }
 </style>
+
