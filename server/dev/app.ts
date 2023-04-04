@@ -1,7 +1,7 @@
 import express from "express";
-// import bodyParser from "body-parser";
+import bodyParser from "body-parser";
 
-// import cors from "cors";
+import cors from "cors";
 import http from "http";
 import session from "express-session";
 
@@ -29,7 +29,7 @@ import { userBidDetailsModel } from "./models/userBidDetails";
 
 import { initSocket } from "./util/socket";
 
-// import { CorsOptions } from "cors";
+import { CorsOptions } from "cors";
 import { wishListRoutes } from "./routes/wishListRoutes";
 import { Wishlist } from "./models/wishlistModel";
 
@@ -89,38 +89,38 @@ app.use(
 // });
 
 //api configration
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// const corsOptions: CorsOptions = {
-//   origin: (origin, callback) => {
-//     if (
-//       origin === "http://localhost:5173" ||
-//       origin === "http://127.0.0.1:5173" ||
-//       origin === "http://csci5308vm5.research.cs.dal.ca:8080"
-//     ) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   credentials: true,
-// };
+const corsOptions: CorsOptions = {
+  origin: (origin, callback) => {
+    if (
+      origin === "http://localhost:5173" ||
+      origin === "http://127.0.0.1:5173" ||
+      origin === "http://csci5308vm5.research.cs.dal.ca:8080"
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
-app.use((_req, res, next) => {
+app.use((req, res, next) => {
 
-//   const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080"];
+  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080"];
 
 
-//   // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
-//   const origin = req.headers.origin;
-//   if (allowedOrigins.includes(origin!)) {
-//     res.setHeader("Access-Control-Allow-Origin", origin!);
-//   }
+  // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin!)) {
+    res.setHeader("Access-Control-Allow-Origin", origin!);
+  }
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  // res.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "OPTIONS, GET, POST, PUT, PATCH, DELETE"
