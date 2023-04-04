@@ -97,7 +97,7 @@ const corsOptions: CorsOptions = {
     if (
       origin === "http://localhost:5173" ||
       origin === "http://127.0.0.1:5173" ||
-      origin === "http://csci5308vm5.research.cs.dal.ca:44833"
+      origin === "http://csci5308vm5.research.cs.dal.ca:8080"
     ) {
       callback(null, true);
     } else {
@@ -111,7 +111,7 @@ app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
 
-  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:44833"];
+  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080"];
 
 
   // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];

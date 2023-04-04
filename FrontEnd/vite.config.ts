@@ -12,9 +12,4 @@ export default defineConfig({
     },
 
   },
-  server:{
-    mimeTypes: {
-      'application/javascript': ['ts']
-    }
-  }
 });
