@@ -29,7 +29,7 @@ import { userBidDetailsModel } from "./models/userBidDetails";
 
 import { initSocket } from "./util/socket";
 
-import { CorsOptions } from "cors";
+// import { CorsOptions } from "cors";
 import { wishListRoutes } from "./routes/wishListRoutes";
 import { Wishlist } from "./models/wishlistModel";
 
