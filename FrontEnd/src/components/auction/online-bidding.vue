@@ -72,6 +72,8 @@
             <button
               class="btn btn-danger"
               @click="sendMessage()"
+              :hidden="!isNotBuyer"
+
               :disabled="isBidMade"
             >
               Submit Bid
@@ -134,12 +136,14 @@ import { Timer } from "../component";
 import { useRoute } from "vue-router";
 import type { IRecentBidder } from "@/interfaces/bid-for-good";
 import { getDate, getTime } from "@/utility";
+import AuthService from "@/services/AuthService";
 
 const isBidMade = ref<boolean>(false);
 const timeLeft = ref(10); // 60 seconds
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
+let isNotBuyer = ref<boolean>(false);
 
 const topUserList = ref<IRecentBidder[]>([]);
 
@@ -222,7 +226,7 @@ onMounted(async () => {
       auctionType,
       userId,
     };
-
+    isNotBuyer=await (await AuthService.getCurrentUserDetails(userId)).data.isBuyer;   //check if user isn't a buyer
     // let auctionDetails = await auctionService.getAuctionDetails(
     //   requestPayload.auctionId
     // );
