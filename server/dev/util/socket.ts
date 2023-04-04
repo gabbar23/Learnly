@@ -141,7 +141,7 @@ export function initSocket(server: any): void {
 
     const io = new Server(server, {
         cors: {
-          origin: 'http://localhost:5173',
+          origin: ['http://localhost:5173','http://csci5308vm5.research.cs.dal.ca:8080'],
           methods: ['GET', 'POST']
         }
       });
