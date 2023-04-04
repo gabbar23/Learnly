@@ -76,7 +76,7 @@ backend-publish-deploy:
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"        
     # - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_backend.sh"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./start_backendOut.sh"
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sudo sh ./start_backendOut.sh"
   only:
     refs:
       - deployment
@@ -98,7 +98,7 @@ frontend-publish-deploy:
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
     - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh" 
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./start_frontendOut.sh" 
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sudo sh ./start_frontendOut.sh" 
   dependencies:
     - frontend-build
   only:
