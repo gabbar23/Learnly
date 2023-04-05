@@ -44,8 +44,8 @@
               <div class="col-4 p-2 font-weight-bold">Start Price:</div>
               <div class="col-8 p-2 text-wrap">
                 {{
-                  sellItemDetail.startPrice > 0
-                    ? sellItemDetail.startPrice + "$"
+                 sellItemDetail.startPrice > 0
+                    ? "$" + sellItemDetail.startPrice
                     : "N/A"
                 }}
               </div>
@@ -97,7 +97,7 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   startPrice: 0,
   updatedAt: "",
   user_id: 0,
-  bidAmount: null,
+  bidAmount: 0,
   createdTime: "",
 });
 const isBidAlreadyMade = ref<boolean>(false);
@@ -105,11 +105,12 @@ const itemId = ref<any>("");
 const auctionId = ref<any>("");
 const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
-const print="hello"
+//const print="hello"
 
 onMounted(async () => {
   itemId.value = route.query.itemId;
   auctionId.value = route.query.auctionId;
+ // console.log(isBidAlreadyMade.value)
   try {
     isLoading.value = true;
     const requestPayload = {
@@ -119,7 +120,7 @@ onMounted(async () => {
       userId,
     };
     const response = await auctionService.getNewItemDetails(requestPayload);
-    sellItemDetail = response.data.item;
+       sellItemDetail = response.data.item;
     isBidAlreadyMade.value = response.data.userCount
       ? response.data.userCount > 0
       : false;
@@ -135,6 +136,16 @@ onMounted(async () => {
 const makePayment = async () => {
   try {
    // console.log("hello")
+   if( sellItemDetail.bidAmount==null ||
+    sellItemDetail.bidAmount<sellItemDetail.startPrice){
+      //console.log("Bid not enough")
+    notify({
+      title: "Failure!",
+      text: "Bid should be more than start price!",
+      type: "danger",
+    });
+  }
+  else{
     isBidAlreadyMade.value = true;
     const requestPayload = {
       itemId: itemId.value,
@@ -148,7 +159,10 @@ const makePayment = async () => {
       text: "Your Bid has been placed Successfully!",
       type: "success",
     });
-  } catch (e) {
+  }
+  console.log(isBidAlreadyMade.value)
+ }
+ catch (e) {
     console.log("Error occured in placing a bid");
     notify({
       title: "Failure!",
