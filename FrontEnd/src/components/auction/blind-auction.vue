@@ -55,20 +55,20 @@
                 :disabled="isBidAlreadyMade"/>
               </div>
             </div>
-            <div class="text-center">
+              <p class="text-center" v-if="isBidAlreadyMade">Bid has been made.
+              All the best!</p>
+              <div v-else> <div class="text-center">
               <button
                 class="btn btn-danger"
                 @click="makePayment"
-                :disabled="isBidAlreadyMade"
+                :hidden="isBidAlreadyMade"
               >
                 Submit Bid
-              </button>
-              <p v-if="isBidAlreadyMade">Bid has been made.
-              All the best!</p>
+              </button></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
     </template>
   </div>
 </template>
@@ -134,7 +134,7 @@ onMounted(async () => {
 
 const makePayment = async () => {
   try {
-    console.log("hello")
+   // console.log("hello")
     isBidAlreadyMade.value = true;
     const requestPayload = {
       itemId: itemId.value,

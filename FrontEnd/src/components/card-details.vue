@@ -1,58 +1,61 @@
 <template>
   <div class="container p-0">
     <div class="card px-4">
+      <FormKit type="form" @submit=approvePayment submit-label="Make payment">
       <p class="h8 py-3">Payment Details</p>
-      <FormKit type="form" 
-      button="disabled"
-      @submit="approvePayment"
-      >
       <div class="row gx-3">
         <div class="col-12">
           <div class="d-flex flex-column">
             <p class="text mb-1">Person Name</p>
-            <FormKit type="text" />
+            <FormKit type="text" name="name" />
           </div>
         </div>
         <div class="col-12">
           <div class="d-flex flex-column">
             <p class="text mb-1">Card Number</p>
-            <FormKit type="text" placeholder="1234 5678 4356 7898" 
-            :validation="[
-                ['required'],
-                ['matches', /^4[0-9]{12}(?:[0-9]{3})?$/],
-              ]
-            "
+            <FormKit type="text" 
+            name="card number"
+            
+            validation="required|number|length:16,16"
             />
           </div>
         </div>
         <div class="col-6">
           <div class="d-flex flex-column">
             <p class="text mb-1">Expiry</p>
-            <FormKit type="text" placeholder="MM/YYYY" />
+            <FormKit type="text" name="Expiry date"
+            placeholder="MM/YYYY"
+            :validation="[
+                ['required'],
+                ['matches', /^((0[1-9])|(1[0-2]))\/((2023)|(20[1-2][0-9]))$/],
+              ]"/>
           </div>
         </div>
         <div class="col-6">
           <div class="d-flex flex-column">
-            <p class="text mb-1">CVV/CVC</p>
-            <FormKit type="password" placeholder="***" />
+            <p class="text mb-1">CVV</p>
+            <FormKit type="password" placeholder="***" 
+            name="CVV"
+            validation="required|number"/>
           </div>
         </div>
          
-        <div class="col-12">
-          <FormKit type="submit"></FormKit>
+<!--        <div class="col-12">
           <div class="btn btn-primary-card mb-3" @click="approvePayment">
             <span class="ps-3">Make Payment</span>
             <span class="fas fa-arrow-right"></span>
           </div>
-        </div>
+        </div> 
         <div class="col-12">
           <div class="btn btn-danger-card mb-3" @click="cancelPayment">
             <span class="ps-3">Cancel Payment</span>
             <span class="fas fa-arrow-right"></span>
           </div>
-        </div>
+        </div> -->
       </div>
     </FormKit>
+    <FormKit type="submit" label="Cancel Payment" @click="cancelPayment" />
+
     </div>
   </div>
 </template>
@@ -60,6 +63,7 @@
 import router from "@/router";
 import auctionService from "@/services/auctionService";
 import AuthService from "@/services/AuthService";
+import { label } from "@formkit/inputs";
 import { useNotification } from "@kyvg/vue3-notification";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
@@ -87,15 +91,21 @@ const approvePayment = async () => {
 };
 
 const cancelPayment = () => {
+  console.log("cancelPayment")
   notify({
     title: "Failure!",
     text: "Payment Cancelled. Redirecting!",
     type: "danger",
   });
-  const timeOut = setTimeout(() => {
+  setTimeout(() => {
     router.push("/home");
   }, 2000);
-  clearTimeout(timeOut);
+
+  /*const timeOut = setTimeout(() => {
+    console.log("inside timeout")
+    router.push("/home");
+  }, 2000);
+  clearTimeout(timeOut); */
 };
 </script>
 <style>
@@ -222,3 +232,4 @@ p {
   max-width: none !important;
 }
 </style>
+
