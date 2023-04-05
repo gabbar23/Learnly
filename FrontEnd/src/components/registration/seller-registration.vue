@@ -207,7 +207,7 @@ onMounted(async () => {
   try {
     let response = await AuthService.getStates();
     states.value = [];
-    console.log(states);
+    //console.log(states);
     for (let i = 0; i < response.data.length; i++) {
       console.warn(response.data[i].province_name);
       states.value.push({
@@ -215,7 +215,7 @@ onMounted(async () => {
         value: response.data[i].province_name,
       });
     }
-    console.log(states.value);
+    //console.log(states.value);
   } catch (e) {
     console.error("Error in fetching states", e);
   }
@@ -230,11 +230,11 @@ const InvalidSignup = () => {
 };
 
 const sellerRegister = async (data: any) => {
-  console.log(data);
+  //console.log(data);
   const body = new FormData();
   // Finally, we append the actual File object(s)
   data.idproof.forEach((fileItem: any) => {
-    console.warn(fileItem);
+    //console.warn(fileItem);
     body.append("image", fileItem.file);
   });
 
@@ -281,7 +281,7 @@ const checkUserExists = async (email: string) => {
   }
 };
 const checkIsBuyerIsSeller = async () => {
-  console.log(buyerSeller.length)
+  //console.log(buyerSeller.length)
   if (buyerSeller.length == 0) {
     userDetails.isBuyer = false;
     userDetails.isSeller = false;
@@ -299,9 +299,9 @@ const checkIsBuyerIsSeller = async () => {
       userDetails.isBuyer = false;
     }
   }
-  console.log(buyerSeller);
-  console.log(userDetails.isBuyer);
-  console.log(userDetails.isSeller);
+  //console.log(buyerSeller);
+  //console.log(userDetails.isBuyer);
+ // console.log(userDetails.isSeller);
 
 };
 
