@@ -59,7 +59,7 @@
             <div class="col-4 p-2 font-weight-bold">Highest Bid Price:</div>
             <div class="col-8 p-2">{{ highestBid }}$</div>
 
-            <div class="col-4 p-2 font-weight-bold">Your Bid:$</div>
+            <div class="col-4 p-2 font-weight-bold">Your Bid:</div>
             <div class="col-8 p-2">{{ myBid }}$</div>
 
             <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
@@ -72,10 +72,16 @@
             <button
               class="btn btn-danger"
               @click="sendMessage()"
-              :disabled="isBidMade"
+              :disabled="!enableSubmitButton"
             >
-              Submit Bid
+              Submit
             </button>
+            <div v-if="!showBidActivenessMessage">
+              Bid isn't active at the moment
+            </div>
+            <div v-if="isBidMade">
+              Waiting for placing next bid in : {{ bidMadeTimer }} sec
+            </div>
           </div>
         </div>
       </div>
@@ -134,12 +140,15 @@ import { Timer } from "../component";
 import { useRoute } from "vue-router";
 import type { IRecentBidder } from "@/interfaces/bid-for-good";
 import { getDate, getTime } from "@/utility";
+import { computed } from "vue";
+import { onUnmounted } from "vue";
 
 const isBidMade = ref<boolean>(false);
-const timeLeft = ref(10); // 60 seconds
+// const timeLeft = ref(10); // 60 seconds
 const isLoading = ref<boolean>(false);
 const bidAmount = ref<Number>();
 const bidStatus = ref<String>();
+const showBidActivenessMessage = ref<boolean>(false);
 
 const topUserList = ref<IRecentBidder[]>([]);
 
@@ -156,43 +165,26 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
   bidAmount: null,
 });
 
-const bidCalculatedEndTime = ref<Date|string>("");
-const bidCalculatedStartTime = ref<Date|string>("");
-
+const bidCalculatedEndTime = ref<Date | string | number>("");
+const bidCalculatedStartTime = ref<Date | string | number>(getDate(new Date()));
 
 const userDetails: any = localStorage.getItem("userDetails");
 const { userId, sessionId } = JSON.parse(userDetails);
 
-watch(timeLeft, (newValue, oldValue) => {
-  console.log(`Count changed from ${oldValue} to ${newValue}`);
-  if (newValue == 0) {
-    isBidMade.value = false;
-    clearInterval(timer);
-    timeLeft.value = 10;
-  }
-});
-
+let bidChecker: number;
 let highestBid = ref<Number>(0);
 let startVal = ref<Number>(100);
-
 let startTime = ref<Date | string>("");
 let endTime = ref<Date | string>("");
 let socket = ref<Socket>();
 const description = ref<String>();
 let myBid = ref<Number>();
 
-let timer: number;
+let bidMadeTimer = ref<number>(10);
 const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
 const globalTimer = ref<number>(0);
-
-const startDate = new Date();
-startDate.setHours(startDate.getHours() - 1);
-const endDate = new Date(
-  "Sat Apr 01 2023 16:32:58 GMT-0300 (Atlantic Daylight Time)"
-);
-endDate.setHours(endDate.getHours() + 1);
 
 // Add an hour to the date
 
@@ -212,8 +204,40 @@ const updateGlobalTime = (time: any) => {
   globalTimer.value = time;
 };
 
+const hasBidStarted = () => {
+  bidChecker = setInterval(() => {
+    const result = checkButtonDisability();
+    console.log("Button Disability status", result);
+  }, 5000);
+};
+
+// watch(timeLeft, (newValue, oldValue) => {
+//   console.log(`Count changed from ${oldValue} to ${newValue}`);
+//   if (newValue == 0) {
+//     isBidMade.value = false;
+//     clearInterval(timer);
+//     timeLeft.value = 10;
+//   }
+// });
+
+const enableSubmitButton = computed(() => {
+  return checkButtonDisability() && !isBidMade.value;
+});
+
+const checkButtonDisability = () => {
+  const currentTime = Date.now();
+  const startTime = new Date(bidCalculatedStartTime.value);
+  const endTime = new Date(bidCalculatedEndTime.value);
+  showBidActivenessMessage.value =
+    currentTime >= startTime.getTime() && currentTime <= endTime.getTime();
+  return showBidActivenessMessage.value;
+};
+
+onUnmounted(() => {
+  clearInterval(bidChecker);
+});
+
 onMounted(async () => {
-  // const userId = user.userId;
   try {
     isLoading.value = true;
     const requestPayload: any = {
@@ -222,10 +246,6 @@ onMounted(async () => {
       auctionType,
       userId,
     };
-
-    // let auctionDetails = await auctionService.getAuctionDetails(
-    //   requestPayload.auctionId
-    // );
 
     console.log("Top users");
     auctionService
@@ -282,10 +302,13 @@ onMounted(async () => {
         sellItemDetail = res.data.item;
         startTime.value = res.data.item.auction.startTime;
         endTime.value = res.data.item.auction.endTime;
-        bidCalculatedStartTime.value = getDate(startTime.value) + " " + getTime(startTime.value);
-        bidCalculatedEndTime.value = getDate(endTime.value) + " " + getTime(endTime.value);
-
+        bidCalculatedStartTime.value =
+          getDate(startTime.value) + " " + getTime(startTime.value);
+        bidCalculatedEndTime.value =
+          getDate(endTime.value) + " " + getTime(endTime.value);
         calculateTimer();
+        checkButtonDisability();
+        hasBidStarted();
       })
       .catch(() => {
         console.log("cant fetch item details");
@@ -372,6 +395,15 @@ const sendMessage = () => {
   console.log("itemId ID:", itemId);
   console.log("userId ID:", userId);
   console.log("bidAmount ID:", bidAmount.value);
+  isBidMade.value = true;
+  const bidPlaced = setInterval(() => {
+    bidMadeTimer.value--;
+    if (bidMadeTimer.value == 0) {
+      isBidMade.value = false;
+      bidMadeTimer.value = 10;
+      clearInterval(bidPlaced);
+    }
+  }, 1000);
 
   socket.value!.emit("placeBid", {
     seesionId: sessionId,
