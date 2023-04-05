@@ -137,7 +137,7 @@
               validation="required"
               v-model="buyerSeller"
               @input="
-                checkIsBuyerIsSeller(userDetails.isSeller, userDetails.isBuyer)
+                checkIsBuyerIsSeller()
               "
             />
           </div>
@@ -168,6 +168,8 @@ import router from "@/router";
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import { fa } from "@formkit/i18n";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
@@ -198,14 +200,14 @@ let userDetails = reactive<IGetUserDetails>({
 });
 const { notify } = useNotification();
 
-let buyerSeller = ["", ""];
+let buyerSeller: string[] = [];
 const isUserAlreadyRegistered = ref<boolean>(false);
 
 onMounted(async () => {
   try {
     let response = await AuthService.getStates();
     states.value = [];
-    console.log(states);
+    //console.log(states);
     for (let i = 0; i < response.data.length; i++) {
       console.warn(response.data[i].province_name);
       states.value.push({
@@ -213,7 +215,7 @@ onMounted(async () => {
         value: response.data[i].province_name,
       });
     }
-    console.log(states.value);
+    //console.log(states.value);
   } catch (e) {
     console.error("Error in fetching states", e);
   }
@@ -228,11 +230,11 @@ const InvalidSignup = () => {
 };
 
 const sellerRegister = async (data: any) => {
-  console.log(data);
+  //console.log(data);
   const body = new FormData();
   // Finally, we append the actual File object(s)
   data.idproof.forEach((fileItem: any) => {
-    console.warn(fileItem);
+    //console.warn(fileItem);
     body.append("image", fileItem.file);
   });
 
@@ -278,24 +280,29 @@ const checkUserExists = async (email: string) => {
     console.error("Error in checking user existence");
   }
 };
-const checkIsBuyerIsSeller = async (val: any, val2: any) => {
+const checkIsBuyerIsSeller = async () => {
+  //console.log(buyerSeller.length)
   if (buyerSeller.length == 0) {
     userDetails.isBuyer = false;
     userDetails.isSeller = false;
   }
-  if (buyerSeller.length == 2) {
+  else if (buyerSeller.length == 2) {
     userDetails.isSeller = true;
     userDetails.isBuyer = true;
   } else if (buyerSeller.length == 1) {
-    if (buyerSeller[0] == "buyer") {
+    if (buyerSeller[0] == "Buyer") {
       userDetails.isBuyer = true;
       userDetails.isSeller = false;
     }
-    if (buyerSeller[0] == "seller") {
+    if (buyerSeller[0] == "Seller") {
       userDetails.isSeller = true;
       userDetails.isBuyer = false;
     }
   }
+  //console.log(buyerSeller);
+  //console.log(userDetails.isBuyer);
+ // console.log(userDetails.isSeller);
+
 };
 
 const triggerChange = async (val: string) => {
