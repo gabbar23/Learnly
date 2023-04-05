@@ -74,4 +74,6 @@ export interface IGeneralAuctionDetails {
   itemId: Number | null;
   itemName: string;
   imgUrl: string;
+  startTime: Date | string;
+  endTime: Date | string;
 }

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@braid/vue-formulate": "^2.5.3",
+    "@esbuild/darwin-arm64": "^0.17.15",
     "@formkit/themes": "^1.0.0-beta.14",
     "@formkit/vue": "^1.0.0-beta.14",
     "@fortawesome/fontawesome-svg-core": "^6.3.0",

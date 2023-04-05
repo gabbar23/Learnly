@@ -110,12 +110,16 @@
           </div>
         </div>
         <div class="text-center">
-          <button class="btn btn-primary">Submit</button>
+          <button class="btn btn-primary"
+          :hidden="!isVerified"
+          >Submit</button>
         </div>
       </FormKit>
     </div>
   </div>
 </template>
+
+
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
 import type {
@@ -132,6 +136,11 @@ const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
+const userDetailsObject: any = localStorage.getItem("userDetails");
+const userDetail = JSON.parse(userDetailsObject);
+
+let isVerified  = ref<boolean>(false);
+
 const { notify } = useNotification();
 
 let cityOptions = computed(() => {
@@ -168,7 +177,7 @@ const bidTypeOptions: ISelectResponse<string>[] = [
     value: "live",
   },
   {
-    label: BidDescriptionEnum[BidTypeEnum.normalBidding],
+    label: BidDescriptionEnum[BidTypeEnum.blindBidding],
     value: "blind",
   },
   {
@@ -179,6 +188,9 @@ const bidTypeOptions: ISelectResponse<string>[] = [
 
 onMounted(async () => {
   try {
+    isVerified=userDetail.isVerified;
+    //console.log(JSON.parse(details).userId)
+   // isVerified=await (await AuthService.checkLogin(UserId)).data;
     let response = await AuthService.getStates();
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {

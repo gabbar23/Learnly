@@ -2,6 +2,10 @@
   <div class="container p-0">
     <div class="card px-4">
       <p class="h8 py-3">Payment Details</p>
+      <FormKit type="form" 
+      button="disabled"
+      @submit="approvePayment"
+      >
       <div class="row gx-3">
         <div class="col-12">
           <div class="d-flex flex-column">
@@ -12,7 +16,13 @@
         <div class="col-12">
           <div class="d-flex flex-column">
             <p class="text mb-1">Card Number</p>
-            <FormKit type="text" placeholder="1234 5678 4356 7898" />
+            <FormKit type="text" placeholder="1234 5678 4356 7898" 
+            :validation="[
+                ['required'],
+                ['matches', /^4[0-9]{12}(?:[0-9]{3})?$/],
+              ]
+            "
+            />
           </div>
         </div>
         <div class="col-6">
@@ -27,7 +37,9 @@
             <FormKit type="password" placeholder="***" />
           </div>
         </div>
+         
         <div class="col-12">
+          <FormKit type="submit"></FormKit>
           <div class="btn btn-primary-card mb-3" @click="approvePayment">
             <span class="ps-3">Make Payment</span>
             <span class="fas fa-arrow-right"></span>
@@ -40,6 +52,7 @@
           </div>
         </div>
       </div>
+    </FormKit>
     </div>
   </div>
 </template>
@@ -53,7 +66,6 @@ import { useRoute } from "vue-router";
 
 const { notify } = useNotification();
 const route = useRoute();
-
 const approvePayment = async () => {
   try {
     const requestPayload = Object.assign({ isSold: true }, { ...route.query });
