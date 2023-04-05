@@ -5,12 +5,11 @@ import { sequelize } from "../util/database";
 export const fetchDetails = async (_: Request, res: Response) => {
   try {
     const results = await sequelize.query(
-      `
-      SELECT auctions.*, items.*, imageDetails.*
+      `SELECT auctions.*, items.*, imageDetails.*
       FROM auctions
       INNER JOIN items ON items.auctionId = auctions.auctionId
       INNER JOIN imageDetails ON imageDetails.itemId = items.itemId
-      WHERE items.isSold = false;
+      WHERE items.isSold = false AND auctions.endTime > NOW()
       `,
       {
         type: QueryTypes.SELECT,
