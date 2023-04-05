@@ -91,7 +91,7 @@ const approvePayment = async () => {
 };
 
 const cancelPayment = () => {
-  console.log("cancelPayment")
+  //console.log("cancelPayment")
   notify({
     title: "Failure!",
     text: "Payment Cancelled. Redirecting!",
