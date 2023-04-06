@@ -168,8 +168,7 @@ import router from "@/router";
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
-import { fa } from "@formkit/i18n";
-import { faL } from "@fortawesome/free-solid-svg-icons";
+
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);

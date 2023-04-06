@@ -59,7 +59,22 @@
 </template>
 <script lang="ts" setup>
 import router from "@/router";
+import { tr } from "@formkit/i18n";
+import { reactive } from "vue";
+import { onMounted } from "vue";
 import { computed } from "vue";
+
+let isNotBuyer=false;
+
+onMounted(async () => {
+  const userDetailsObject: any = localStorage.getItem("userDetails");
+  const userDetail = JSON.parse(userDetailsObject);
+  isNotBuyer=userDetail.isBuyer;
+  console.log(isNotBuyer);
+  if (localStorage.getItem("isSeller") == "true") {
+    router.push("/seller");
+  }
+});
 
 const currentRoute = computed(() => {
   return router.currentRoute.value;

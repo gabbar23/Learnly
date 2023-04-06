@@ -29,9 +29,9 @@ const router = createRouter({
       children: [
         { path: "", name: "Buyer Details", component: BuyerDetails },
         // { path: "/donations", component: DonationDetails },
-        { path: "/buyer/orders", component: OrderDetails },
-        { path: "/buyer/report-issue", component: ReportIssue },
-        { path: "/buyer/issues",component: IssueTrack },
+        { name:"buyer-order", path: "/buyer/orders", component: OrderDetails },
+        { name:"buyer-report-issue", path: "/buyer/report-issue", component: ReportIssue },
+        { name:"buyer-issue-history", path: "/buyer/issues",component: IssueTrack },
       ],
     },
     {
@@ -164,7 +164,7 @@ router.beforeEach((to, from, next) => {
     else if(!isSeller && to.name==="Post Bid"){
       next({ name: "No Access" });
     }
-    else if(!isBuyer && to.name==="wishlist"){
+    else if(!isBuyer && (to.name==="wishlist" || to.name==="buyer-order" || to.name ==="buyer-report-issue" || to.name ==="buyer-issue-history")){
       next({ name: "No Access" });
     }
     else{
