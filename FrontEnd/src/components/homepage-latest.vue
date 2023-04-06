@@ -128,7 +128,7 @@ const showFilter = () => {
   isHidden.value = true;
 };
 
-const filterByDate = async (auctions: IGeneralAuctionDetails[]) => {
+const filterByDate = async () => {
   let response = await auctionService.getAllBidDetails();
 
   let allAuctionDetails = response.data.details.map((auction: any) => {
