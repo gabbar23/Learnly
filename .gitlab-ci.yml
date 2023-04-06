@@ -96,7 +96,7 @@ frontend-publish-deploy:
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./fr_devOut.sh" 
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./fr_dev.sh" 
   dependencies:
     - frontend-build
   only:
