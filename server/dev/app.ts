@@ -32,6 +32,7 @@ import { initSocket } from "./util/socket";
 import { CorsOptions } from "cors";
 import { wishListRoutes } from "./routes/wishListRoutes";
 import { Wishlist } from "./models/wishlistModel";
+// import { or } from "sequelize";
 
 declare module "express-session" {
   interface Session {
@@ -97,7 +98,9 @@ const corsOptions: CorsOptions = {
     if (
       origin === "http://localhost:5173" ||
       origin === "http://127.0.0.1:5173" ||
-      origin === "http://csci5308vm5.research.cs.dal.ca:8080"
+      origin === "http://csci5308vm5.research.cs.dal.ca:8080" ||
+      origin === "http://localhost:8080" ||
+      origin === "http://csci5308vm5.research.cs.dal.ca:5173"
     ) {
       callback(null, true);
     } else {
@@ -111,7 +114,7 @@ app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
 
-  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080"];
+  const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173","http://csci5308vm5.research.cs.dal.ca:8080","http://localhost:8080","http://csci5308vm5.research.cs.dal.ca:5173"];
 
 
   // const allowedOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];

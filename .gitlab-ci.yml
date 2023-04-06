@@ -91,12 +91,12 @@ frontend-publish-deploy:
   script:
     - ls
     # - cd dist
-    - zip -r FrontEnd.zip FrontEnd/dist
+    - zip -r FrontEnd.zip FrontEnd
     - chmod og-rwx ${VM_PRIVATE_KEY}
     - sshpass -V    
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./start_frontendOut.sh" 
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./fr_devOut.sh" 
   dependencies:
     - frontend-build
   only:
