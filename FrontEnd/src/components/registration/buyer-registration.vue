@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <nav class="col-md-2 d-none d-md-block sidebar mt-5">
+      <nav class="col-md-2 d-none d-md-block sidebar ">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item" @click="navigateTo('details')">
@@ -13,7 +13,11 @@
                 Details
               </a>
             </li>
-            <li class="nav-item" @click="navigateTo('orders')">
+            <li
+              class="nav-item"
+              @click="navigateTo('orders')"
+              v-if="isUserBuyer"
+            >
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/orders' }"
@@ -22,7 +26,11 @@
                 Orders
               </a>
             </li>
-            <li class="nav-item" @click="navigateTo('report')">
+            <li
+              class="nav-item"
+              @click="navigateTo('report')"
+              v-if="isUserBuyer"
+            >
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/report-issue' }"
@@ -31,7 +39,11 @@
                 Report an Issue
               </a>
             </li>
-            <li class="nav-item" @click="navigateTo('issues')">
+            <li
+              class="nav-item"
+              @click="navigateTo('issues')"
+              v-if="isUserBuyer"
+            >
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/issues' }"
@@ -60,16 +72,17 @@
 <script lang="ts" setup>
 import router from "@/router";
 import { tr } from "@formkit/i18n";
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { onMounted } from "vue";
 import { computed } from "vue";
+import { useStore } from "vuex";
 
-let isNotBuyer=false;
+let isNotBuyer = false;
 
 onMounted(async () => {
   const userDetailsObject: any = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
-  isNotBuyer=userDetail.isBuyer;
+  isNotBuyer = userDetail.isBuyer;
   console.log(isNotBuyer);
   if (localStorage.getItem("isSeller") == "true") {
     router.push("/seller");
@@ -79,6 +92,19 @@ onMounted(async () => {
 const currentRoute = computed(() => {
   return router.currentRoute.value;
 });
+const store = useStore();
+const userDetailsNew = ref<any>(store.state.userDetails);
+
+const isUserSeller = computed(() => store.state.userDetails?.isSeller);
+const isUserBuyer = computed(() => store.state.userDetails?.isBuyer);
+
+store.watch(
+  (state) => state.userDetails,
+  (newValue) => {
+    userDetailsNew.value = newValue;
+  },
+  { deep: true }
+);
 
 const navigateTo = (buttonClicked: String) => {
   if (buttonClicked == "details") {
@@ -87,8 +113,7 @@ const navigateTo = (buttonClicked: String) => {
     router.push("/buyer/orders");
   } else if (buttonClicked == "report") {
     router.push("/buyer/report-issue");
-  }
-  else if (buttonClicked=="issues"){
+  } else if (buttonClicked == "issues") {
     router.push("/buyer/issues");
   }
 };
@@ -96,12 +121,11 @@ const navigateTo = (buttonClicked: String) => {
 <style>
 /* Sidebar */
 .sidebar {
-  position: fixed;
+  position: relative;
   top: 0;
   bottom: 275px;
   left: 0;
   z-index: 100;
-  padding: 48px 0 0;
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -202,13 +226,4 @@ const navigateTo = (buttonClicked: String) => {
   color: #fff;
 }
 
-/* Grid breakpoints */
-@media (min-width: 768px) {
-  .sidebar {
-    padding-top: 56px; /* Space for fixed navbar */
-  }
-  /* [role="main"] {
-    padding-top: 80px;
-  } */
-}
 </style>
