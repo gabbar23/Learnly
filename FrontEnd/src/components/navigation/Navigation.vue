@@ -89,7 +89,7 @@ const navigateTo = (navigation: string) => {
     router.push("/buyer");
   }
   else if (navigation== "home"){
-    console.log(adminID)
+   // console.log(adminID)
     console.log(JSON.parse(details));
     router.push("/home");
   }
