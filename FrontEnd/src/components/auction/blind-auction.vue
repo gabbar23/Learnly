@@ -57,6 +57,10 @@
             </div>
               <p class="text-center" v-if="isBidAlreadyMade">Bid has been made.
               All the best!</p>
+              <div v-else-if="!isBuyer"> <div class="text-center">
+                Seller Cannot place a bid
+                </div>
+              </div>
               <div v-else> <div class="text-center">
               <button
                 class="btn btn-danger"
@@ -105,9 +109,12 @@ const itemId = ref<any>("");
 const auctionId = ref<any>("");
 const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
+let {isBuyer}=JSON.parse(details);
 //const print="hello"
 
+
 onMounted(async () => {
+  //console.log(isBuyer)
   itemId.value = route.query.itemId;
   auctionId.value = route.query.auctionId;
  // console.log(isBidAlreadyMade.value)
