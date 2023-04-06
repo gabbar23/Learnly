@@ -18,7 +18,7 @@ declare const process: {
 apiClient.interceptors.request.use(function (config) {
   // modify the request config
   if (process.env.NODE_ENV === 'development') {
-    config.baseURL = 'http://localhost:3000';
+    config.baseURL = 'http://csci5308vm5.research.cs.dal.ca:3000';
   } else {
     config.baseURL = 'http://csci5308vm5.research.cs.dal.ca:3000';
   }
