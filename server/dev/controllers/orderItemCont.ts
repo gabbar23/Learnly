@@ -30,15 +30,15 @@ export const addOrder = async (req: Request, res: Response) => {
   }
 };
 
-export const getOrder = async (_: Request, res: Response) => {
-  // const { buyerId } = req.body;
+export const getOrder = async (req: Request, res: Response) => {
+   const {buyerId}  = req.query
   try {
     // Fetch all order details and include associated items
     const results = await sequelize.query(
       `SELECT orderId,buyerId,orderDetails.itemId,items.itemName,items.startPrice,items.itemDes,items.isSold
       FROM orderDetails
       JOIN items ON orderDetails.itemId = items.itemId
-      WHERE orderDetails.buyerId = buyerId;`
+      WHERE orderDetails.buyerId = ${buyerId};`
       ,
       {
         // replacements: { buyerId: buyerId },
