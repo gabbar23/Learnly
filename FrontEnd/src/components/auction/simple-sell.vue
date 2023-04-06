@@ -44,19 +44,28 @@
         <div class="col-4 p-2 font-weight-bold">Description:</div>
         <div class="col-8 p-2 text-wrap">{{ sellItemDetail.itemDes }}</div>
       </div>
-      <div class="text-center mt-5">
+      <div v-if="!isBuyer"  class="text-center mt-5">
+        <button      
+        >
+          Sellers cannot buy the items
+        </button>
+      </div>
+      <div v-else-if="!sellItemDetail.isSold"
+       class="text-center mt-5">
         <button
           class="btn btn-danger payButton"
           @click="makePayment"
-          :disabled="sellItemDetail.isSold"
         >
           Pay
         </button>
       </div>
-      <button
+      <div v-if="isBuyer">
+      <button 
         :class="isWishlisted ? 'wishlisted' : 'wishlist-svg'"
         @click="wishlist"
       ></button>
+    </div>
+    <div v-else></div>
     </template>
   </div>
 </template>
@@ -88,9 +97,12 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 const details:any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
 const item_id:any = route.query.itemId;
+let {isBuyer}=JSON.parse(details);
+
 
 const isWishlisted = ref<boolean>(false);
 onMounted(async () => {
+  //console.log(isBuyer)
   const { itemId, auctionId, auctionType } = route.query;
   const isWishlistedInDb = await auctionService.getWishlist(userId);
 
