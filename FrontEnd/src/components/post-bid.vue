@@ -15,18 +15,21 @@
               type="text"
               label="Name Of Offering"
               v-model="sellerDetails.itemName"
+              validation="required"
             />
 
             <FormKit
               type="number"
               label="Estimated Value"
               v-model="sellerDetails.startPrice"
+              validation="required|number"
             />
 
             <FormKit
               type="date"
               label="Start Date Of Auction"
               v-model="sellerDetails.startDate"
+              validation="required"
             />
 
             <FormKit
@@ -34,12 +37,14 @@
               label="Start Time Of Auction"
               help="What time will the auction start?"
               v-model="sellerDetails.startTime"
+              validation="required"
             />
 
             <FormKit
               type="date"
               label="End Date Of Auction"
               v-model="sellerDetails.endDate"
+              validation="required"
             />
 
             <FormKit
@@ -47,6 +52,7 @@
               label="End Time Of Auction"
               help="What time will the auction end?"
               v-model="sellerDetails.endTime"
+              validation="required"
             />
           </div>
 
@@ -55,6 +61,7 @@
               type="text"
               label="Address"
               v-model="sellerDetails.address"
+              validation="required"
             />
             <FormKit
               type="select"
@@ -63,6 +70,7 @@
               :options="states"
               v-model="sellerDetails.provinceName"
               @change="triggerChange(sellerDetails.provinceName)"
+              validation="required"
             >
             </FormKit>
 
@@ -72,14 +80,19 @@
               placeholder="Select City"
               v-model="sellerDetails.cityName"
               :options="cityOptions"
+              validation="required"
             >
             </FormKit>
 
             <FormKit
               type="text"
               label="Postal Zip Code"
-              help="format: a1b-c2d | a1bc2d | a1b c2d"
               v-model="sellerDetails.postalCode"
+              help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
+              :validation="[
+                ['required'],
+                ['matches', /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i],
+              ]"
             />
 
             <FormKit
@@ -91,6 +104,7 @@
               multiple="true"
               v-model="bidPhotos"
               @blur="uploadImages(bidPhotos)"
+              validation="required"
             />
 
             <FormKit
@@ -99,6 +113,7 @@
               placeholder="Post Bid as"
               :options="bidTypeOptions"
               v-model="sellerDetails.auctionType"
+              validation="required"
             >
             </FormKit>
 
@@ -106,6 +121,7 @@
               type="textarea"
               label="Description"
               v-model="sellerDetails.itemDes"
+              validation="required"
             />
           </div>
         </div>

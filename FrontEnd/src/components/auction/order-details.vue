@@ -6,9 +6,9 @@
     <v-table class="fullWidth fullHeight">
       <thead>
         <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Description</th>
-          <th class="text-left">Price</th>
+          <th id="order_name" class="text-left">Name</th>
+          <th id="order_description" class="text-left">Description</th>
+          <th id="order_price" class="text-left">Price</th>
         </tr>
       </thead>
       <tbody>
