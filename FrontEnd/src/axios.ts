@@ -20,10 +20,11 @@ console.log(process.env.NODE_ENV);
 apiClient.interceptors.request.use(function (config) {
   // modify the request config
   if (window.location.hostname === 'csci5308vm5.research.cs.dal.ca') {
-
-    config.baseURL = 'http://localhost:3000';
-  } else {
     config.baseURL = 'http://csci5308vm5.research.cs.dal.ca:3000';
+    
+  } else {
+    config.baseURL = 'http://localhost:3000';
+   
   }
   return config;
 });
