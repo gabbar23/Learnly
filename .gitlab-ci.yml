@@ -49,6 +49,7 @@ backend-test:
     - ls
     - echo "Backend application test started."
     - cd server
+    - npm install
     - npm run test
     - echo "Backend application Tested successfully."
   artifacts:
