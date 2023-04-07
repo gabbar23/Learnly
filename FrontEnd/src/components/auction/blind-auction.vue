@@ -51,9 +51,14 @@
               </div>
               <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
               <div class="col-8 p-2">
-                <FormKit type="text" v-model="sellItemDetail.bidAmount" 
-                :disabled="isBidAlreadyMade"/>
-              </div>
+                <FormKit type="text" :ignore="false"
+                v-model="sellItemDetail.bidAmount" 
+                :disabled="isBidAlreadyMade"
+                name="Bid Amount"
+                pattern="\d+"
+                validation="number"
+                />
+              </div>    
             </div>
               <p class="text-center" v-if="isBidAlreadyMade">Bid has been made.
               All the best!</p>
@@ -142,9 +147,23 @@ onMounted(async () => {
 
 const makePayment = async () => {
   try {
-   // console.log("hello")
+    if (sellItemDetail.bidAmount == null) {
+      notify({
+        title: "Failure!",
+        text: "Bid should not be empty!",
+        type: "danger",
+      });
+    }
+    else if(!/^\d+$/.test(sellItemDetail?.bidAmount.toString())){
+      notify({
+        title: "Failure!",
+        text: "Bid should be a number!",
+        type: "danger",
+      });
+    }
+    else{
    if( sellItemDetail.bidAmount==null ||
-    sellItemDetail.bidAmount<sellItemDetail.startPrice){
+    sellItemDetail.bidAmount< sellItemDetail.startPrice){
       //console.log("Bid not enough")
     notify({
       title: "Failure!",
@@ -167,8 +186,8 @@ const makePayment = async () => {
       type: "success",
     });
   }
-  console.log(isBidAlreadyMade.value)
- }
+ }}
+
  catch (e) {
     console.log("Error occured in placing a bid");
     notify({
