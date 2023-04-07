@@ -179,10 +179,13 @@ const bubbles = ref<any>([]);
 let socketUrl;
 
 if (window.location.hostname === 'localhost') {
+  console.log("its on local machines");
   socketUrl = 'http://localhost:3000';
 } else {
+  console.log("its on server");
   socketUrl = 'http://csci5308vm5.research.cs.dal.ca:3000'; 
 }
+
 
 socket.value = io(socketUrl);
 
