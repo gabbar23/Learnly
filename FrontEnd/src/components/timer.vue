@@ -83,7 +83,7 @@ onMounted(() => {
 
 <style scoped>
 .font {
-  font-size: 1.5rem !important;
+  font-size: 1.2rem !important;
 }
 
 .timer {
