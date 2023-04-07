@@ -2,8 +2,8 @@
   <nav class="navbar navbar-expand-lg row background mb-4 w-105">
     <div class="col-9">
       <router-link to="/home" class="nounderline">
-      <h1>Bid4Good</h1>
-    </router-link>
+        <h1>Bid4Good</h1>
+      </router-link>
     </div>
 
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
@@ -85,7 +85,9 @@ const navigateTo = (navigation: string) => {
 
 const showLogOutIcon = computed(
   () =>
-    store.state.currentRoute != null && store.state.currentRoute.name == "Login"
+    store.state.currentRoute != null &&
+    (store.state.currentRoute.name == "Login" ||
+      store.state.currentRoute.name == "User Registration")
 );
 
 const isUserAdmin = computed(() => store.state.userDetails?.isAdmin);
