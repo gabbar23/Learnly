@@ -3,7 +3,6 @@
   <div class="main-section w-50 mx-auto m-2">
     <loader v-if="isLoading"></loader>
     <template v-else>
-
       <h3 class="text-center mb-5">Blind Auction</h3>
       <Carousel>
         <template v-if="sellItemDetail.imageDetails.length > 0">
@@ -11,9 +10,11 @@
             v-for="(item, index) in sellItemDetail.imageDetails"
             :key="index"
           >
-            <img :src="item.imgUrl" class="carousel__item item_size" 
-            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
-/>
+            <img
+              :src="item.imgUrl"
+              class="carousel__item item_size"
+              onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+            />
           </Slide>
         </template>
         <template v-else>
@@ -44,35 +45,40 @@
               <div class="col-4 p-2 font-weight-bold">Start Price:</div>
               <div class="col-8 p-2 text-wrap">
                 {{
-                 sellItemDetail.startPrice > 0
+                  sellItemDetail.startPrice > 0
                     ? "$" + sellItemDetail.startPrice
                     : "N/A"
                 }}
               </div>
               <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
               <div class="col-8 p-2">
-                <FormKit type="text" v-model="sellItemDetail.bidAmount" 
-                :disabled="isBidAlreadyMade"/>
+                <FormKit
+                  type="text"
+                  v-model="sellItemDetail.bidAmount"
+                  :disabled="isBidAlreadyMade"
+                />
               </div>
             </div>
-              <p class="text-center" v-if="isBidAlreadyMade">Bid has been made.
-              All the best!</p>
-              <div v-else-if="!isBuyer"> <div class="text-center">
-                Seller Cannot place a bid
-                </div>
-              </div>
-              <div v-else> <div class="text-center">
-              <button
-                class="btn btn-danger"
-                @click="makePayment"
-                :hidden="isBidAlreadyMade"
-              >
-                Submit Bid
-              </button></div>
+            <p class="text-center" v-if="isBidAlreadyMade">
+              Bid has been made. All the best!
+            </p>
+            <div v-else-if="!isBuyer">
+              <div class="text-center">Seller Cannot place a bid</div>
+            </div>
+            <div v-else>
+              <div class="text-center">
+                <button
+                  class="btn btn-danger"
+                  @click="makePayment"
+                  :hidden="isBidAlreadyMade"
+                >
+                  Submit Bid
+                </button>
               </div>
             </div>
           </div>
         </div>
+      </div>
     </template>
   </div>
 </template>
@@ -107,17 +113,16 @@ let sellItemDetail = reactive<IGetAuctionItemDetails>({
 const isBidAlreadyMade = ref<boolean>(false);
 const itemId = ref<any>("");
 const auctionId = ref<any>("");
-const details:any = localStorage.getItem("userDetails");
+const details: any = localStorage.getItem("userDetails");
 const { userId } = JSON.parse(details);
-let {isBuyer}=JSON.parse(details);
+let { isBuyer } = JSON.parse(details);
 //const print="hello"
-
 
 onMounted(async () => {
   //console.log(isBuyer)
   itemId.value = route.query.itemId;
   auctionId.value = route.query.auctionId;
- // console.log(isBidAlreadyMade.value)
+  // console.log(isBidAlreadyMade.value)
   try {
     isLoading.value = true;
     const requestPayload = {
@@ -127,7 +132,7 @@ onMounted(async () => {
       userId,
     };
     const response = await auctionService.getNewItemDetails(requestPayload);
-       sellItemDetail = response.data.item;
+    sellItemDetail = response.data.item;
     isBidAlreadyMade.value = response.data.userCount
       ? response.data.userCount > 0
       : false;
@@ -142,34 +147,34 @@ onMounted(async () => {
 
 const makePayment = async () => {
   try {
-   // console.log("hello")
-   if( sellItemDetail.bidAmount==null ||
-    sellItemDetail.bidAmount<sellItemDetail.startPrice){
+    // console.log("hello")
+    if (
+      sellItemDetail.bidAmount == null ||
+      sellItemDetail.bidAmount < sellItemDetail.startPrice
+    ) {
       //console.log("Bid not enough")
-    notify({
-      title: "Failure!",
-      text: "Bid should be more than start price!",
-      type: "danger",
-    });
-  }
-  else{
-    isBidAlreadyMade.value = true;
-    const requestPayload = {
-      itemId: itemId.value,
-      bidAmount: sellItemDetail.bidAmount,
-      auctionId: auctionId.value,
-      userId: userId,
-    };
-    await auctionService.makeBlindBid(requestPayload);
-    notify({
-      title: "Successfull!",
-      text: "Your Bid has been placed Successfully!",
-      type: "success",
-    });
-  }
-  console.log(isBidAlreadyMade.value)
- }
- catch (e) {
+      notify({
+        title: "Failure!",
+        text: "Bid should be more than start price!",
+        type: "danger",
+      });
+    } else {
+      isBidAlreadyMade.value = true;
+      const requestPayload = {
+        itemId: itemId.value,
+        bidAmount: sellItemDetail.bidAmount,
+        auctionId: auctionId.value,
+        userId: userId,
+      };
+      await auctionService.makeBlindBid(requestPayload);
+      notify({
+        title: "Successfull!",
+        text: "Your Bid has been placed Successfully!",
+        type: "success",
+      });
+    }
+    console.log(isBidAlreadyMade.value);
+  } catch (e) {
     console.log("Error occured in placing a bid");
     notify({
       title: "Failure!",
@@ -178,8 +183,6 @@ const makePayment = async () => {
     });
   }
 };
-
-
 </script>
 <style scoped>
 .main-section {
