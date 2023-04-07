@@ -19,7 +19,7 @@ console.log(process.env.NODE_ENV);
 
 apiClient.interceptors.request.use(function (config) {
   // modify the request config
-  if (process.env.NODE_ENV === 'development') {
+  if (window.location.hostname === 'csci5308vm5.research.cs.dal.ca') {
 
     config.baseURL = 'http://localhost:3000';
   } else {
