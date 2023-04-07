@@ -50,8 +50,8 @@
                     : "N/A"
                 }}
               </div>
-              <div class="col-4 p-2 font-weight-bold">Make Bid:</div>
-              <div class="col-8 p-2">
+              <div class="col-4 p-2 font-weight-bold" v-if="!isBidAlreadyMade">Make Bid:</div>
+              <div class="col-8 p-2" v-if="!isBidAlreadyMade">
                 <FormKit
                   type="text"
                   :ignore="false"
