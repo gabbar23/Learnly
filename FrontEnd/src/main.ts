@@ -15,11 +15,33 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faHouse, faTrashCan, faSignOutAlt, faHeart, faUserCircle, faUser, faUserSecret, faFilter, faGavel } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouse,
+  faTrashCan,
+  faSignOutAlt,
+  faHeart,
+  faUserCircle,
+  faUser,
+  faUserSecret,
+  faFilter,
+  faGavel,
+  faImage,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import store from "./store";
 
-library.add(faGavel, faHouse, faTrashCan, faSignOutAlt,faHeart ,faUserCircle, faUser, faUserSecret, faFilter);
+library.add(
+  faGavel,
+  faHouse,
+  faTrashCan,
+  faSignOutAlt,
+  faHeart,
+  faUserCircle,
+  faUser,
+  faUserSecret,
+  faFilter,
+  faImage
+);
 
 const vuetify = createVuetify({
   components,

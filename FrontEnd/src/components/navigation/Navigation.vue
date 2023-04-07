@@ -2,8 +2,8 @@
   <nav class="navbar navbar-expand-lg row background mb-4 w-105">
     <div class="col-9">
       <a href="/home" class="nounderline">
-      <h1>Bid4Good</h1>
-    </a>
+        <h1>Bid4Good</h1>
+      </a>
     </div>
 
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
@@ -11,7 +11,7 @@
       <a class="nav-link m-2" @click = "navigateTo('blindBid')" href="javascript:void"> Blind Bid </a>
       <a class="nav-link m-2" href="javascript:void"> Simple Sell </a>
     </div> -->
-    <div class="col-6">
+    <div class="col-4">
       <button
         class="btn btn-outline-dark m-2"
         @click="navigateTo('home')"
@@ -136,9 +136,7 @@ const logout = async () => {
   width: 35px;
 }
 
-
 .nounderline {
-  text-decoration: none !important
+  text-decoration: none !important;
 }
-
 </style>
