@@ -47,7 +47,8 @@
               type="date"
               label="End Date Of Auction"
               v-model="sellerDetails.endDate"
-              validation="required"
+              :validation="[['required'],['date_after', sellerDetails.startDate]]"
+
             />
 
             <FormKit
@@ -130,13 +131,15 @@
             </FormKit>
           </div>
         </div>
-        <div class="text-center">
-          <button class="btn btn-primary" :hidden="!isVerified">Submit</button>
+        <div class="text-center" v-if="isVerified">
+          <button class="btn btn-primary"
+          >Submit</button>
         </div>
       </FormKit>
     </div>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
