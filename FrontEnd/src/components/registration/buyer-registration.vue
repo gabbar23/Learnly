@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <nav class="col-md-2 d-none d-md-block sidebar ">
+      <nav class="col-md-2 d-none d-md-block sidebar">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item" @click="navigateTo('details')">
@@ -26,10 +26,7 @@
                 Orders
               </a>
             </li>
-            <li
-              class="nav-item"
-              @click="navigateTo('report')"
-              >
+            <li class="nav-item" @click="navigateTo('report')">
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/report-issue' }"
@@ -38,10 +35,7 @@
                 Report an Issue
               </a>
             </li>
-            <li
-              class="nav-item"
-              @click="navigateTo('issues')"
-            >
+            <li class="nav-item" @click="navigateTo('issues')">
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/issues' }"
@@ -50,13 +44,6 @@
                 Issue History
               </a>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link"  :class="{ active: currentRoute.path == '/buyer' }"
-                href="javascript:void">
-                <i class="fas fa-cog"></i>
-                Settings
-              </a>
-            </li> -->
           </ul>
         </div>
       </nav>
@@ -223,5 +210,4 @@ const navigateTo = (buttonClicked: String) => {
   background-color: #b9eedc;
   color: #fff;
 }
-
 </style>

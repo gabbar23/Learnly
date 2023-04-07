@@ -1,15 +1,12 @@
 <template>
   <loader v-if="isLoading"></loader>
   <template v-else>
-    <div
-      class="filter-container"
-      style="display: flex; justify-content: flex-end"
-    >
+    <div>
       <button class="filter-toggle" v-if="!isHidden" @click="showFilter">
         <font-awesome-icon icon="filter" />
       </button>
-      <div class="card filter-section" v-if="isHidden">
-        <div class="form-group w-40" style="display: inline-block">
+      <div v-if="isHidden" class="d-flex align-items-center">
+        <div class = "col-4">
           <FormKit
             type="date"
             name="StartDate"
@@ -17,17 +14,20 @@
             validation="required"
             validation-visibility="live"
             v-model="startDate"
+            class="m-2"
           />
         </div>
-        <div class="form-group w-40" style="display: inline-block">
+
+        <div class = "col-4 m-2">
           <FormKit
+            class="m-2"
             type="date"
             label="End Date"
             :validation="[['date_after', startDate]]"
             v-model="endDate"
           />
         </div>
-        <div style="text-align: center">
+        <div class="text-center m-2 col-4">
           <button class="btn btn-primary m-1" @click="filterByDate">
             Search
           </button>
@@ -351,10 +351,10 @@ onMounted(async () => {
   cursor: pointer;
 }
 
-.filter-container {
+/* .filter-container {
   display: flex;
   align-items: center;
-}
+} */
 
 .filter-toggle {
   margin-right: 1rem;

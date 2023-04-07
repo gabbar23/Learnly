@@ -1,9 +1,9 @@
 <template>
   <div class="timer" v-if="timeLeft > 0">
-    <div class="timer-value">{{ formattedTime }}</div>
-    <div class="timer-bar">
+    <div class="timer-value font" v-html="formattedTime"></div>
+    <!-- <div class="timer-bar">
       <div class="timer-progress" :style="{ width: progress + '%' }"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -25,10 +25,34 @@ let props = defineProps({
 });
 
 const formattedTime = computed(() => {
-  const hours = Math.floor(props.timeLeft / 3600);
-  const minutes = Math.floor((props.timeLeft % 3600) / 60);
-  const seconds = props.timeLeft % 60;
-  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  let seconds = props.timeLeft;
+  const days = Math.floor(seconds / 86400);
+  seconds %= 86400;
+  const hours = Math.floor(seconds / 3600);
+  seconds %= 3600;
+  const minutes = Math.floor(seconds / 60);
+  seconds %= 60;
+  let formattedString = `${days} <sup> days </sup>: ${pad(
+    hours
+  )} <sup> hours </sup>: ${pad(minutes)} <sup> min </sup>:  ${pad(
+    seconds
+  )} <sup> sec </sup>`;
+
+  if (days <= 0) {
+    formattedString = `${pad(hours)} <sup> hours </sup>: ${pad(
+      minutes
+    )} <sup> min </sup>:  ${pad(seconds)} <sup> sec </sup>`;
+  }
+  if (hours <= 0) {
+    formattedString = `${pad(minutes)} <sup> min </sup>:  ${pad(
+      seconds
+    )} <sup> sec </sup>`;
+  }
+  if (minutes <= 0) {
+    formattedString = `${pad(seconds)} <sup> sec </sup>`;
+  }
+
+  return formattedString;
 });
 
 const startTimer = () => {
@@ -57,7 +81,11 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
+.font {
+  font-size: 1.2rem !important;
+}
+
 .timer {
   display: flex;
   flex-direction: column;
@@ -71,11 +99,12 @@ onMounted(() => {
 }
 
 .timer-bar {
-  width: 80%;
+  width: 100%;
   height: 10px;
   background-color: #e0e0e0;
   border-radius: 5px;
   margin-top: 10px;
+  overflow: hidden;
 }
 
 .timer-progress {
