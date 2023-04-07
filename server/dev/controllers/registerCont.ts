@@ -147,7 +147,7 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-  req.session.userId = loginDetails.user_id;
+    req.session.userId = loginDetails.user_id;
 
     console.log(req.session.userId);
 
@@ -169,23 +169,21 @@ const checkLoginCredentials = async (req: Request, res: Response) => {
 
 const logoutUser = async (req: Request, res: Response) => {
   const { sessionId } = req.body;
-  if (sessionId === req.session.id) {
-    console.log(`Destroying session ${sessionId}`);
-    req.session.destroy((err) => {
-      if (err) {
-        console.log(err);
-        res.status(500).json({ message: "Failed to destroy session" });
-      } else {
-        res.status(200).json({ message: "Session destroyed" });
-      }
-    });
-  } else {
-    res.status(400).json({ message: "Invalid session ID" });
-  }
+  console.log(sessionId, req.session.id);
+
+  console.log(`Destroying session ${sessionId}`);
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({ message: "Failed to destroy session" });
+    } else {
+      res.status(200).json({ message: "Session destroyed" });
+    }
+  });
 };
 
 const getCurrentUserDetails = async (req: Request, res: Response) => {
-  const  userId = req.query.user;
+  const userId = req.query.user;
   if (!!userId) {
     try {
       console.log(req);
@@ -229,7 +227,7 @@ const getCurrentUserDetails = async (req: Request, res: Response) => {
 };
 
 const updateUserDetails = async (req: Request, res: Response) => {
-  try{
+  try {
     const {
       firstName,
       lastName,
@@ -246,14 +244,23 @@ const updateUserDetails = async (req: Request, res: Response) => {
         userId: userId,
       },
     });
-    updateUserDetail?.update({ firstName, lastName, dateOfBirth, phone, address, cityName, provinceName, postalCode });
+    updateUserDetail?.update({
+      firstName,
+      lastName,
+      dateOfBirth,
+      phone,
+      address,
+      cityName,
+      provinceName,
+      postalCode,
+    });
     res.status(200).json({
       isSuccessfull: true,
       message: {
         description: "Details Updated Successfully",
       },
     });
-  }catch(e){
+  } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Internal Server error" });
   }
@@ -266,5 +273,5 @@ export default {
   checkLoginCredentials,
   logoutUser,
   getCurrentUserDetails,
-  updateUserDetails
+  updateUserDetails,
 };
