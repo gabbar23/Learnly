@@ -285,6 +285,7 @@ onMounted(async () => {
       auctionService
         .getTopFiveUser(requestPayload.auctionId)
         .then((result) => {
+          highestBid.value = result.data[0].UserDetail.bidAmount;
           const tempResult = result.data.map((bid: any) => {
             return {
               firstName: bid.UserDetail.firstName,

@@ -134,7 +134,7 @@ const findMaxBidAmount = (req: Request, res: Response) => {
   userBidDetailsModel
     .max("bidAmount", {
       where: {
-        itemId: req.body.auctionId,
+        auctionId: req.body.auctionId,
       },
     })
     .then((result) => {
