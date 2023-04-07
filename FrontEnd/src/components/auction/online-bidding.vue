@@ -478,7 +478,7 @@ h3 {
 .pos {
   position: relative;
   top: 180px;
-  left: 280px;
+  left: 250px;
 }
 .tb-bg {
   background-color: #a5dfcb;
