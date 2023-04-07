@@ -50,7 +50,7 @@ const UserDetailModel = sequelize.define("UserDetails", {
     allowNull: true,
   },
   govtIdUrl: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(10000),
     allowNull: true,
   },
 });

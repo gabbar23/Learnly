@@ -11,7 +11,7 @@
       <a class="nav-link m-2" @click = "navigateTo('blindBid')" href="javascript:void"> Blind Bid </a>
       <a class="nav-link m-2" href="javascript:void"> Simple Sell </a>
     </div> -->
-    <div class="col-6">
+    <div class="col-4">
       <button
         class="btn btn-outline-dark m-2"
         @click="navigateTo('home')"
@@ -136,9 +136,7 @@ const logout = async () => {
   width: 35px;
 }
 
-
 .nounderline {
-  text-decoration: none !important
+  text-decoration: none !important;
 }
-
 </style>
