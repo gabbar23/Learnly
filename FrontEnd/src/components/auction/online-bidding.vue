@@ -176,7 +176,16 @@ const route = useRoute();
 const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
 
-socket.value = io("http://localhost:3000/");
+let socketUrl;
+
+if (window.location.hostname === 'localhost') {
+  socketUrl = 'http://localhost:3000';
+} else {
+  socketUrl = 'http://csci5308vm5.research.cs.dal.ca:3000'; 
+}
+
+socket.value = io(socketUrl);
+
 
 onMounted(() => {
   // const userId = user.userId;

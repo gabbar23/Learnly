@@ -32,7 +32,15 @@ import { initSocket } from "./util/socket";
 import { CorsOptions } from "cors";
 import { wishListRoutes } from "./routes/wishListRoutes";
 import { Wishlist } from "./models/wishlistModel";
+import * as path from "path"
 // import { or } from "sequelize";
+
+
+import * as dotenv from 'dotenv';
+const envFilePath = path.resolve(__dirname, '../../.env');
+console.log(envFilePath);
+dotenv.config({path:envFilePath});
+
 
 declare module "express-session" {
   interface Session {
@@ -60,38 +68,11 @@ app.use(
   })
 );
 
-// const io = new Server(server, {
-//   cors: {
-//     origin: 'http://127.0.0.1:5173/',
-//     methods: ['GET', 'POST']
-//   }
-// });
-
-// const io = new Server(server);
-
-// io.on('connection', (socket:Socket)=>{
-
-//   console.log("user just connected!");
-
-//   socket.on('placeBid', (data) => {
-//     // Update the bid in the database
-//     // ...
-
-//     console.log("bid pressed",data);
-//     // Emit a bid update event to all connected clients
-
-//     socket.emit('bidUpdate', (data + 20));
-//   });
-
-//   socket.on('disconnect', () => {
-//     console.log('User disconnected');
-//   });
-
-// });
-
 //api configration
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
@@ -182,17 +163,6 @@ userBidDetailsModel.belongsTo(UserDetail, { foreignKey: "userId" });
 
 UserDetail.hasMany(Wishlist, { foreignKey: "user_id" });
 Wishlist.belongsTo(UserDetail, { foreignKey: "user_id" });
-
-// syncing models
-// userBidDetailsModel.sync({force:true}).then((_:any)=>{
-//   console.log("Models Loaded");
-// })
-// Auction.sync({ force: true }).then((_:any) => {
-//   console.log("true");
-// });
-// Item.sync({ force: true }).then((_:any) => {
-//   console.log("true");
-// });
 
 sequelize
   .sync()

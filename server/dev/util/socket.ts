@@ -3,6 +3,7 @@ import { Socket,Server } from "socket.io";
 // import { Auction } from "../models/aunctionModel";
 import { userBidDetailsModel } from "../models/userBidDetails";
 import { Item } from "../models/itemModel";
+// import { or } from "sequelize";
 // import { sequelize } from "./database";
 // import { Transaction } from "sequelize";
 
@@ -139,11 +140,22 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
 
 export function initSocket(server: any): void {
 
+  const originType = process.env.NODE_ENV
+  
+  let origin = "";
+
+  if (originType == 'development'){
+    origin = "http://localhost:5173"
+  }
+  else{
+    origin = "http://csci5308vm5.research.cs.dal.ca:5173"
+  }
+
     const io = new Server(server, {
-        // cors: {
-        //   origin: ['http://localhost:5173','http://csci5308vm5.research.cs.dal.ca:8080','http://csci5308vm5.research.cs.dal.ca:5173'],
-        //   methods: ['GET', 'POST']
-        // }
+        cors: {
+          origin: origin,
+          methods: ['GET', 'POST']
+        }
       });
 
 
