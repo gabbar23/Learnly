@@ -1,9 +1,9 @@
 <template>
   <div class="timer" v-if="timeLeft > 0">
     <div class="timer-value font" v-html="formattedTime"></div>
-    <div class="timer-bar">
+    <!-- <div class="timer-bar">
       <div class="timer-progress" :style="{ width: progress + '%' }"></div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -32,9 +32,27 @@ const formattedTime = computed(() => {
   seconds %= 3600;
   const minutes = Math.floor(seconds / 60);
   seconds %= 60;
-  return `${days} <sup> days </sup>: ${pad(hours)} <sup> hours </sup>: ${pad(
-    minutes
-  )} <sup> min </sup>:  ${pad(seconds)} <sup> sec </sup>`;
+  let formattedString = `${days} <sup> days </sup>: ${pad(
+    hours
+  )} <sup> hours </sup>: ${pad(minutes)} <sup> min </sup>:  ${pad(
+    seconds
+  )} <sup> sec </sup>`;
+
+  if (days <= 0) {
+    formattedString = `${pad(hours)} <sup> hours </sup>: ${pad(
+      minutes
+    )} <sup> min </sup>:  ${pad(seconds)} <sup> sec </sup>`;
+  }
+  if (hours <= 0) {
+    formattedString = `${pad(minutes)} <sup> min </sup>:  ${pad(
+      seconds
+    )} <sup> sec </sup>`;
+  }
+  if (minutes <= 0) {
+    formattedString = `${pad(seconds)} <sup> sec </sup>`;
+  }
+
+  return formattedString;
 });
 
 const startTimer = () => {
