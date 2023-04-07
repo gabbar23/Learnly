@@ -1,7 +1,6 @@
 <template>
-    <div style="display: flex; justify-content: flex-end ;margin-right: 100px;">
-    <button class="issueListButton" @click="issueList">
-    </button>
+  <div style="display: flex; justify-content: flex-end; margin-right: 100px">
+    <button class="issueListButton" @click="issueList"></button>
   </div>
   <v-table>
     <thead>
@@ -22,17 +21,9 @@
           <td>{{ item.loginDetail?.email }}</td>
           <td>{{ item.phone }}</td>
           <td>
-            <!-- <div v-if="!item.editInProgress">
-              <button @click="item.editInProgress = !item.editInProgress">
-                Show ID
-              </button>
-            </div>
-            <div v-else class="d-flex">
-              <button @click="item.editInProgress = !item.editInProgress">
-                Hide ID
-              </button>
-              <img src="{{ item.govtIdUrl }}" />
-            </div> -->
+            <a :href="item.govtIdUrl" target="_blank">
+              <font-awesome-icon icon="image" />
+            </a>
           </td>
           <td>
             <button class="btn btn-primary" @click="approve(item)">
@@ -44,15 +35,20 @@
           </td>
         </tr>
       </template>
-      <no-content
-        v-else
-        :message="'No Sellers available to Approve'"
-      ></no-content>
+      <tr v-else>
+        <td colspan="6">
+          <div class="card d-flex justify-content-center">
+            <div class="card-body text-center">
+              <h1 class="card-title">No Records Found</h1>
+              <p class="card-text">
+                Sorry, there are no records at the moment.
+              </p>
+            </div>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </v-table>
-  <div>
-    <!-- <v-pagination v-model="page" :length="pageCount"></v-pagination> -->
-  </div>
 </template>
 <script lang="ts" setup>
 import type {
@@ -71,7 +67,7 @@ const verifiedSellers = ref<IVerfiedSeller[]>([]);
 const { notify } = useNotification();
 const isLoading = ref<boolean>(false);
 
-const getRegisteredSellers = async()=>{
+const getRegisteredSellers = async () => {
   try {
     verifiedSellers.value = [];
     isLoading.value = true;
@@ -88,10 +84,10 @@ const getRegisteredSellers = async()=>{
       text: "Fetching Registered Seller Operations Failed!",
       type: "error",
     });
-  }finally{
+  } finally {
     isLoading.value = false;
   }
-}
+};
 
 onMounted(async () => {
   getRegisteredSellers();
@@ -118,7 +114,7 @@ const approveOrDecline = async (payload: IApproveOrDeclineReqPayload) => {
   }
 };
 
-const approve = async(seller: IVerfiedSeller) => {
+const approve = async (seller: IVerfiedSeller) => {
   console.warn(seller);
   const reqPayload: IApproveOrDeclineReqPayload = {
     userId: seller.userId,
@@ -144,7 +140,8 @@ const decline = async (seller: IVerfiedSeller) => {
   grid-template-columns: 1fr 1fr;
 }
 .issueListButton {
-  background: url(../../src/assets/triangle-exclamation-solid.svg) no-repeat top left;
+  background: url(../../src/assets/triangle-exclamation-solid.svg) no-repeat top
+    left;
   background-size: contain;
   cursor: pointer;
   display: inline-block;

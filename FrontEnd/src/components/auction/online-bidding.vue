@@ -73,6 +73,7 @@
               class="btn btn-danger"
               @click="sendMessage()"
               :disabled="!enableSubmitButton"
+              v-if="isBuyer"
             >
               Submit
             </button>
@@ -142,6 +143,7 @@ import type { IRecentBidder } from "@/interfaces/bid-for-good";
 import { getDate, getTime } from "@/utility";
 import { computed } from "vue";
 import { onUnmounted } from "vue";
+import { notify } from "@kyvg/vue3-notification";
 
 const isBidMade = ref<boolean>(false);
 // const timeLeft = ref(10); // 60 seconds
@@ -169,7 +171,7 @@ const bidCalculatedEndTime = ref<Date | string | number>("");
 const bidCalculatedStartTime = ref<Date | string | number>(getDate(new Date()));
 
 const userDetails: any = localStorage.getItem("userDetails");
-const { userId, sessionId } = JSON.parse(userDetails);
+const { userId, sessionId, isBuyer} = JSON.parse(userDetails);
 
 let bidChecker: number;
 let highestBid = ref<Number>(0);
@@ -260,7 +262,6 @@ onMounted(async () => {
       auctionType,
       userId,
     };
-
     console.log("Top users");
     auctionService
       .getTopFiveUser(requestPayload.auctionId)
@@ -409,6 +410,40 @@ const sendMessage = () => {
   console.log("itemId ID:", itemId);
   console.log("userId ID:", userId);
   console.log("bidAmount ID:", bidAmount.value);
+    console.log(bidAmount.value)
+    if (bidAmount.value == null) {
+      notify({
+        title: "Failure!",
+        text: "Bid should not be empty!",
+        type: "danger",
+      });
+    }
+    else if(!/^\d+$/.test(bidAmount.value.toString())){
+      notify({
+        title: "Failure!",
+        text: "Bid should be a number!",
+        type: "danger",
+      });
+    }
+    else{
+   if( bidAmount.value==null ||
+    bidAmount.value< sellItemDetail.startPrice){
+      //console.log("Bid not enough")
+    notify({
+      title: "Failure!",
+      text: "Bid should be more than start price!",
+      type: "danger",
+    });
+  }
+  else if(bidAmount.value<=highestBid.value){
+    //console.log("Bid not enough")
+  notify({
+    title: "Failure!",
+    text: "Bid should be more than highest bid!",
+    type: "danger",
+  });
+}
+  else{
   isBidMade.value = true;
   const bidPlaced = setInterval(() => {
     bidMadeTimer.value--;
@@ -425,9 +460,13 @@ const sendMessage = () => {
     itemId: itemId,
     userId: userId,
     bidVal: bidAmount.value,
-  });
+  });}
+}
 };
+
+
 </script>
+
 <style scoped>
 .main-section {
   background-color: #f7f7f7;
@@ -493,7 +532,7 @@ h3 {
 .pos {
   position: relative;
   top: 180px;
-  left: 280px;
+  left: 250px;
 }
 .tb-bg {
   background-color: #a5dfcb;

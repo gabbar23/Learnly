@@ -26,6 +26,7 @@
             />
 
             <FormKit
+              v-if="!isBidTypeSimple"
               type="date"
               label="Start Date Of Auction"
               v-model="sellerDetails.startDate"
@@ -33,6 +34,7 @@
             />
 
             <FormKit
+              v-if="!isBidTypeSimple"
               type="time"
               label="Start Time Of Auction"
               help="What time will the auction start?"
@@ -41,17 +43,27 @@
             />
 
             <FormKit
+              v-if="!isBidTypeSimple"
               type="date"
               label="End Date Of Auction"
               v-model="sellerDetails.endDate"
-              validation="required"
+              :validation="[['required'],['date_after', sellerDetails.startDate]]"
+
             />
 
             <FormKit
+              v-if="!isBidTypeSimple"
               type="time"
               label="End Time Of Auction"
               help="What time will the auction end?"
               v-model="sellerDetails.endTime"
+              validation="required"
+            />
+
+            <FormKit
+              type="textarea"
+              label="Description"
+              v-model="sellerDetails.itemDes"
               validation="required"
             />
           </div>
@@ -114,20 +126,13 @@
               :options="bidTypeOptions"
               v-model="sellerDetails.auctionType"
               validation="required"
+              @change="bidTypeChanged(sellerDetails.auctionType)"
             >
             </FormKit>
-
-            <FormKit
-              type="textarea"
-              label="Description"
-              v-model="sellerDetails.itemDes"
-              validation="required"
-            />
           </div>
         </div>
-        <div class="text-center">
+        <div class="text-center" v-if="isVerified">
           <button class="btn btn-primary"
-          :hidden="!isVerified"
           >Submit</button>
         </div>
       </FormKit>
@@ -155,7 +160,7 @@ const bidPhotos = ref<any>({});
 const userDetailsObject: any = localStorage.getItem("userDetails");
 const userDetail = JSON.parse(userDetailsObject);
 
-let isVerified  = ref<boolean>(false);
+let isVerified = ref<boolean>(false);
 
 const { notify } = useNotification();
 
@@ -202,11 +207,13 @@ const bidTypeOptions: ISelectResponse<string>[] = [
   },
 ];
 
+const isBidTypeSimple = ref<boolean>(false);
+
 onMounted(async () => {
   try {
-    isVerified=userDetail.isVerified;
+    isVerified.value = userDetail.isVerified;
     //console.log(JSON.parse(details).userId)
-   // isVerified=await (await AuthService.checkLogin(UserId)).data;
+    // isVerified=await (await AuthService.checkLogin(UserId)).data;
     let response = await AuthService.getStates();
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {
@@ -221,13 +228,20 @@ onMounted(async () => {
   }
 });
 
+const bidTypeChanged = (bidType: any) => {
+  if (bidType == "simple") {
+    isBidTypeSimple.value = true;
+  } else {
+    isBidTypeSimple.value = false;
+  }
+};
+
 const uploadImages = async (data: any) => {
   const headerConfig = {
     headers: {
       "content-type": "multipart/form-data",
     },
   };
-  console.log(data);
   // if(data.length > 3){
   //   console.log("Only 3 Images are allowed");
   //   return;
@@ -288,7 +302,6 @@ const triggerChange = async (val: string) => {
   cities.value = [];
   try {
     let response = await AuthService.getCities(val);
-    console.log(response);
     for (let i = 0; i < response.data.length; i++) {
       cities.value.push({
         label: response.data[i].city,

@@ -29,9 +29,17 @@ const router = createRouter({
       children: [
         { path: "", name: "Buyer Details", component: BuyerDetails },
         // { path: "/donations", component: DonationDetails },
-        { name:"buyer-order", path: "/buyer/orders", component: OrderDetails },
-        { name:"buyer-report-issue", path: "/buyer/report-issue", component: ReportIssue },
-        { name:"buyer-issue-history", path: "/buyer/issues",component: IssueTrack },
+        { name: "buyer-order", path: "/buyer/orders", component: OrderDetails },
+        {
+          name: "buyer-report-issue",
+          path: "/buyer/report-issue",
+          component: ReportIssue,
+        },
+        {
+          name: "buyer-issue-history",
+          path: "/buyer/issues",
+          component: IssueTrack,
+        },
       ],
     },
     {
@@ -106,8 +114,8 @@ const router = createRouter({
       component: () => import("../components/misc pages/not-found.vue"),
     },
     {
-      path:"/No-access",
-      name:"No Access",
+      path: "/No-access",
+      name: "No Access",
       component: () => import("../components/misc pages/not-found.vue"),
     },
 
@@ -127,9 +135,9 @@ const router = createRouter({
       component: () => import("../components/auction-filter.vue"),
     },
     {
-        path: "/wishlist",
-        name: "wishlist",
-        component: () => import("../components/misc pages/wishlist.vue"),
+      path: "/wishlist",
+      name: "wishlist",
+      component: () => import("../components/misc pages/wishlist.vue"),
     },
   ],
 });
@@ -137,45 +145,44 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userDetailsObject: any = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
- // console.log(userDetail)
+  // console.log(userDetail)
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
   //const isAdmin= !!(userDetail && userDetail.isAdmin);
-  const isSeller= !!(userDetail && userDetail.isSeller);
- // const isVerified= !!(userDetail && userDetail.isVerified);
-  const isBuyer= !!(userDetail && userDetail.isBuyer);
-  const adminID= !! (userDetail && userDetail.email=="admin@bid4good.ca");
+  const isSeller = !!(userDetail && userDetail.isSeller);
+  // const isVerified= !!(userDetail && userDetail.isVerified);
+  const isBuyer = !!(userDetail && userDetail.isBuyer);
+  const adminID = !!(userDetail && userDetail.email == "admin@bid4good.ca");
   if (isLoggedIn) {
-   //console.log(userDetail)
+    //console.log(userDetail)
     store.commit("setSessionId", userDetail.sessionId);
   }
   store.commit("setCurrentRoute", to);
   //console.log(to);
-  let adminPages= (to.name==="Admin Dashboard" || to.name==="Admin Issues");
+  const adminPages =
+    to.name === "Admin Dashboard" || to.name === "Admin Issues";
 
-  if(adminID){
+  if (adminID) {
     next();
-  }
-  else if (to.name !== "Login" && to.name !== "User Registration" && !isLoggedIn) {
+  } else if (
+    to.name !== "Login" &&
+    to.name !== "User Registration" &&
+    !isLoggedIn
+  ) {
     next({ name: "Login" });
-  }
-  else if(isLoggedIn){
-    if(to.name=="Login"){
+  } else if (isLoggedIn) {
+    if (to.name == "Login") {
       next({ name: "Home" });
     }
     if (!adminID && adminPages) {
       next({ name: "No Access" });
-    }
-    else if(!isSeller && to.name==="Post Bid"){
+    } else if (!isSeller && to.name === "Post Bid") {
       next({ name: "No Access" });
-    }
-    else if(!isBuyer && to.name==="buyer-order" ){
+    } else if (!isBuyer && to.name === "buyer-order") {
       next({ name: "No Access" });
-    }
-    else{
+    } else {
       next();
     }
-  }
-  else {
+  } else {
     next();
   }
 });

@@ -199,6 +199,10 @@ onMounted(async () => {
     if (userResponse.data.isSeller) {
       buyerSeller.push("Seller");
     }
+    cities.value.push({
+      label: userResponse.data.cityName,
+      value: userResponse.data.cityName,
+    });
   } catch (e) {
     notify({
       title: "Failure!",

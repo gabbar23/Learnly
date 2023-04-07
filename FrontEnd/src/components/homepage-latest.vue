@@ -1,16 +1,12 @@
-
 <template>
   <loader v-if="isLoading"></loader>
   <template v-else>
-    <div
-      class="filter-container"
-      style="display: flex; justify-content: flex-end"
-    >
+    <div>
       <button class="filter-toggle" v-if="!isHidden" @click="showFilter">
         <font-awesome-icon icon="filter" />
       </button>
-      <div class="card filter-section" v-if="isHidden">
-        <div class="form-group w-40" style="display: inline-block">
+      <div v-if="isHidden" class="d-flex align-items-center">
+        <div class = "col-4">
           <FormKit
             type="date"
             name="StartDate"
@@ -18,17 +14,20 @@
             validation="required"
             validation-visibility="live"
             v-model="startDate"
+            class="m-2"
           />
         </div>
-        <div class="form-group w-40" style="display: inline-block">
+
+        <div class = "col-4 m-2">
           <FormKit
+            class="m-2"
             type="date"
             label="End Date"
             :validation="[['date_after', startDate]]"
             v-model="endDate"
           />
         </div>
-        <div style="text-align: center">
+        <div class="text-center m-2 col-4">
           <button class="btn btn-primary m-1" @click="filterByDate">
             Search
           </button>
@@ -36,71 +35,122 @@
         </div>
       </div>
     </div>
-    <Carousel
-      id="gallery"
-      :items-to-show="1"
-      :wrap-around="false"
-      v-model="currentSlide"
-    >
-      <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
-        <img
-          :src="item.imgUrl"
-          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
-          class="carousel__item item_size"
-          style="object-fit: contain"
-          @click="liveAuctionClicked(item)"
-        />
-      </Slide>
-    </Carousel>
-    <Carousel
-      id="thumbnails"
-      :items-to-show="liveAuctionDetails.length"
-      :wrap-around="true"
-      v-model="currentSlide"
-      ref="carousel"
-    >
-      <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
-        <img
-          :src="item.imgUrl"
-          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
-          class="carousel__item item_size img_resolution"
-          @click="slideTo(index - 1)"
-        />
-      </Slide>
-    </Carousel>
+    <div v-if="liveAuctionDetails.length > 0">
+      <Carousel
+        id="gallery"
+        :items-to-show="1"
+        :wrap-around="false"
+        v-model="currentSlide"
+      >
+        <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
+          <img
+            :src="item.imgUrl"
+            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+            class="carousel__item item_size"
+            style="object-fit: contain"
+            @click="liveAuctionClicked(item)"
+          />
+        </Slide>
+      </Carousel>
+      <Carousel
+        id="thumbnails"
+        :items-to-show="liveAuctionDetails.length"
+        :wrap-around="true"
+        v-model="currentSlide"
+        ref="carousel"
+      >
+        <Slide v-for="(item, index) in liveAuctionDetails" :key="index">
+          <img
+            :src="item.imgUrl"
+            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+            class="carousel__item item_size img_resolution"
+            @click="slideTo(index - 1)"
+          />
+        </Slide>
+      </Carousel>
+    </div>
+    <div v-else>
+      <div class="container m-5">
+        <div class="card border border-info">
+          <div class="card-body">
+            <h1 class="card-title text-center mb-4">
+              No Live Bids Posted at the Moment
+            </h1>
+            <p class="card-text text-center">
+              We're sorry, but there are currently no live bids available.
+              Please check back later for updates.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h3 style="display: flex; justify-content: center">Blind Bid</h3>
-    <Carousel>
-      <Slide v-for="(item, index) in blindAuctionDetails" :key="index">
-        <img
-          :src="item.imgUrl"
-          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
-          class="carousel__item item_size"
-          @click="blindAuctionClicked(item)"
-        />
-      </Slide>
-      <template #addons>
-        <Navigation />
-        <Pagination />
-      </template>
-    </Carousel>
+    <div v-if="blindAuctionDetails.length > 0">
+      <h3 style="display: flex; justify-content: center">Blind Bid</h3>
+      <Carousel>
+        <Slide v-for="(item, index) in blindAuctionDetails" :key="index">
+          <img
+            :src="item.imgUrl"
+            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+            class="carousel__item item_size"
+            @click="blindAuctionClicked(item)"
+          />
+        </Slide>
+        <template #addons>
+          <Navigation />
+          <Pagination />
+        </template>
+      </Carousel>
+    </div>
+    <div v-else>
+      <div class="container m-5">
+        <div class="card border border-info">
+          <div class="card-body">
+            <h1 class="card-title text-center mb-4">
+              No Blind Bid's Posted at the Moment
+            </h1>
+            <p class="card-text text-center">
+              Sorry, no Blind Bid's has been posted at the moment. Please check
+              back later.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h3 style="display: flex; justify-content: center">Simple sell</h3>
+    <div v-if="simpleSellAuctionDetails.length > 0">
+      <h3 style="display: flex; justify-content: center">Simple sell</h3>
 
-    <Carousel>
-      <Slide v-for="(item, index) in simpleSellAuctionDetails" :key="index">
-        <img
-          :src="item.imgUrl"
-          onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
-          class="carousel__item item_size"
-          @click="simpleSellClicked(item)"
-        />
-      </Slide>
-      <template #addons>
-        <Navigation />
-        <Pagination />
-      </template>
-    </Carousel>
+      <Carousel>
+        <Slide v-for="(item, index) in simpleSellAuctionDetails" :key="index">
+          <img
+            :src="item.imgUrl"
+            onerror="this.src='https://imgs.search.brave.com/5W8zVnZVHamv7gy2RklV0IPv4-vJWrNe0wCqNTUjlDo/rs:fit:630:630:1/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdGVlcHVibGlj/L2ltYWdlL3ByaXZh/dGUvcy0tNzlFd0pr/M3otLS90X1ByZXZp/ZXcvYl9yZ2I6MDAw/MDAwLGNfbGltaXQs/Zl9hdXRvLGhfNjMw/LHFfOTAsd182MzAv/djE2MDgyMzY0NDMv/cHJvZHVjdGlvbi9k/ZXNpZ25zLzE3NTE5/ODQ1XzAuanBn'"
+            class="carousel__item item_size"
+            @click="simpleSellClicked(item)"
+          />
+        </Slide>
+        <template #addons>
+          <Navigation />
+          <Pagination />
+        </template>
+      </Carousel>
+    </div>
+    <div v-else>
+      <div class="container m-5">
+        <div class="card border border-info">
+          <div class="card-body">
+            <h1 class="card-title text-center mb-4">
+              No Simple Sell Item's Posted at the Moment
+            </h1>
+            <p class="card-text text-center">
+              Sorry, No Simple Sell Item's has been posted at the moment. Please
+              check back later.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </template>
 </template>
 
@@ -120,7 +170,7 @@ const slideTo = (val: any) => {
   currentSlide.value = val;
 };
 
-const close =  () => {
+const close = () => {
   isHidden.value = false;
 };
 
@@ -143,15 +193,16 @@ const filterByDate = async () => {
   });
   blindAuctionDetails.value = allAuctionDetails.filter(
     (auction: any) =>
-    auction.auctionType == "blind" &&
+      auction.auctionType == "blind" &&
       getDate(auction.startTime) >= getDate(startDate.value) &&
       getDate(auction.endTime) <= getDate(endDate.value)
   );
   simpleSellAuctionDetails.value = allAuctionDetails.filter(
     (auction: any) =>
-      auction.auctionType == null || auction.auctionType == "simple" && // update it to simple get it fixed with BE
-      getDate(auction.startTime) >= getDate(startDate.value) &&
-      getDate(auction.endTime) <= getDate(endDate.value)
+      auction.auctionType == null ||
+      (auction.auctionType == "simple" && // update it to simple get it fixed with BE
+        getDate(auction.startTime) >= getDate(startDate.value) &&
+        getDate(auction.endTime) <= getDate(endDate.value))
   );
   liveAuctionDetails.value = allAuctionDetails.filter(
     (auction: any) =>
@@ -212,8 +263,8 @@ onMounted(async () => {
       (auction: any) => auction.auctionType == "blind"
     );
     simpleSellAuctionDetails.value = allAuctionDetails.filter(
-      (auction: any) => auction.auctionType == null ||
-      auction.auctionType == "simple"
+      (auction: any) =>
+        auction.auctionType == null || auction.auctionType == "simple"
       // update it to simple get it fixed with BE
     );
     liveAuctionDetails.value = allAuctionDetails.filter(
@@ -300,13 +351,12 @@ onMounted(async () => {
   cursor: pointer;
 }
 
-.filter-container {
+/* .filter-container {
   display: flex;
   align-items: center;
-}
+} */
 
 .filter-toggle {
   margin-right: 1rem;
 }
 </style>
-
