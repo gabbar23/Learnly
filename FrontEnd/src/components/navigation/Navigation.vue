@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg row background mb-4 w-105">
-    <div class="col-9">
+    <div class="col-8">
       <h1>Bid4Good</h1>
     </div>
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
@@ -8,7 +8,7 @@
       <a class="nav-link m-2" @click = "navigateTo('blindBid')" href="javascript:void"> Blind Bid </a>
       <a class="nav-link m-2" href="javascript:void"> Simple Sell </a>
     </div> -->
-    <div class="col-6">
+    <div class="col-4">
       <button
         class="btn btn-outline-dark m-2"
         @click="navigateTo('home')"

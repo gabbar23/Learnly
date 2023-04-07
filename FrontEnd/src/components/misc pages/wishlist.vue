@@ -24,11 +24,25 @@
             <td>{{ item.startPrice }}</td>
           </tr>
         </template>
-        <no-content v-else :message="'No items Wishlisted'"></no-content>
+        <template v-else>
+          <tr>
+            <td colspan="4">
+              <div class="card d-flex justify-content-center">
+                <div class="card-body text-center">
+                  <h1 class="card-title">No Records Found</h1>
+                  <p class="card-text">
+                    Sorry, there are no records at the moment.
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </v-table>
   </section>
 </template>
+
 <script lang="ts" setup>
 import auctionService from "@/services/auctionService";
 import { button } from "@formkit/inputs";
