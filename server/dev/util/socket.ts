@@ -86,7 +86,7 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
 
       await Item.findOne({
         where:{
-          auctionId:itemId
+          itemId:itemId
         },
         attributes: ["startPrice"],
         
@@ -99,6 +99,9 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
           
           // Checking if startPrice is bigger than newVal than update the DB.
           let startPrice = result.dataValues.startPrice;
+
+          console.log(startPrice);
+          console.log(bidVal);
           
           if(startPrice < bidVal){
             
