@@ -145,11 +145,11 @@ router.beforeEach((to, from, next) => {
   const isBuyer= !!(userDetail && userDetail.isBuyer);
   const adminID= !! (userDetail && userDetail.email=="admin@bid4good.ca");
   if (isLoggedIn) {
-    console.log(userDetail)
+   //console.log(userDetail)
     store.commit("setSessionId", userDetail.sessionId);
   }
   store.commit("setCurrentRoute", to);
-  console.log(to);
+  //console.log(to);
   let buyerPages= (to.name==="buyer-order" || to.name==="buyer-report-issue" || to.name ==="buyer-issue-history");
   let adminPages= (to.name==="Admin Dashboard" || to.name==="Admin Issues");
 
@@ -160,6 +160,9 @@ router.beforeEach((to, from, next) => {
     next({ name: "Login" });
   }
   else if(isLoggedIn){
+    if(to.name=="Login"){
+      next({ name: "Home" });
+    }
     if (!adminID && adminPages) {
       next({ name: "No Access" });
     }
