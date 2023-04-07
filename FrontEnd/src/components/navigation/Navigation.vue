@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg row background mb-4 w-105">
     <div class="col-9">
-      <a href="/home" class="nounderline">
+      <router-link to="/home" class="nounderline">
       <h1>Bid4Good</h1>
-    </a>
+    </router-link>
     </div>
 
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
