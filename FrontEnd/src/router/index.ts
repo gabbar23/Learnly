@@ -137,20 +137,22 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userDetailsObject: any = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
-  console.log(userDetail)
+ // console.log(userDetail)
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
   //const isAdmin= !!(userDetail && userDetail.isAdmin);
   const isSeller= !!(userDetail && userDetail.isSeller);
  // const isVerified= !!(userDetail && userDetail.isVerified);
   const isBuyer= !!(userDetail && userDetail.isBuyer);
-  const adminID= !! (userDetail && userDetail.userId==34);
+  const adminID= !! (userDetail && userDetail.email=="admin@bid4good.ca");
   if (isLoggedIn) {
-    //console.log(userDetail)
+    console.log(userDetail)
     store.commit("setSessionId", userDetail.sessionId);
   }
   store.commit("setCurrentRoute", to);
   console.log(to);
-  
+  let buyerPages= (to.name==="buyer-order" || to.name==="buyer-report-issue" || to.name ==="buyer-issue-history");
+  let adminPages= (to.name==="Admin Dashboard" || to.name==="Admin Issues");
+
   if(adminID){
     next();
   }
@@ -158,13 +160,13 @@ router.beforeEach((to, from, next) => {
     next({ name: "Login" });
   }
   else if(isLoggedIn){
-    if (!adminID && to.name === "Admin Dashboard" || to.name === "Admin Issues") {
+    if (!adminID && adminPages) {
       next({ name: "No Access" });
     }
     else if(!isSeller && to.name==="Post Bid"){
       next({ name: "No Access" });
     }
-    else if(!isBuyer && (to.name==="wishlist" || to.name==="buyer-order" || to.name ==="buyer-report-issue" || to.name ==="buyer-issue-history")){
+    else if(!isBuyer && buyerPages){
       next({ name: "No Access" });
     }
     else{
