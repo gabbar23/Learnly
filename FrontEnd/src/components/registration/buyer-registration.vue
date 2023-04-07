@@ -29,8 +29,7 @@
             <li
               class="nav-item"
               @click="navigateTo('report')"
-              v-if="isUserBuyer"
-            >
+              >
               <a
                 class="nav-link"
                 :class="{ active: currentRoute.path == '/buyer/report-issue' }"
@@ -42,7 +41,6 @@
             <li
               class="nav-item"
               @click="navigateTo('issues')"
-              v-if="isUserBuyer"
             >
               <a
                 class="nav-link"
