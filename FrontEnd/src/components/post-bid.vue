@@ -22,7 +22,7 @@
               type="number"
               label="Estimated Value"
               v-model="sellerDetails.startPrice"
-              validation="required|number"
+              validation="required|number|min:1"
             />
 
             <FormKit

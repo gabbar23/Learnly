@@ -54,8 +54,12 @@
               <div class="col-8 p-2">
                 <FormKit
                   type="text"
+                  :ignore="false"
                   v-model="sellItemDetail.bidAmount"
                   :disabled="isBidAlreadyMade"
+                  name="Bid Amount"
+                  pattern="\d+"
+                  validation="number"
                 />
               </div>
             </div>
@@ -147,33 +151,45 @@ onMounted(async () => {
 
 const makePayment = async () => {
   try {
-    // console.log("hello")
-    if (
-      sellItemDetail.bidAmount == null ||
-      sellItemDetail.bidAmount < sellItemDetail.startPrice
-    ) {
-      //console.log("Bid not enough")
+    if (sellItemDetail.bidAmount == null) {
       notify({
         title: "Failure!",
-        text: "Bid should be more than start price!",
+        text: "Bid should not be empty!",
+        type: "danger",
+      });
+    } else if (!/^\d+$/.test(sellItemDetail?.bidAmount.toString())) {
+      notify({
+        title: "Failure!",
+        text: "Bid should be a number!",
         type: "danger",
       });
     } else {
-      isBidAlreadyMade.value = true;
-      const requestPayload = {
-        itemId: itemId.value,
-        bidAmount: sellItemDetail.bidAmount,
-        auctionId: auctionId.value,
-        userId: userId,
-      };
-      await auctionService.makeBlindBid(requestPayload);
-      notify({
-        title: "Successfull!",
-        text: "Your Bid has been placed Successfully!",
-        type: "success",
-      });
+      if (
+        sellItemDetail.bidAmount == null ||
+        sellItemDetail.bidAmount < sellItemDetail.startPrice
+      ) {
+        //console.log("Bid not enough")
+        notify({
+          title: "Failure!",
+          text: "Bid should be more than start price!",
+          type: "danger",
+        });
+      } else {
+        isBidAlreadyMade.value = true;
+        const requestPayload = {
+          itemId: itemId.value,
+          bidAmount: sellItemDetail.bidAmount,
+          auctionId: auctionId.value,
+          userId: userId,
+        };
+        await auctionService.makeBlindBid(requestPayload);
+        notify({
+          title: "Successfull!",
+          text: "Your Bid has been placed Successfully!",
+          type: "success",
+        });
+      }
     }
-    console.log(isBidAlreadyMade.value);
   } catch (e) {
     console.log("Error occured in placing a bid");
     notify({

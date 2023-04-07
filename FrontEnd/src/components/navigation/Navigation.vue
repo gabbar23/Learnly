@@ -1,8 +1,11 @@
 <template>
   <nav class="navbar navbar-expand-lg row background mb-4 w-105">
-    <div class="col-8">
-      <h1>Bid4Good</h1>
+    <div class="col-9">
+      <a href="/home" class="nounderline">
+        <h1>Bid4Good</h1>
+      </a>
     </div>
+
     <!-- <a class="nav-link ml-auto" href="/">Home </a> -->
     <!-- <div class = "d-flex col-8">   2/8/2
       <a class="nav-link m-2" @click = "navigateTo('blindBid')" href="javascript:void"> Blind Bid </a>
@@ -131,5 +134,9 @@ const logout = async () => {
   justify-content: center;
   height: 35px;
   width: 35px;
+}
+
+.nounderline {
+  text-decoration: none !important;
 }
 </style>
