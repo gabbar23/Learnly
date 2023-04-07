@@ -5,9 +5,7 @@ import {
   ReportIssue,
   IssueTrack,
 } from "@/components/component";
-import type { ILoggedInUserDetails } from "@/interfaces/bid-for-good";
 import store from "@/store";
-import { onMounted } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -31,9 +29,9 @@ const router = createRouter({
       children: [
         { path: "", name: "Buyer Details", component: BuyerDetails },
         // { path: "/donations", component: DonationDetails },
-        { path: "/buyer/orders", component: OrderDetails },
-        { path: "/buyer/report-issue", component: ReportIssue },
-        { path: "/buyer/issues",component: IssueTrack },
+        { name:"buyer-order", path: "/buyer/orders", component: OrderDetails },
+        { name:"buyer-report-issue", path: "/buyer/report-issue", component: ReportIssue },
+        { name:"buyer-issue-history", path: "/buyer/issues",component: IssueTrack },
       ],
     },
     {
@@ -104,9 +102,15 @@ const router = createRouter({
     },
     {
       path: "/:pathMatch(.*)",
-      name: "error",
+      name: "Error",
       component: () => import("../components/misc pages/not-found.vue"),
     },
+    {
+      path:"/No-access",
+      name:"No Access",
+      component: () => import("../components/misc pages/not-found.vue"),
+    },
+
     {
       path: "/congratulations",
       name: "congratulations",
@@ -133,14 +137,45 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userDetailsObject: any = localStorage.getItem("userDetails");
   const userDetail = JSON.parse(userDetailsObject);
+ // console.log(userDetail)
   const isLoggedIn = !!(userDetail && userDetail.sessionId);
+  //const isAdmin= !!(userDetail && userDetail.isAdmin);
+  const isSeller= !!(userDetail && userDetail.isSeller);
+ // const isVerified= !!(userDetail && userDetail.isVerified);
+  const isBuyer= !!(userDetail && userDetail.isBuyer);
+  const adminID= !! (userDetail && userDetail.email=="admin@bid4good.ca");
   if (isLoggedIn) {
+   //console.log(userDetail)
     store.commit("setSessionId", userDetail.sessionId);
   }
   store.commit("setCurrentRoute", to);
-  if (to.name !== "Login" && to.name !== "User Registration" && !isLoggedIn) {
+  //console.log(to);
+  let adminPages= (to.name==="Admin Dashboard" || to.name==="Admin Issues");
+
+  if(adminID){
+    next();
+  }
+  else if (to.name !== "Login" && to.name !== "User Registration" && !isLoggedIn) {
     next({ name: "Login" });
-  } else {
+  }
+  else if(isLoggedIn){
+    if(to.name=="Login"){
+      next({ name: "Home" });
+    }
+    if (!adminID && adminPages) {
+      next({ name: "No Access" });
+    }
+    else if(!isSeller && to.name==="Post Bid"){
+      next({ name: "No Access" });
+    }
+    else if(!isBuyer && to.name==="buyer-order" ){
+      next({ name: "No Access" });
+    }
+    else{
+      next();
+    }
+  }
+  else {
     next();
   }
 });

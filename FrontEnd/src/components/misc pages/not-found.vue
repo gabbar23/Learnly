@@ -9,7 +9,7 @@
   <div class="center">
     <FormKit
       type="button"
-      label="Go Back"
+      label="Go to Homepage"
       style="background-color: seagreen"
       @click="goBack"
     />
@@ -21,7 +21,7 @@ import router from "@/router";
 import { FormKit } from "@formkit/vue";
 
 const goBack = () => {
-  router.push("/");
+  router.push("/home");
 };
 </script>
 

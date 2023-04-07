@@ -13,30 +13,30 @@
 </template>
 
 <script lang="ts">
-  export default {
-    data() {
-      return {
-        items: [
-          { id: 1, name: "Apple", type: "fruit" },
-          { id: 2, name: "Carrot", type: "vegetable" },
-          { id: 3, name: "Pear", type: "fruit" },
-          { id: 4, name: "Broccoli", type: "vegetable" },
-        ],
-        filters: [
-          { id: "fruit", name: "Fruit" },
-          { id: "vegetable", name: "Vegetable" },
-        ],
-        selectedFilter: "",
-      };
+export default {
+  data() {
+    return {
+      items: [
+        { id: 1, name: "Apple", type: "fruit" },
+        { id: 2, name: "Carrot", type: "vegetable" },
+        { id: 3, name: "Pear", type: "fruit" },
+        { id: 4, name: "Broccoli", type: "vegetable" },
+      ],
+      filters: [
+        { id: "fruit", name: "Fruit" },
+        { id: "vegetable", name: "Vegetable" },
+      ],
+      selectedFilter: "",
+    };
+  },
+  computed: {
+    filteredItems() {
+      if (!this.selectedFilter) {
+        return this.items;
+      } else {
+        return this.items.filter((item) => item.type === this.selectedFilter);
+      }
     },
-    computed: {
-      filteredItems() {
-        if (!this.selectedFilter) {
-          return this.items;
-        } else {
-          return this.items.filter((item) => item.type === this.selectedFilter);
-        }
-      },
-    },
-  };
+  },
+};
 </script>

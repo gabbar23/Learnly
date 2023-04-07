@@ -1,10 +1,17 @@
 import { createStore } from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 const store = createStore({
   // store configuration goes here
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage,
+    }),
+  ],
   state: {
     currentRoute: null,
     sessionId: null,
+    userDetails: null,
   },
   mutations: {
     setCurrentRoute(state, route) {
@@ -13,6 +20,9 @@ const store = createStore({
     setSessionId(state, sessionId) {
       state.sessionId = sessionId;
     },
+    setCurrentUserDetails(state, userDetails) {
+      state.userDetails = userDetails;
+    },
   },
   getters: {
     getCurrentRoute(state) {
@@ -20,6 +30,9 @@ const store = createStore({
     },
     getSessionId(state) {
       return state.sessionId;
+    },
+    getCurrentUserDetails(state) {
+      return state.userDetails;
     },
   },
 });

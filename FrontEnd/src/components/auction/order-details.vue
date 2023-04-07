@@ -3,16 +3,16 @@
     <h1>Order Details</h1>
   </section>
   <section>
-    <v-table>
+    <v-table class="fullWidth fullHeight">
       <thead>
         <tr>
-          <th class="text-left">Name</th>
-          <th class="text-left">Description</th>
-          <th class="text-left">Price</th>
+          <th id="order_name" class="text-left">Name</th>
+          <th id="order_description" class="text-left">Description</th>
+          <th id="order_price" class="text-left">Price</th>
         </tr>
       </thead>
       <tbody>
-        <template v-if="orderDetails.length > 0">
+        <template  v-if="orderDetails.length > 0">
           <tr v-for="item in orderDetails" :key="item.cityName">
             <td>{{ item.itemName }}</td>
             <td>{{ item.itemDes }}</td>
@@ -28,7 +28,6 @@
   </section>
 </template>
 <script lang="ts" setup>
-import type { IGetUserDetails } from "@/interfaces/seller-registration";
 import AuthService from "@/services/AuthService";
 import { onMounted, ref } from "vue";
 import NoContent from "../no-content.vue";

@@ -59,7 +59,7 @@ let loginDetails = reactive<ILoginDetails>({
   password: "",
 });
 const { notify } = useNotification();
-
+const adminEmail = "admin@bid4good.ca";
 
 const loginError = async () => {
   notify({
@@ -76,9 +76,16 @@ const onSubmit = async () => {
       text: "Your Login was successful!!",
       type: "success",
     });
-    const userDetails = JSON.stringify(response.data.message);
+    if (response.data.message.email == adminEmail) {
+      response.data.message.isAdmin = true;
+    } else {
+      response.data.message.isAdmin = false;
+    }
+    const userDetails: any = JSON.stringify(response.data.message);
     localStorage.setItem("userDetails", userDetails);
     store.commit("setSessionId", response.data.message.sessionId);
+    store.commit("setCurrentUserDetails", response.data.message);
+
     router.push("/home");
   } catch (e) {
     console.error("Something went wrong while logging in Please try again.");

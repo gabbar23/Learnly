@@ -187,6 +187,7 @@ onMounted(async () => {
     const userResponse = await AuthService.getCurrentUserDetails(
       userDetail.userId
     );
+   // console.log(userResponse)
     userDetails = Object.assign(
       {},
       { ...userResponse.data },

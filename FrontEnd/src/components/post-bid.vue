@@ -15,18 +15,21 @@
               type="text"
               label="Name Of Offering"
               v-model="sellerDetails.itemName"
+              validation="required"
             />
 
             <FormKit
               type="number"
               label="Estimated Value"
               v-model="sellerDetails.startPrice"
+              validation="required|number|min:1"
             />
 
             <FormKit
               type="date"
               label="Start Date Of Auction"
               v-model="sellerDetails.startDate"
+              validation="required"
             />
 
             <FormKit
@@ -34,12 +37,14 @@
               label="Start Time Of Auction"
               help="What time will the auction start?"
               v-model="sellerDetails.startTime"
+              validation="required"
             />
 
             <FormKit
               type="date"
               label="End Date Of Auction"
               v-model="sellerDetails.endDate"
+              validation="required"
             />
 
             <FormKit
@@ -47,6 +52,7 @@
               label="End Time Of Auction"
               help="What time will the auction end?"
               v-model="sellerDetails.endTime"
+              validation="required"
             />
           </div>
 
@@ -55,6 +61,7 @@
               type="text"
               label="Address"
               v-model="sellerDetails.address"
+              validation="required"
             />
             <FormKit
               type="select"
@@ -63,6 +70,7 @@
               :options="states"
               v-model="sellerDetails.provinceName"
               @change="triggerChange(sellerDetails.provinceName)"
+              validation="required"
             >
             </FormKit>
 
@@ -72,14 +80,19 @@
               placeholder="Select City"
               v-model="sellerDetails.cityName"
               :options="cityOptions"
+              validation="required"
             >
             </FormKit>
 
             <FormKit
               type="text"
               label="Postal Zip Code"
-              help="format: a1b-c2d | a1bc2d | a1b c2d"
               v-model="sellerDetails.postalCode"
+              help="format: a1b-2c3 | a1b2c3 | a1b 2c3"
+              :validation="[
+                ['required'],
+                ['matches', /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/i],
+              ]"
             />
 
             <FormKit
@@ -91,6 +104,7 @@
               multiple="true"
               v-model="bidPhotos"
               @blur="uploadImages(bidPhotos)"
+              validation="required"
             />
 
             <FormKit
@@ -98,7 +112,8 @@
               label="Bid Type"
               placeholder="Post Bid as"
               :options="bidTypeOptions"
-              v-model="sellerDetails.bidType"
+              v-model="sellerDetails.auctionType"
+              validation="required"
             >
             </FormKit>
 
@@ -106,16 +121,21 @@
               type="textarea"
               label="Description"
               v-model="sellerDetails.itemDes"
+              validation="required"
             />
           </div>
         </div>
         <div class="text-center">
-          <button class="btn btn-primary">Submit</button>
+          <button class="btn btn-primary"
+          :hidden="!isVerified"
+          >Submit</button>
         </div>
       </FormKit>
     </div>
   </div>
 </template>
+
+
 <script lang="ts" setup>
 import { BidDescriptionEnum, BidTypeEnum } from "@/enums/BidTypeEnum";
 import type {
@@ -126,11 +146,17 @@ import type {
 import AuthService from "@/services/AuthService";
 import { computed, onMounted, reactive, ref } from "vue";
 import { useNotification } from "@kyvg/vue3-notification";
+import { getDate } from "@/utility";
 
 const states = ref<ISelectResponse<string>[]>([]);
 const cities = ref<ISelectResponse<string>[]>([]);
 const allImages = ref<any>([]);
 const bidPhotos = ref<any>({});
+const userDetailsObject: any = localStorage.getItem("userDetails");
+const userDetail = JSON.parse(userDetailsObject);
+
+let isVerified  = ref<boolean>(false);
+
 const { notify } = useNotification();
 
 let cityOptions = computed(() => {
@@ -158,6 +184,7 @@ let sellerDetails = reactive<IGetSellerBidDetails>({
   startDate: "",
   endDate: "",
   userId: null,
+  auctionType: "",
 });
 
 const bidTypeOptions: ISelectResponse<string>[] = [
@@ -166,7 +193,7 @@ const bidTypeOptions: ISelectResponse<string>[] = [
     value: "live",
   },
   {
-    label: BidDescriptionEnum[BidTypeEnum.normalBidding],
+    label: BidDescriptionEnum[BidTypeEnum.blindBidding],
     value: "blind",
   },
   {
@@ -177,6 +204,9 @@ const bidTypeOptions: ISelectResponse<string>[] = [
 
 onMounted(async () => {
   try {
+    isVerified=userDetail.isVerified;
+    //console.log(JSON.parse(details).userId)
+   // isVerified=await (await AuthService.checkLogin(UserId)).data;
     let response = await AuthService.getStates();
     states.value = [];
     for (let i = 0; i < response.data.length; i++) {

@@ -19,7 +19,7 @@
           <ul class="list-unstyled">
             <li><a href="javascript:void">FAQs</a></li>
             <li><a href="javascript:void">Help Center</a></li>
-            <li><a href="javascript:void">Report a Bug</a></li>
+            <li><a href="/buyer/report-issue">Report a Bug</a></li>
           </ul>
         </div>
         <div class="col-md-4 col-sm-12">
