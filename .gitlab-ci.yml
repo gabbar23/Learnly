@@ -1,4 +1,3 @@
-
 stages:
   - build
   - test
@@ -39,24 +38,23 @@ frontend-build:
     paths:
       - FrontEnd/dist
 
-
-# backend-test:
-#   stage: test
-#   tags:
-#     - dalfcs_docker_autoscale
-#   image: node:latest
-#   script:
-#     - ls
-#     - echo "Backend application test started."
-#     - cd server
-#     - npm install
-#     - npm run test
-#     - echo "Backend application Tested successfully."
-#   artifacts:
-#     when: on_success
-#     paths:
-#       - server/prod
-
+backend-test:
+  stage: test
+  tags:
+    - dalfcs_docker_autoscale
+  image: node:latest
+  script:
+    - ls
+    - echo "Backend application test started."
+    - cd server
+    - npm install
+    - npm build
+    - npm run test
+    - echo "Backend application Tested successfully."
+  artifacts:
+    when: on_success
+    paths:
+      - server/prod
 
 backend-publish-deploy:
   stage: deploy
@@ -73,14 +71,13 @@ backend-publish-deploy:
     - cd ../
     - zip -r server.zip server
     - ls
-    - sshpass -V    
+    - sshpass -V
     - export SSHPASS=${VM_PASS}
-    - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"        
+    - sshpass -e scp -o StrictHostKeyChecking=no server.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
     - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./start_backendOut.sh"
   only:
     refs:
       - deployment
-
 
 frontend-publish-deploy:
   stage: deploy
@@ -94,10 +91,10 @@ frontend-publish-deploy:
     # - cd dist
     - zip -r FrontEnd.zip FrontEnd
     - chmod og-rwx ${VM_PRIVATE_KEY}
-    - sshpass -V    
+    - sshpass -V
     - export SSHPASS=${VM_PASS}
     - sshpass -e scp -o StrictHostKeyChecking=no FrontEnd.zip "csci5308vm5@csci5308vm5.research.cs.dal.ca:"
-    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./fr_dev.sh" 
+    - sshpass -e ssh csci5308vm5@csci5308vm5.research.cs.dal.ca "sh ./stop_frontend.sh; sh ./fr_dev.sh"
   dependencies:
     - frontend-build
   only:
