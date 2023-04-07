@@ -150,7 +150,6 @@ router.beforeEach((to, from, next) => {
   }
   store.commit("setCurrentRoute", to);
   //console.log(to);
-  let buyerPages= (to.name==="buyer-order" || to.name==="buyer-report-issue" || to.name ==="buyer-issue-history");
   let adminPages= (to.name==="Admin Dashboard" || to.name==="Admin Issues");
 
   if(adminID){
@@ -169,7 +168,7 @@ router.beforeEach((to, from, next) => {
     else if(!isSeller && to.name==="Post Bid"){
       next({ name: "No Access" });
     }
-    else if(!isBuyer && buyerPages){
+    else if(!isBuyer && to.name==="buyer-order" ){
       next({ name: "No Access" });
     }
     else{
