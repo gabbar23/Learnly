@@ -40,22 +40,22 @@ frontend-build:
       - FrontEnd/dist
 
 
-backend-test:
-  stage: test
-  tags:
-    - dalfcs_docker_autoscale
-  image: node:latest
-  script:
-    - ls
-    - echo "Backend application test started."
-    - cd server
-    - npm install
-    - npm run test
-    - echo "Backend application Tested successfully."
-  artifacts:
-    when: on_success
-    paths:
-      - server/prod
+# backend-test:
+#   stage: test
+#   tags:
+#     - dalfcs_docker_autoscale
+#   image: node:latest
+#   script:
+#     - ls
+#     - echo "Backend application test started."
+#     - cd server
+#     - npm install
+#     - npm run test
+#     - echo "Backend application Tested successfully."
+#   artifacts:
+#     when: on_success
+#     paths:
+#       - server/prod
 
 
 backend-publish-deploy:

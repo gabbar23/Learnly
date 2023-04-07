@@ -186,6 +186,8 @@ const { itemId, auctionId, auctionType } = route.query;
 const bubbles = ref<any>([]);
 const globalTimer = ref<number>(0);
 
+
+
 // Add an hour to the date
 
 let socketUrl;
@@ -419,6 +421,7 @@ const sendMessage = () => {
 
   socket.value!.emit("placeBid", {
     seesionId: sessionId,
+    auctionId: auctionId,
     itemId: itemId,
     userId: userId,
     bidVal: bidAmount.value,

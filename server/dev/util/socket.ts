@@ -8,7 +8,7 @@ import { Item } from "../models/itemModel";
 // import { Transaction } from "sequelize";
 
 
-const addBidOnDB = async (itemId:Number,userId:Number,bidVal:Number)=>{
+const addBidOnDB = async (itemId:Number,userId:Number,bidVal:Number,auctionId:Number)=>{
 
   console.log(userId)
 
@@ -17,7 +17,7 @@ const addBidOnDB = async (itemId:Number,userId:Number,bidVal:Number)=>{
     // await sequelize.transaction(async (transaction:Transaction) => {
       await userBidDetailsModel.create({
         itemId:itemId,
-        auctionId:itemId,
+        auctionId:auctionId,
         isWinner:false,
         bidAmount:bidVal,
         userId:userId,
@@ -39,13 +39,13 @@ const addBidOnDB = async (itemId:Number,userId:Number,bidVal:Number)=>{
 }
 
 
-const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Server, socket:Socket ) => {
+const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Server, socket:Socket, auctionId:Number ) => {
 
   // Checking if the previous bid exist in auction ,
   // If yes then check the max value with newVal
   userBidDetailsModel.max("bidAmount",{
     where:{
-      itemId:itemId,
+      auctionId:auctionId
     }
   })
   .then(async (result)=>{
@@ -60,7 +60,7 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
       // Checking if the new Value is bigger than maxVal
       if(maxVal <bidVal){
         
-        await addBidOnDB(itemId,userId,bidVal);
+        await addBidOnDB(itemId,userId,bidVal,auctionId);
         console.log("updated - 1");
         
         let info = {
@@ -104,7 +104,7 @@ const updateBidData = async (itemId:Number,userId:Number, bidVal :Number, io:Ser
             
             console.log("updated - 1");
             
-            await addBidOnDB(itemId,userId,bidVal);
+            await addBidOnDB(itemId,userId,bidVal,auctionId);
             
             let info = {
               highestBid:bidVal 
@@ -173,7 +173,7 @@ export function initSocket(server: any): void {
         
         if(data.userId != null){
 
-          await updateBidData(data.itemId,data.userId,data.bidVal,io,socket);
+          await updateBidData(data.itemId,data.userId,data.bidVal,io,socket,data.auctionId);
           
             console.log("make Update on client");
 
